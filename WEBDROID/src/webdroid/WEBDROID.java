@@ -16,10 +16,12 @@ public class WEBDROID {
         KeywordList.KW_CODE kc;
         
             try {
-                File htmlfile = new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID\\src\\HTML FILE.html");
+                File htmlfile = new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID.txt\\WEBDROID\\src\\HTML FILE.html");
             try (Scanner myReader = new Scanner(htmlfile)) {  
                 while (myReader.hasNextLine()) {
+                    //reading the text line per line
                     String data = myReader.nextLine();
+                    //concatenating the text as a single string
                     s +=data;
                 }
                 scan.setSource(s);

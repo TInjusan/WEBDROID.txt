@@ -94,11 +94,16 @@ public class TokenScanner {
                 arg_char_type = CharMap.CHAR_TYPE.FORWARD_SLASH;
                 arg_token_code = TOKEN_CODE.FORWARD_SLASH;
                 break;
+            case DIGIT:
+                arg_char_type = CharMap.CHAR_TYPE.FORWARD_SLASH;
+                arg_token_code = TOKEN_CODE.NUMBER;
+                get_number_token(arg_char_type, arg_token_code); 
+                break;
                 
             case EOF_TYPE:
                 arg_char_type = CharMap.CHAR_TYPE.EOF_TYPE;
                 arg_token_code = TOKEN_CODE.EOF_TOKEN;
-                
+                 
                 break;
         }
         
@@ -150,6 +155,23 @@ public class TokenScanner {
         cchar = get_source_char();   
         token = arg_token_code;
       }    
+     
+          private void get_number_token(CharMap.CHAR_TYPE arg_char_type, TOKEN_CODE arg_token_code){
+        
+            int count_dot = 0;  
+            lexeme = String.valueOf(cchar);   
+           
+            do{
+                cchar = get_source_char();
+                table.setChar(cchar);
+                lexeme+=String.valueOf(cchar);
+                
+            }while(table.getChar() != arg_char_type);
+            
+        cchar = get_source_char();   
+        token = arg_token_code;
+      } 
+     
      
     //getter method
     public TOKEN_CODE getToken(){
