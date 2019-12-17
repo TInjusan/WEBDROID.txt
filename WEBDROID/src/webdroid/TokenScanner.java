@@ -166,7 +166,8 @@ public class TokenScanner {
                 table.setChar(cchar);
                 lexeme+=String.valueOf(cchar);
                 
-            }while(table.getChar() != arg_char_type);
+                //count of dot should only be zero or one
+            }while(table.getChar() == arg_char_type && count_dot < 2 );
             
         cchar = get_source_char();   
         token = arg_token_code;
