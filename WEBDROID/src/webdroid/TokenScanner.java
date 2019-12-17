@@ -72,10 +72,12 @@ public class TokenScanner {
             case LETTER:
                 arg_char_type = CharMap.CHAR_TYPE.LETTER;
                 arg_token_code = TOKEN_CODE.WORD;
+                get_token(arg_char_type, arg_token_code); 
                 break;
             case SPECIAL:
                 arg_char_type = CharMap.CHAR_TYPE.SPECIAL;
                 arg_token_code = TOKEN_CODE.SPECIAL_CHARACTER;
+                get_token(arg_char_type, arg_token_code); 
                 break;
             case QOUTE:
                 arg_char_type = CharMap.CHAR_TYPE.QOUTE;
@@ -85,44 +87,48 @@ public class TokenScanner {
             case ANGLE_BRACKET_OPEN:
                 arg_char_type = CharMap.CHAR_TYPE.ANGLE_BRACKET_OPEN;
                 arg_token_code = TOKEN_CODE.ANGLE_BRACKET_OPEN;
+                get_token(arg_char_type, arg_token_code); 
                 break;
             case ANGLE_BRACKET_CLOSE:
                 arg_char_type = CharMap.CHAR_TYPE.ANGLE_BRACKET_CLOSE;
                 arg_token_code = TOKEN_CODE.ANGLE_BRACKET_CLOSE;
+                get_token(arg_char_type, arg_token_code); 
                 break;
             case FORWARD_SLASH:
                 arg_char_type = CharMap.CHAR_TYPE.FORWARD_SLASH;
                 arg_token_code = TOKEN_CODE.FORWARD_SLASH;
+                get_token(arg_char_type, arg_token_code); 
                 break;
+            case DOT_CLASS:
+                arg_char_type = CharMap.CHAR_TYPE.DOT_CLASS;
+                arg_token_code = TOKEN_CODE.WORD;
+                get_token(arg_char_type, arg_token_code); 
+                break;
+                
             case DIGIT:
-                arg_char_type = CharMap.CHAR_TYPE.FORWARD_SLASH;
+                arg_char_type = CharMap.CHAR_TYPE.DIGIT;
                 arg_token_code = TOKEN_CODE.NUMBER;
                 get_number_token(arg_char_type, arg_token_code); 
                 break;
                 
             case EOF_TYPE:
-                arg_char_type = CharMap.CHAR_TYPE.EOF_TYPE;
-                arg_token_code = TOKEN_CODE.EOF_TOKEN;
-                 
+                get_eof_token();
                 break;
         }
         
-        if(table.getChar()!=CharMap.CHAR_TYPE.QOUTE){
-           get_token(arg_char_type, arg_token_code); 
-        }
-        
+     
         return token;
     }
     
-    
+    private void get_eof_token(){
+            lexeme = "";
+            token = TOKEN_CODE.EOF_TOKEN;
+    }
     
     private void get_token(CharMap.CHAR_TYPE arg_char_type, TOKEN_CODE arg_token_code){
         
-        if(arg_char_type == CharMap.CHAR_TYPE.EOF_TYPE){
-            lexeme = "";
-            token = TOKEN_CODE.EOF_TOKEN;
-        }
-        else{
+       
+        
             lexeme = String.valueOf(cchar);   
             boolean run = true;
             while(run){
@@ -136,7 +142,7 @@ public class TokenScanner {
                     run = false;
             }
             
-        }     
+             
         token = arg_token_code;
       }
        
@@ -160,17 +166,29 @@ public class TokenScanner {
         
             int count_dot = 0;  
             lexeme = String.valueOf(cchar);   
-           
-            do{
+            boolean run = true;
+                
+            while(run){
+            
                 cchar = get_source_char();
                 table.setChar(cchar);
-                lexeme+=String.valueOf(cchar);
                 
-                //count of dot should only be zero or one
-            }while(table.getChar() == arg_char_type && count_dot < 2 );
+                if(table.getChar() == CharMap.CHAR_TYPE.DOT_CLASS){
+                    count_dot++;
+                    
+                }
+                
+                if( (table.getChar() == arg_char_type || table.getChar() == CharMap.CHAR_TYPE.DOT_CLASS) && count_dot < 2  ){
+                    lexeme+=String.valueOf(cchar);
+                 }
+                else
+                    run = false;
+                
+                
+            }
             
-        cchar = get_source_char();   
-        token = arg_token_code;
+                  
+         token = arg_token_code;
       } 
      
      
