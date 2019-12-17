@@ -26,7 +26,7 @@ public class WEBDROID {
                 do{
                     t = scan.next_token();
                     kc = kw.SearchKeyword(scan.getLexeme());
-                    System.out.println(scan.getLexeme()+" - "+scan.getToken()+ " - "+ kc);
+                    System.out.println(scan.getToken()+ " - "+scan.getLexeme()+" - "+  kc);
                     
                 }while(t != TokenScanner.TOKEN_CODE.EOF_TOKEN);
             }
