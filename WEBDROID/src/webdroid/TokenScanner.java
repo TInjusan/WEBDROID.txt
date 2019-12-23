@@ -68,6 +68,8 @@ public class TokenScanner {
         CharMap.CHAR_TYPE arg_char_type = CharMap.CHAR_TYPE.ERROR;
         TOKEN_CODE arg_token_code = TOKEN_CODE.ERROR;
         
+        //Combining
+        
         switch(table.getChar()){
             case LETTER:
                 arg_char_type = CharMap.CHAR_TYPE.LETTER;
