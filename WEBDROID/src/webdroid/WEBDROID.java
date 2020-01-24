@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 public class WEBDROID extends Application {
         
       private String result; 
-      
+      public static String HTMLText = "";
       private static String FilePath=""; 
 
     public WEBDROID() {
@@ -76,9 +76,12 @@ public class WEBDROID extends Application {
                     
                     FilePath= file.getAbsoluteFile().toString();
                     HTMLTextField.setText( ReadHTMLFile());
-                    String HTMLText = HTMLTextField.getText();
-                    System.out.println(HTMLText);
-                    Extraction_Method();
+                    HTMLText = HTMLTextField.getText();
+                    
+                    //This is where you pick which test case would you like to use
+                    Test_Module Test = new Test_Module();
+                    Test.Extraction_Method(HTMLText);
+                    
             });
                 VBox vBox = VBoxBuilder.create().children(button_browse).build();
                 root.getChildren().add(vBox);
@@ -92,36 +95,7 @@ public class WEBDROID extends Application {
             primaryStage.show();
         }
 
-    
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-    private static void Extraction_Method(){
-        
-        String s; 
-        String temp;
-        TokenScanner scan = new TokenScanner();
-        TokenScanner.TOKEN_CODE t;
-        KeywordList kw = new KeywordList();
-        KeywordList.KW_CODE kc;
-                
-                s = ReadHTMLFile();
-                scan.setSource(s);
-               
-                do{
-                    t = scan.next_token();
-                    kc = kw.SearchKeyword(scan.getLexeme());
-                    temp = scan.getLexeme()+" - "+scan.getToken()+ " - "+ kc;
-                    
-                     System.out.println(temp);
-                   }while(t != TokenScanner.TOKEN_CODE.EOF_TOKEN);
-        
-         
-        
-    }
-    
-    private static String ReadHTMLFile(){
+     private static String ReadHTMLFile(){
         String s = "";
         
            try {
@@ -142,4 +116,13 @@ public class WEBDROID extends Application {
         return s;
     }
     
+    public static void main(String[] args) {
+        launch(args);
+        
+    }
+    
+ 
+
+ 
 }
+
