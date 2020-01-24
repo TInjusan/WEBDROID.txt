@@ -14,7 +14,7 @@ public class CharMap {
     HASH_ID, 
     DOT_CLASS,
     ERROR, 
-    EOF_TYPE
+    EOF_TYPE 
 }
 
     
