@@ -60,7 +60,7 @@ public class KeywordList {
 
         
         // and the corresponding token codes
-           htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
+        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
         htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
         htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
         htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
