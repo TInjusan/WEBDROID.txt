@@ -15,8 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.VBoxBuilder;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -83,8 +81,8 @@ public class WEBDROID extends Application {
                     Test.Extraction_Method(HTMLText);
                     
             });
-                VBox vBox = VBoxBuilder.create().children(button_browse).build();
-                root.getChildren().add(vBox);
+              //  VBox vBox = VBoxBuilder.create().children(button_browse).build();
+              //  root.getChildren().add(vBox);
                 
             gridpane.add(button_browse, 0, 3);
            
@@ -120,9 +118,6 @@ public class WEBDROID extends Application {
         launch(args);
         
     }
-    
- 
-
- 
+     
 }
 
