@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class KeywordList {
     
     
-     public enum HTML_CODE {NOT_FOUND, HTML_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
+     public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
      
      ArrayList<String> html_kw = new ArrayList<>();
      ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
@@ -21,6 +21,7 @@ public class KeywordList {
         html_kw.add("action");
         html_kw.add("body");
         html_kw.add("button");
+        html_kw.add("br");
         html_kw.add("checkbox");
         html_kw.add("class");
         html_kw.add("date");
@@ -59,48 +60,50 @@ public class KeywordList {
 
         
         // and the corresponding token codes
+           htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
         htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
         htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
-        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_TAG);
+        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+
 
      }
      
