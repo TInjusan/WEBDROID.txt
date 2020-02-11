@@ -1,4 +1,5 @@
- 
+// This is the implementation of Recursive Descent Parser with depth first algorithm to track the closing of non-void tags
+// DF ReD means Depth First Recursive Descent 
 package webdroid;
 import java.util.ArrayList; 
 import java.util.*;
@@ -8,19 +9,16 @@ public class DF_ReD_Parser {
     
     private ArrayList<String> lexemes = new ArrayList<>();
     private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
-    private int i = 0; //iteration variable to select each lexeme genarated from TokenScanner
-    
-    Stack<String> NV_tag_stack  = new Stack<>();  //Storage of the Non-void tags in a first-in last-out implementation
+    private int i = 0; //iteration variable to select each lexeme genarated from TokenScanner. Every iteration of i means point to the next lexeme  
+    private Stack<String> NV_tag_stack  = new Stack<>();  //Storage of the Non-void tags in a first-in last-out implementation
     
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;
     TokenScanner scan = new TokenScanner();
     TokenScanner.TOKEN_CODE t;
      
-       public void setLexeme(String s){
-         
-
-        scan.setSource(s);
+       public void Set_Parser(String s){
+            scan.setSource(s);
                
                 do{
                     t = scan.next_token();
@@ -30,6 +28,10 @@ public class DF_ReD_Parser {
                     
                    }while(t != TokenScanner.TOKEN_CODE.EOF_TOKEN);
       }
+       
+       public void PARSE(){
+           HTML();
+       }
        
        public void HTML(){
            
@@ -66,26 +68,35 @@ public class DF_ReD_Parser {
        
        
        public void Non_void_element(){
-                
-    
                 Attribute();
+                
+                if(lexemes.get(i).equals('>'))
+                    i++;
+                else
+                    Error(0);
                 
                 if(lexemes.get(i).equals("<")){
                     i++;
                     if(lexemes.get(i).equals("/")){
-                        NV_tag_stack.pop();  // Removing of the top tag because it has been closed.
+                        i++;
+                                               
+                        String current_tag = (String) NV_tag_stack.peek(); // Get the current tag which is on top of the stack 
+                       
+                        if(current_tag.equals(lexemes.get(i)))  // Compare the name of the tag vs the one on top of the stack                      
+                                NV_tag_stack.pop();             // Removing of the top tag because it has been closed.
                     }
                     else          
                         Element(); //if this is not closing an element then it must be a new one,  a child of the one on top of the stack  
                     i++;
                 }
                     
-                else
+                else  //Store the string element enclosed in the angle brackets (pending)
                     String_element();
                 
-                
-                 
-                  
+       }
+      
+       public void Void_element(){
+           Attribute();  
        }
        
        public void Attribute(){
@@ -113,24 +124,15 @@ public class DF_ReD_Parser {
               
                
            }
-           else if(lexemes.get(i).equals('>')){
-               i++;
-           }
-                      
+           else  
+               i++; 
        }
        
        public void String_element(){
-           
-           
                 if(lexemes.get(i).equals("<"))
                     i++;
                 else
                     { i++; String_element(); }
-       }
-       
-       public void Void_element(){
-           
-           
        }
        
             
@@ -138,9 +140,9 @@ public class DF_ReD_Parser {
            
            switch (code){
                //Generic Error Message:
-               case 0: System.out.println("Syntax Error");
+               case 0: System.out.println("Syntax Error at"+lexemes.get(i));
                
            }
-                   
+           System.exit(0);         
        }
 }

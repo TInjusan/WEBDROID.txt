@@ -80,9 +80,13 @@ public class WEBDROID extends Application {
                     Test_Module Test = new Test_Module();
                     Test.Extraction_Method(HTMLText);
                     
+                    //Parsing phase
+                    DF_ReD_Parser Parser = new DF_ReD_Parser();
+                    Parser.Set_Parser(HTMLText);
+                    Parser.PARSE();
+                    
             });
-              //  VBox vBox = VBoxBuilder.create().children(button_browse).build();
-              //  root.getChildren().add(vBox);
+             
                 
             gridpane.add(button_browse, 0, 3);
            
