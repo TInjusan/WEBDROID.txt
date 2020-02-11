@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.*;
 import webdroid.TokenScanner.TOKEN_CODE;
 
-public class DF_ReD_Parser {
+public class Parser {
     
     private ArrayList<String> lexemes = new ArrayList<>();
     private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
@@ -31,23 +31,28 @@ public class DF_ReD_Parser {
        
        public void PARSE(){
            HTML();
+           System.out.println("Success! Zero Error found");
        }
        
        public void HTML(){
            
            if( (lexemes.get(i) + lexemes.get(i+1) + lexemes.get(i+2) + " "+lexemes.get(i+3)+lexemes.get(i+4)) . equals("<!DOCTYPE html>"))
                i+=5;
+           else
+               Error(-1);
+          
             
-                                 
            if(lexemes.get(i).equals("<"))  //The lookahead statement
                Element(); 
        } 
        
        public void Element(){
-                
+               i++;
                kc = kw.SearchKeyword(lexemes.get(i));
+               System.out.println(lexemes.get(i)+" is "+kc.toString()+ "    Element");
                
-               switch(kc){                //The lookahead statement
+                if(lexemes.get(i).equals("<")){
+                switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                        NV_tag_stack.push(lexemes.get(i));  //Pushing a new Non void tag on top of the stack
@@ -61,19 +66,26 @@ public class DF_ReD_Parser {
                    default:
                        Error(0);
                        
-               }
-                             
+                    }
+                }         
            
        }
        
        
        public void Non_void_element(){
-                Attribute();
                 
-                if(lexemes.get(i).equals('>'))
-                    i++;
-                else
-                    Error(0);
+                System.out.println(lexemes.get(i)+" is "+kw.SearchKeyword(lexemes.get(i)).toString()+ "   Non_void element");
+               
+                Attribute();
+                 
+                
+                if(lexemes.get(i).equals(">")){
+                    i++; //Move to the next lexeme which can be new element or string element
+                }
+                else{
+                    Error(1);
+                }
+                
                 
                 if(lexemes.get(i).equals("<")){
                     i++;
@@ -84,10 +96,14 @@ public class DF_ReD_Parser {
                        
                         if(current_tag.equals(lexemes.get(i)))  // Compare the name of the tag vs the one on top of the stack                      
                                 NV_tag_stack.pop();             // Removing of the top tag because it has been closed.
+                        else
+                            Error(3);
                     }
-                    else          
+                    else{
+                        i++;
                         Element(); //if this is not closing an element then it must be a new one,  a child of the one on top of the stack  
-                    i++;
+                    }          
+                         i++;
                 }
                     
                 else  //Store the string element enclosed in the angle brackets (pending)
@@ -96,10 +112,14 @@ public class DF_ReD_Parser {
        }
       
        public void Void_element(){
+           System.out.println(lexemes.get(i)+" is "+kw.SearchKeyword(lexemes.get(i)).toString()+ "    Void element");
+               
            Attribute();  
        }
        
        public void Attribute(){
+           System.out.println(lexemes.get(i)+" is "+kw.SearchKeyword(lexemes.get(i)).toString()+ "    Attribute");
+               
            kc = kw.SearchKeyword(lexemes.get(i));
          
            if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
@@ -108,7 +128,7 @@ public class DF_ReD_Parser {
                         if(lexemes.get(i).equals('='))
                             i++;
                         else
-                            Error(0);
+                            Error(2);
 
 
                          // Checking if the next lexeme is a string
@@ -124,11 +144,12 @@ public class DF_ReD_Parser {
               
                
            }
-           else  
-               i++; 
+            
        }
        
        public void String_element(){
+           System.out.println(lexemes.get(i)+" is "+kw.SearchKeyword(lexemes.get(i)).toString()+ "    String");
+               
                 if(lexemes.get(i).equals("<"))
                     i++;
                 else
@@ -140,9 +161,13 @@ public class DF_ReD_Parser {
            
            switch (code){
                //Generic Error Message:
-               case 0: System.out.println("Syntax Error at"+lexemes.get(i));
+               case -1: System.out.println("DOCTYPE: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
+               case 0: System.out.println("Element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
+               case 1: System.out.println("Non_void_element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
+               case 2: System.out.println("Attribute: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break; 
+               case 3: System.out.println("Non_void_element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)+"Incorrect tag name to close"); break; 
                
-           }
+            }
            System.exit(0);         
        }
 }

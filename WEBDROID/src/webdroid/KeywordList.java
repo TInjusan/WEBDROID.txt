@@ -13,99 +13,52 @@ public class KeywordList {
      
      //constructor
      KeywordList(){
-        //predefined list of keywords in HTML
-        html_kw.add("/");
-        html_kw.add("<");
-        html_kw.add(">");
-        html_kw.add("a");
-        html_kw.add("action");
-        html_kw.add("body");
-        html_kw.add("button");
-        html_kw.add("br");
-        html_kw.add("checkbox");
-        html_kw.add("class");
-        html_kw.add("date");
-        html_kw.add("div");
-        html_kw.add("DOCTYPE");
-        html_kw.add("email");
-        html_kw.add("form");       
-        html_kw.add("h1");
-        html_kw.add("h2");
-        html_kw.add("h3");
-        html_kw.add("head");
-        html_kw.add("html");
-        html_kw.add("id");
-        html_kw.add("img");
-        html_kw.add("input");
-        html_kw.add("label");
-        html_kw.add("li");
-        html_kw.add("nav");
-        html_kw.add("number");
-        html_kw.add("ol");
-        html_kw.add("option");
-        html_kw.add("password");
-        html_kw.add("radio");
-        html_kw.add("select");
-        html_kw.add("submit");
-        html_kw.add("table");
-        html_kw.add("td");
-        html_kw.add("text");
-        html_kw.add("textarea");
-        html_kw.add("time");
-        html_kw.add("title");
-        html_kw.add("tr");
-        html_kw.add("type");
-        html_kw.add("ul");
-        html_kw.add("value");
-
-        
-        // and the corresponding token codes
-        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
-        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
-        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
-        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
-
-
-     }
+            
+    //predefined list of keywords in HTML     // and the corresponding token codes
+        html_kw.add("/");		        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
+        html_kw.add("<");		        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
+        html_kw.add(">");		        htmlcodes.add(HTML_CODE.HTML_SPECIAL_CHARACTER);
+        html_kw.add("a");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        html_kw.add("action");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+        html_kw.add("body");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("button");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("br");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        html_kw.add("checkbox");		htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("class");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+        html_kw.add("date");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("div");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("DOCTYPE");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("email");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("form");       		htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("h1");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("h2");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("h3");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("head");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("html");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("id");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+        html_kw.add("img");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        html_kw.add("input");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        html_kw.add("label");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("li");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("nav");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("number");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("ol");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("option");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("password");		htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("radio");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("select");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("submit");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("table");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("td");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("text");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("textarea");		htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("time");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
+        html_kw.add("title");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("tr");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("type");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+        html_kw.add("ul");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("value");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
+    }
      
      HTML_CODE SearchKeyword(String key){
      //perform binary search
