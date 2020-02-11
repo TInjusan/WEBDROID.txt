@@ -37,21 +37,22 @@ public class Parser {
        public void HTML(){
            
            if( (lexemes.get(i) + lexemes.get(i+1) + lexemes.get(i+2) + " "+lexemes.get(i+3)+lexemes.get(i+4)) . equals("<!DOCTYPE html>"))
-               i+=5;
+               i+=4;
            else
                Error(-1);
           
             
-           if(lexemes.get(i).equals("<"))  //The lookahead statement
-               Element(); 
+           Element(); 
        } 
        
        public void Element(){
                i++;
-               kc = kw.SearchKeyword(lexemes.get(i));
-               System.out.println(lexemes.get(i)+" is "+kc.toString()+ "    Element");
-               
+             
                 if(lexemes.get(i).equals("<")){
+                 i++;
+                kc = kw.SearchKeyword(lexemes.get(i));
+                System.out.println(lexemes.get(i)+" is "+kc.toString()+ "    Element");
+               
                 switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
@@ -68,7 +69,8 @@ public class Parser {
                        
                     }
                 }         
-           
+           System.out.println(lexemes.get(i)+" is "+kc.toString()+ "    ending of Element");
+               
        }
        
        
