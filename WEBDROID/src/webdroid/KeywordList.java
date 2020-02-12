@@ -9,8 +9,7 @@ public class KeywordList {
      
      ArrayList<String> html_kw = new ArrayList<>();
      ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
-     
-     
+          
      //constructor
      KeywordList(){
             
@@ -40,6 +39,7 @@ public class KeywordList {
         html_kw.add("input");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
         html_kw.add("label");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("li");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("name");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         html_kw.add("nav");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("number");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("ol");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
@@ -47,6 +47,7 @@ public class KeywordList {
         html_kw.add("password");		htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("radio");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("select");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("style");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         html_kw.add("submit");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("table");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("td");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);

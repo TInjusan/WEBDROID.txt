@@ -31,7 +31,6 @@ public class CharMap {
                 //initializes all to error
                 for(i = 0; i<ALL_CHAR; i++){
                     char_table[i] = CHAR_TYPE.ERROR;
-
                 }
         
                 
