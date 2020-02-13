@@ -84,10 +84,10 @@ public class Parser {
                  
                 
                 if(lexemes.get(i).equals(">")){
-                    i++; //Move to the next lexeme which can be new element or string element
+                    nextLexeme("Non_void_element");  //Move to the next lexeme which can be new element or string element
                 }
                 else{
-                    Error(1);
+                    Error(4);
                 }
                 
                 if(!(lexemes.get(i).equals("<"))){
@@ -114,8 +114,8 @@ public class Parser {
                           
                 }
                 if(lexemes.get(i).equals(">")){
-                    i++; //Move to the next lexeme which can be new element or string element
-                }
+                    nextLexeme("Non_void_element");  //Move to the next lexeme which can be new element or string element
+                  }
                 else{
                     Error(2);
                 }    
@@ -186,8 +186,9 @@ public class Parser {
                case 0: System.out.println("Element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
                case 1: System.out.println("Void: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
                case 2: System.out.println("Attribute: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break; 
-               case 3: System.out.println("Non_void_element: Syntax Error at --"+lexemes.get(i)+lexemes.get(i+1)+"Incorrect tag name to close. It should be: "+NV_tag_stack.peek()); break; 
-               
+               case 3: System.out.println("Non_void_element: Syntax Error at : "+lexemes.get(i)+lexemes.get(i+1)+" Incorrect tag name to close. It should be: "+NV_tag_stack.peek()); break; 
+               case 4: System.out.println("Non_void_element: Syntax Error at : "+lexemes.get(i)+lexemes.get(i+1)); break; 
+              
             }
            System.exit(0);         
        }
