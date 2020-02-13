@@ -33,7 +33,10 @@ public class Parser {
            HTML();
            System.out.println("Success! Zero Error found");
        }
-       
+       public void nextLexeme(String c){
+           i++;
+           System.out.println("Lexeme: "+lexemes.get(i)+"  Token: "+tokens.get(i)+" Keyword: "+kw.SearchKeyword(lexemes.get(i))+"   Module:"+c);
+       }
        public void HTML(){
            
            if( (lexemes.get(i) + lexemes.get(i+1) + lexemes.get(i+2) + " "+lexemes.get(i+3)+lexemes.get(i+4)) . equals("<!DOCTYPE html>"))
@@ -48,7 +51,7 @@ public class Parser {
        public void Element(){
               
                 if(lexemes.get(i).equals("<")){
-                 i++;
+                 nextLexeme("Element");
                  kc = kw.SearchKeyword(lexemes.get(i));
                
                 
@@ -75,7 +78,7 @@ public class Parser {
        
        
        public void Non_void_element(){
-                i++; //to move to the next lexeme after the tag name
+                nextLexeme("Non_void_element"); //to move to the next lexeme after the tag name
                
                 Attribute();
                  
@@ -87,19 +90,19 @@ public class Parser {
                     Error(1);
                 }
                 
-                String_element();
-                
+                if(!(lexemes.get(i).equals("<"))){
+                    String_element();
+                }
                 if(lexemes.get(i).equals("<")){
-                     
-                    if(lexemes.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
+                        if(lexemes.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
                         i+=2; //move two lexemes to reach the tag name being closed
-                                               
+                                              
                         String current_tag = (String) NV_tag_stack.peek(); // Get the current tag which is on top of the stack 
                        
                         if(current_tag.equals(lexemes.get(i))){  // Compare the name of the tag vs the one on top of the stack                      
                                 NV_tag_stack.pop();             // Removing of the top tag because it has been closed.
                                 System.out.println(lexemes.get(i)+"   pop");
-                                i++;
+                                nextLexeme("Non_void_element");
                         }
                         else
                             Error(3);
@@ -120,7 +123,7 @@ public class Parser {
        }
       
        public void Void_element(){
-            i++;   
+            nextLexeme("Void_element");   
             Attribute(); 
            
             if(lexemes.get(i).equals(">")){
@@ -137,21 +140,20 @@ public class Parser {
            kc = kw.SearchKeyword(lexemes.get(i));
          
            if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
-                 i++; //  Store the property name into the symbol table (pending)
+                  nextLexeme("Attribute"); //  Store the property name into the symbol table (pending)
                       // Look for the equal sign if the lexeme is a property  
                   
                         if(lexemes.get(i).equals("="))
-                            i++;
+                            nextLexeme("Attribute"); 
                         else
                             Error(2);
 
-                       System.out.println(lexemes.get(i)+" is "+tokens.get(i).toString()+ "    Attribute");
-                  
+                       
                          // Checking if the next lexeme is a string
                         if(tokens.get(i)== TOKEN_CODE.STRING){
 
                             //Store the value of the property here (pending)
-                            i++;
+                            nextLexeme("Attribute"); 
                         }
                         else 
                             Error(2);
@@ -165,7 +167,7 @@ public class Parser {
        public void String_element(){
                  
                 if(lexemes.get(i+1).equals("<")){
-                   i++;
+                   nextLexeme("String_element");
                 }
                     
                 else{ 
@@ -184,7 +186,7 @@ public class Parser {
                case 0: System.out.println("Element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
                case 1: System.out.println("Void: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break;
                case 2: System.out.println("Attribute: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)); break; 
-               case 3: System.out.println("Non_void_element: Syntax Error at"+lexemes.get(i)+lexemes.get(i+1)+"Incorrect tag name to close"); break; 
+               case 3: System.out.println("Non_void_element: Syntax Error at --"+lexemes.get(i)+lexemes.get(i+1)+"Incorrect tag name to close. It should be: "+NV_tag_stack.peek()); break; 
                
             }
            System.exit(0);         
