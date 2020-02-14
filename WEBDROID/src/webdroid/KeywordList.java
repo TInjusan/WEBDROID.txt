@@ -44,6 +44,7 @@ public class KeywordList {
         html_kw.add("number");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("ol");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("option");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("p");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("password");		htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("radio");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("select");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);

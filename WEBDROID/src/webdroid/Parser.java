@@ -53,8 +53,7 @@ public class Parser {
                 if(lexemes.get(i+1).equals("<")){
                  nextLexeme("Element");
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead 
-               
-                System.out.println(lexemes.get(i));
+                
                 switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
@@ -65,9 +64,13 @@ public class Parser {
                    case HTML_VOID_TAG:  //The lookahead statement if the lexeme is a void tag
                        Void_element();
                        break;  
+                   case HTML_SPECIAL_CHARACTER:
+                       System.out.println("HTML_SPECIAL_CHARACTER   "+lexemes.get(i)+lexemes.get(i+1));
+                       break;
                    default:
-                       Error(0);
-                       
+                         
+                        Error(0);
+                        break;   
                     }
                 }
                 else
@@ -89,27 +92,26 @@ public class Parser {
                 while(!(lexemes.get(i)+lexemes.get(i+1)).equals("</")){  //Repeating element lookahead
                        Element();
                 }
+                
                 if(lexemes.get(i).equals("<")){
                         if(lexemes.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
-                        i+=2; //move two lexemes to reach the tag name being closed
+                       nextLexeme("Non_void_element"); //move two lexemes to reach the tag name being closed
                                               
                         String current_tag = (String) NV_tag_stack.peek(); // Get the current tag which is on top of the stack 
                        
-                        if(current_tag.equals(lexemes.get(i))){  // Compare the name of the tag vs the one on top of the stack                      
+                        if(current_tag.equals(lexemes.get(i+1))){  // Compare the name of the tag vs the one on top of the stack                      
+                                System.out.println("Pop:  "+lexemes.get(i+1));
                                 NV_tag_stack.pop();             // Removing of the top tag because it has been closed.
-                                System.out.println(lexemes.get(i)+"   pop");
+                                
                                 nextLexeme("Non_void_element");
                         }
                         else
                             Error(3);
                     }
-                    else{
-                        
-                        Element(); //if this is not closing an element then it must be a new one,  a child of the one on top of the stack  
-                    }          
                           
+                           
                 }
-                if(lexemes.get(i).equals(">")){
+                if(lexemes.get(i+1).equals(">")){
                     nextLexeme("Non_void_element");  //Move to the next lexeme which can be new element or string element
                   }
                 else{
