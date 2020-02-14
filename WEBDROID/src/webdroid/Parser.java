@@ -40,7 +40,7 @@ public class Parser {
        public void HTML(){
            
            if( (lexemes.get(i) + lexemes.get(i+1) + lexemes.get(i+2) + " "+lexemes.get(i+3)+lexemes.get(i+4)) . equals("<!DOCTYPE html>"))
-               i+=5;
+               i+=4;
            else
                Error(-1);
           
@@ -50,15 +50,16 @@ public class Parser {
        
        public void Element(){
               
-                if(lexemes.get(i).equals("<")){
+                if(lexemes.get(i+1).equals("<")){
                  nextLexeme("Element");
-                 kc = kw.SearchKeyword(lexemes.get(i));
+                 kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead 
                
-                
+                System.out.println(lexemes.get(i));
                 switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
-                       NV_tag_stack.push(lexemes.get(i));  //Pushing a new Non void tag on top of the stack
+                       NV_tag_stack.push(lexemes.get(i+1));  //Pushing a new Non void tag on top of the stack
+                       System.out.println("Push: "+lexemes.get(i+1));
                        Non_void_element();
                        break;
                    case HTML_VOID_TAG:  //The lookahead statement if the lexeme is a void tag
@@ -70,10 +71,7 @@ public class Parser {
                     }
                 }
                 else
-                    String_element();
-                          
-          if(tokens.get(i)!=TokenScanner.TOKEN_CODE.EOF_TOKEN)
-              Element();
+                    String_element(); 
        }
        
        
@@ -83,15 +81,13 @@ public class Parser {
                 Attribute();
                  
                 
-                if(lexemes.get(i).equals(">")){
-                    nextLexeme("Non_void_element");  //Move to the next lexeme which can be new element or string element
-                }
-                else{
+                if(!(lexemes.get(i).equals(">"))){
+                      //Move to the next lexeme which can be new element or string element
                     Error(4);
                 }
                 
-                if(!(lexemes.get(i).equals("<"))){
-                    String_element();
+                while(!(lexemes.get(i)+lexemes.get(i+1)).equals("</")){  //Repeating element lookahead
+                       Element();
                 }
                 if(lexemes.get(i).equals("<")){
                         if(lexemes.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
@@ -119,7 +115,8 @@ public class Parser {
                 else{
                     Error(2);
                 }    
-                
+                 
+                 
        }
       
        public void Void_element(){
@@ -127,7 +124,7 @@ public class Parser {
             Attribute(); 
            
             if(lexemes.get(i).equals(">")){
-                i++; //Move to the next lexeme which can be new element or string element
+                nextLexeme("Void_element");  //Move to the next lexeme which can be new element or string element
             }
             else{
                 Error(1);
@@ -136,7 +133,7 @@ public class Parser {
        }
        
        public void Attribute(){
-             
+           nextLexeme("Attribute");  
            kc = kw.SearchKeyword(lexemes.get(i));
          
            if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
@@ -150,15 +147,10 @@ public class Parser {
 
                        
                          // Checking if the next lexeme is a string
-                        if(tokens.get(i)== TOKEN_CODE.STRING){
-
-                            //Store the value of the property here (pending)
-                            nextLexeme("Attribute"); 
-                        }
-                        else 
-                            Error(2);
-
-               Attribute();
+                        if(!(tokens.get(i)== TOKEN_CODE.STRING)) 
+                            Error(2); //Store the value of the property here (pending)
+                       
+                    Attribute();  // the recursion part
                        
            }
             
@@ -166,15 +158,14 @@ public class Parser {
        
        public void String_element(){
                  
-                if(lexemes.get(i+1).equals("<")){
-                   nextLexeme("String_element");
-                }
-                    
-                else{ 
-                    i++; 
+                if(!(lexemes.get(i+1).equals("<") )){
+                   
+                    nextLexeme("String_element"); 
                     String_element(); 
                     //Concatenate the string element here separated by space (pending)
                 }
+              
+                //nextLexeme("String_element"); 
        }
        
             

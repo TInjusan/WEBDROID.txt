@@ -1,7 +1,6 @@
-HTML				:== <!DOCTYPE html> { Element }
+HTML				:== "<!DOCTYPE html>" { Element }
 Element				:==  Non-void_element | Void_element | String_element
-Non-void_element	:== '<'  Non_void_tag  {Attribute}'>'  ( String_element | *{Element}  ) 
-						'<' '/' Non_void_tag   '>'
+Non-void_element	:== '<'  Non_void_tag  {Attribute}'>'  [ Element] '<' '/' Non_void_tag   '>'				
 Void_element		:==  '<'  Void_tag  {Attribute} '>'
 Non_void_tag		:== html | body | title | form | ...
 Void_tag			:== img | br | input 
