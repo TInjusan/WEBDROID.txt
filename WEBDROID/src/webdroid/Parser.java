@@ -35,7 +35,7 @@ public class Parser {
        }
        public void nextLexeme(String c){
            i++;
-           System.out.println("Lexeme: "+lexemes.get(i)+"  Token: "+tokens.get(i)+" Keyword: "+kw.SearchKeyword(lexemes.get(i))+"   Module:"+c);
+       //    System.out.println("Lexeme: "+lexemes.get(i)+"  Token: "+tokens.get(i)+" Keyword: "+kw.SearchKeyword(lexemes.get(i))+"   Module:"+c);
        }
        public void HTML(){
            
@@ -53,9 +53,7 @@ public class Parser {
                 if(lexemes.get(i+1).equals("<")){
                  nextLexeme("Element");
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead 
-                   int f = lexemes.indexOf("br");
-                   KeywordList.HTML_CODE ww = kw.htmlcodes.get(f);
-                          
+                     
                      
                 switch(kc){                //The lookahead statement
                    
@@ -69,7 +67,7 @@ public class Parser {
                          
                        break;  
                    case HTML_SPECIAL_CHARACTER:
-                       System.out.println("HTML_SPECIAL_CHARACTER   "+lexemes.get(i)+lexemes.get(i+1));
+                       //Do nothing
                        break;
                    default:
                          
@@ -88,10 +86,9 @@ public class Parser {
                 Attribute();
                  
                 
-                if(!(lexemes.get(i).equals(">"))){
-                      //Move to the next lexeme which can be new element or string element
+                if(!(lexemes.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
                     Error(4);
-                }
+                 
                 
                 while(!(lexemes.get(i)+lexemes.get(i+1)).equals("</")){  //Repeating element lookahead
                        Element();
