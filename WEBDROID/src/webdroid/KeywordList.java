@@ -7,8 +7,8 @@ public class KeywordList {
     
      public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
      
-     ArrayList<String> html_kw = new ArrayList<>();
-     ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
+    public ArrayList<String> html_kw = new ArrayList<>();
+    public ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
           
      //constructor
      KeywordList(){
@@ -20,8 +20,8 @@ public class KeywordList {
         html_kw.add("a");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
         html_kw.add("action");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         html_kw.add("body");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
-        html_kw.add("button");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("br");		        htmlcodes.add(HTML_CODE.HTML_VOID_TAG);
+        html_kw.add("button");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("checkbox");		htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("class");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         html_kw.add("date");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);

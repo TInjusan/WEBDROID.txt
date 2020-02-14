@@ -53,7 +53,10 @@ public class Parser {
                 if(lexemes.get(i+1).equals("<")){
                  nextLexeme("Element");
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead 
-                
+                   int f = lexemes.indexOf("br");
+                   KeywordList.HTML_CODE ww = kw.htmlcodes.get(f);
+                          
+                     
                 switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
@@ -63,6 +66,7 @@ public class Parser {
                        break;
                    case HTML_VOID_TAG:  //The lookahead statement if the lexeme is a void tag
                        Void_element();
+                         
                        break;  
                    case HTML_SPECIAL_CHARACTER:
                        System.out.println("HTML_SPECIAL_CHARACTER   "+lexemes.get(i)+lexemes.get(i+1));
@@ -124,13 +128,10 @@ public class Parser {
        public void Void_element(){
             nextLexeme("Void_element");   
             Attribute(); 
-           
-            if(lexemes.get(i).equals(">")){
-                nextLexeme("Void_element");  //Move to the next lexeme which can be new element or string element
-            }
-            else{
-                Error(1);
-            }  
+          
+            if(!(lexemes.get(i).equals(">"))) 
+                 Error(1);  //Move to the next lexeme which can be new element or string element
+            
 
        }
        
