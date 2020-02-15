@@ -10,7 +10,7 @@ public class Parser {
     private ArrayList<String> lexemes = new ArrayList<>();
     private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
     private int i = 0; //iteration variable to select each lexeme genarated from TokenScanner. Every iteration of i means point to the next lexeme  
-    private Stack<String> NV_tag_stack  = new Stack<>();  //Storage of the Non-void tags in a first-in last-out implementation
+    private Stack<String> NV_tag_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;
@@ -33,10 +33,11 @@ public class Parser {
            HTML();
            System.out.println("Success! Zero Error found");
        }
-       public void nextLexeme(String c){
+       private void nextLexeme(String c){
            i++;
-       //    System.out.println("Lexeme: "+lexemes.get(i)+"  Token: "+tokens.get(i)+" Keyword: "+kw.SearchKeyword(lexemes.get(i))+"   Module:"+c);
        }
+       
+       
        public void HTML(){
            
            if( (lexemes.get(i) + lexemes.get(i+1) + lexemes.get(i+2) + " "+lexemes.get(i+3)+lexemes.get(i+4)) . equals("<!DOCTYPE html>"))

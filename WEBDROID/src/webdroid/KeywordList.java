@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class KeywordList {
     
     
-     public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
+    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
      
     public ArrayList<String> html_kw = new ArrayList<>();
     public ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
@@ -27,6 +27,7 @@ public class KeywordList {
         html_kw.add("date");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("div");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("DOCTYPE");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
+        html_kw.add("for");		        htmlcodes.add(HTML_CODE.HTML_PROPERTY_NAME);
         html_kw.add("email");		        htmlcodes.add(HTML_CODE.HTML_FORM_TYPE);
         html_kw.add("form");       		htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
         html_kw.add("h1");		        htmlcodes.add(HTML_CODE.HTML_NONVOID_TAG);
@@ -63,35 +64,16 @@ public class KeywordList {
     }
      
      HTML_CODE SearchKeyword(String key){
-     //perform binary search
-      
-      int bottom = 0;
-      int top = html_kw.size();
-      int mid = 0;
-      
-      boolean found = false;
-            while (bottom <= top && found == false){
-
-                mid = (bottom + top) / 2;
-
-                  if(html_kw.get(mid).equals(key)){
-                    found = true;
-
-                }
-                else if(html_kw.get(mid).compareTo(key) >= 0 ){
-                    top = mid - 1;
-                }
-                else
-                    bottom = mid + 1;
-            }
-            if(found)
-                return htmlcodes.get(mid);
-            else
-                return HTML_CODE.NOT_FOUND;
+     
+       int indexOfKeyword = html_kw.indexOf(key);
+       
+       if(indexOfKeyword>-1)
+            return htmlcodes.get(indexOfKeyword);
+       else
+           return HTML_CODE.NOT_FOUND;
 
            }
  
-              
      }
      
    
