@@ -24,8 +24,6 @@ public class TokenScanner {
         lexeme = "";
     }
     
-    
-
     //setter method
     public void setSource(String s){
         this.source = s;
