@@ -51,12 +51,12 @@ public class Parser {
        
        public void Element(){
               
-                if(lexemes.get(i+1).equals("<")){
+               if(lexemes.get(i+1).equals("<")){
                  nextLexeme("Element");
+                 
+                 
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead 
-                     
-                     
-                switch(kc){                //The lookahead statement
+                 switch(kc){                //The lookahead statement
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                        NV_tag_stack.push(lexemes.get(i+1));  //Pushing a new Non void tag on top of the stack
@@ -166,7 +166,7 @@ public class Parser {
                     //Concatenate the string element here separated by space (pending)
                 }
               
-                //nextLexeme("String_element"); 
+               
        }
        
             

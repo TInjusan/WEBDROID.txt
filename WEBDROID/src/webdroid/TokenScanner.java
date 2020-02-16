@@ -1,28 +1,23 @@
 package webdroid;
-
+ 
 public class TokenScanner {  
     
     public enum TOKEN_CODE {
-    ERROR, 
-    WORD, 
-    NUMBER, 
-    SPECIAL_CHARACTER, 
-    STRING, 
-    ANGLE_BRACKET_OPEN, 
-    ANGLE_BRACKET_CLOSE, 
-    FORWARD_SLASH,  
-    EOF_TOKEN
+                ERROR, 
+                WORD, 
+                NUMBER, 
+                SPECIAL_CHARACTER, 
+                STRING, 
+                EOF_TOKEN
     }
 
-    
-    
     public String source;
     public TOKEN_CODE token;
     private int cchar_ptr;
     private char cchar;
-    private  CharMap table = new CharMap();
     private String lexeme;
-    TokenScanner(){
+    
+    TokenScanner(){ //constractor initializing the object properties
         
         source = "";
         cchar = ' ';
@@ -52,145 +47,83 @@ public class TokenScanner {
       return c;  
     }
     
-    private void skip_whitespace(){
+    private void skip_whitespace(){         
+        if(Character.isWhitespace(cchar)) {
+             cchar = get_source_char();    
+             skip_whitespace();
+        }    // Recursively go through all next whitespace 
          
-        while(table.getChar() == CharMap.CHAR_TYPE.WHITESPACE){
-             cchar = get_source_char();
-             table.setChar(cchar);
-        }
     }
     
     public TOKEN_CODE next_token(){
         
-        table.setChar(cchar);
         
         skip_whitespace();
-        CharMap.CHAR_TYPE arg_char_type = CharMap.CHAR_TYPE.ERROR;
-        TOKEN_CODE arg_token_code = TOKEN_CODE.ERROR;
+         
+        //Grouping the characters into lexemes and associate token
         
-        //Combining
-        
-        switch(table.getChar()){
-            case LETTER:
-                arg_char_type = CharMap.CHAR_TYPE.LETTER;
-                arg_token_code = TOKEN_CODE.WORD;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-            case SPECIAL:
-                arg_char_type = CharMap.CHAR_TYPE.SPECIAL;
-                arg_token_code = TOKEN_CODE.SPECIAL_CHARACTER;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-            case QOUTE:
-                arg_char_type = CharMap.CHAR_TYPE.QOUTE;
-                arg_token_code = TOKEN_CODE.STRING;
-                get_string_token(arg_char_type, arg_token_code);
-                break;
-            case ANGLE_BRACKET_OPEN:
-                arg_char_type = CharMap.CHAR_TYPE.ANGLE_BRACKET_OPEN;
-                arg_token_code = TOKEN_CODE.ANGLE_BRACKET_OPEN;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-            case ANGLE_BRACKET_CLOSE:
-                arg_char_type = CharMap.CHAR_TYPE.ANGLE_BRACKET_CLOSE;
-                arg_token_code = TOKEN_CODE.ANGLE_BRACKET_CLOSE;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-            case FORWARD_SLASH:
-                arg_char_type = CharMap.CHAR_TYPE.FORWARD_SLASH;
-                arg_token_code = TOKEN_CODE.FORWARD_SLASH;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-            case DOT_CLASS:
-                arg_char_type = CharMap.CHAR_TYPE.DOT_CLASS;
-                arg_token_code = TOKEN_CODE.WORD;
-                get_token(arg_char_type, arg_token_code); 
-                break;
-                
-            case DIGIT:
-                arg_char_type = CharMap.CHAR_TYPE.DIGIT;
-                arg_token_code = TOKEN_CODE.NUMBER;
-                get_number_token(arg_char_type, arg_token_code); 
-                break;
-                
-            case EOF_TYPE:
-                get_eof_token();
-                break;
+        if(Character.isLetter(cchar)){ 
+                get_letter_token(); 
+        }
+        else if(Character.isDigit(cchar)){
+                get_number_token(); 
+            
+        }
+        else if(cchar=='\"'){  // Getting a string enclosed in quotations ("")
+                get_string_token();
+        }
+        else if(cchar==127){
+            lexeme = "";
+            token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
+        }
+        else if(cchar <= 32 && cchar >=126 ){  // These are the unsupported characters
+            token = TOKEN_CODE.ERROR;
+            cchar = get_source_char();
+        }
+        else {
+            lexeme = String.valueOf(cchar);
+            token  = TOKEN_CODE.SPECIAL_CHARACTER;
+            cchar  = get_source_char();
         }
         
-     
-        return token;
-    }
-    
-    private void get_eof_token(){
-            lexeme = "";
-            token = TOKEN_CODE.EOF_TOKEN;
-    }
-    
-    private void get_token(CharMap.CHAR_TYPE arg_char_type, TOKEN_CODE arg_token_code){
-        
-       
-        
-            lexeme = String.valueOf(cchar);   
-            boolean run = true;
-            while(run){
-            
-                cchar = get_source_char();
-                table.setChar(cchar);
-                if(table.getChar() == arg_char_type){
-                    lexeme+=String.valueOf(cchar);
-                }
-                else
-                    run = false;
-            }
-            
              
-        token = arg_token_code;
+        return token;
+    } 
+    
+    private void get_letter_token(){
+            lexeme = "";   // Set the first character of the lexeme
+              
+              while(Character.isLetter(cchar)){
+                    lexeme+=String.valueOf(cchar); //Concatenate the characters into the lexeme
+                    cchar = get_source_char();
+              }
+              
+            token = TOKEN_CODE.WORD;  //Setting the Token of the lexeme into WORD
       }
        
-     private void get_string_token(CharMap.CHAR_TYPE arg_char_type, TOKEN_CODE arg_token_code){
-        
-          
-            lexeme = String.valueOf(cchar);   
+     private void get_string_token(){  
+            lexeme = String.valueOf(cchar);    // Set the first character of the lexeme
            
-            do{
-                cchar = get_source_char();
-                table.setChar(cchar);
-                lexeme+=String.valueOf(cchar);
-                
-            }while(table.getChar() != arg_char_type);
+                do{
+                    cchar = get_source_char();
+                    lexeme+=String.valueOf(cchar);
+
+                }while(cchar != '\"');
             
-        cchar = get_source_char();   
-        token = arg_token_code;
+            cchar = get_source_char();   
+            token = TOKEN_CODE.STRING;
       }    
      
-          private void get_number_token(CharMap.CHAR_TYPE arg_char_type, TOKEN_CODE arg_token_code){
+      private void get_number_token(){
         
-            int count_dot = 0;  
-            lexeme = String.valueOf(cchar);   
-            boolean run = true;
-                
-            while(run){
-            
-                cchar = get_source_char();
-                table.setChar(cchar);
-                
-                if(table.getChar() == CharMap.CHAR_TYPE.DOT_CLASS){
-                    count_dot++;
-                    
+            lexeme = String.valueOf(cchar);   // Set the first character of the lexeme
+              
+                while(Character.isDigit(cchar)){
+                      lexeme+=String.valueOf(cchar); //Concatenate the characters into the lexeme
+                      cchar = get_source_char();
                 }
-                
-                if( (table.getChar() == arg_char_type || table.getChar() == CharMap.CHAR_TYPE.DOT_CLASS) && count_dot < 2  ){
-                    lexeme+=String.valueOf(cchar);
-                 }
-                else
-                    run = false;
-                
-                
-            }
-            
-                  
-         token = arg_token_code;
+              
+            token = TOKEN_CODE.NUMBER;  //Setting the Token of the lexeme into WORD
       } 
      
      

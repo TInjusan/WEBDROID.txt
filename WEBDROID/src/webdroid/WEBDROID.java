@@ -20,13 +20,11 @@ import javafx.stage.Stage;
 
 public class WEBDROID extends Application {
         
-      private String result; 
+    
       public static String HTMLText = "";
       private static String FilePath=""; 
 
-    public WEBDROID() {
-        this.result = "";
-    }
+     
         @Override
         public void start(Stage primaryStage) {
             primaryStage.setTitle("WEBDROID");
@@ -77,13 +75,13 @@ public class WEBDROID extends Application {
                     HTMLText = HTMLTextField.getText();
                     
                     //This is where you pick which test case would you like to use
-                  //   Test_Module Test = new Test_Module();
-                  //    Test.Extraction_Method(HTMLText);
+                   /// Test_Module Test = new Test_Module();
+                  //  Test.Extraction_Method(HTMLText);
                     
                     //Parsing phase
-                    Parser Parser = new Parser();
-                    Parser.Set_Parser(HTMLText);
-                    Parser.PARSE();
+                   Parser Parser = new Parser();
+                   Parser.Set_Parser(HTMLText);
+                   Parser.PARSE();
                     
             });
              

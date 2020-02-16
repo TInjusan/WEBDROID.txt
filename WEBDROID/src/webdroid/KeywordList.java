@@ -1,12 +1,14 @@
  
 package webdroid;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class KeywordList {
     
     
     public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
-     
+    HashMap<String, HTML_CODE> Keyword = new HashMap<>();
+    
     public ArrayList<String> html_kw = new ArrayList<>();
     public ArrayList<HTML_CODE> htmlcodes = new ArrayList<>();
           
