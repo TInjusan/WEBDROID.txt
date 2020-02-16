@@ -88,7 +88,7 @@ public class WEBDROID extends Application {
                 
             gridpane.add(button_browse, 0, 3);
            
-            Image anotherIcon = new Image("/webdroid/Webdroid Icon Initial.png");
+            Image anotherIcon = new Image("/Webdroid Icon Initial.png");
             primaryStage.getIcons().add(anotherIcon);
 
             primaryStage.setScene(scene);

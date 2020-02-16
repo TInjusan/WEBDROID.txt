@@ -13,8 +13,8 @@ public class Test_Module {
         
        
         String temp;
-        TokenScanner scan = new TokenScanner();
-        TokenScanner.TOKEN_CODE t;
+        CharacterScanner scan = new CharacterScanner();
+        CharacterScanner.TOKEN_CODE t;
         KeywordList kw = new KeywordList();
         KeywordList.HTML_CODE kc;
                 
@@ -27,7 +27,7 @@ public class Test_Module {
                     temp = scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc;
                     
                      System.out.println(temp);
-                   }while(t != TokenScanner.TOKEN_CODE.EOF_TOKEN);
+                   }while(t != CharacterScanner.TOKEN_CODE.EOF_TOKEN);
       }
     
 }

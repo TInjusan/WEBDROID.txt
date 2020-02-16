@@ -1,11 +1,12 @@
  
-package webdroid;
+package webdroid; 
 import java.util.HashMap;
 
 public class KeywordList {
     
     
-    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER};
+    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT};
+    //initializing the collection of keywords in key value pair of hashmap
     HashMap<String, HTML_CODE> Keyword = new HashMap<>();
      
      //constructor initializing the keywords
@@ -20,6 +21,7 @@ public class KeywordList {
             Keyword.put("br",HTML_CODE.HTML_VOID_TAG);
             Keyword.put("button",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("checkbox",HTML_CODE.HTML_FORM_TYPE);
+            Keyword.put("color",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("class",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("date",HTML_CODE.HTML_FORM_TYPE);
             Keyword.put("div",HTML_CODE.HTML_NONVOID_TAG);
@@ -27,6 +29,7 @@ public class KeywordList {
             Keyword.put("for",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("email",HTML_CODE.HTML_FORM_TYPE);
             Keyword.put("form",HTML_CODE.HTML_NONVOID_TAG);
+            Keyword.put("font",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("h1",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("h2",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("h3",HTML_CODE.HTML_NONVOID_TAG);
@@ -62,9 +65,10 @@ public class KeywordList {
     }
      
      HTML_CODE SearchKeyword(String key){ 
+          
          
-          if(Keyword.containsKey(key)) 
-            return  Keyword.get(key);                
+          if(Keyword.containsKey(key.toLowerCase())) 
+            return  Keyword.get(key.toLowerCase());                
           else
             return HTML_CODE.NOT_FOUND;      
      }

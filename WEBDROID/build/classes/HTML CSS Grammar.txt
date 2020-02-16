@@ -1,14 +1,15 @@
-HTML				:== "<!DOCTYPE html>" { Element }
+HTML				:== ["<!DOCTYPE html>"] { Element } 
 Element				:==  Non-void_element | Void_element | String_element
 Non-void_element	:== '<'  Non_void_tag  {Attribute}'>'  [ Element] '<' '/' Non_void_tag   '>'				
 Void_element		:==  '<'  Void_tag  {Attribute} '>'
 Non_void_tag		:== html | body | title | form | ...
 Void_tag			:== img | br | input 
 String_element		:== * (Alphanumeric | Letter | Special_character | Number)
-Alphanumeric		:== [ Letter | Number ]
+String				:== '"' 
+Alphanumeric		:== { Letter | Number }
 Word				:== {Letter}
 Number				:== {Number} | {Number} '.' {Number}
 Digit				:==  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 Letter				:== A-Z | a-z
 Attribute 			:== Property '=' String_element 
-Property			:== id | style | class | type | value | text  
+Property			:== id | style | class | type | value | text  | for

@@ -1,6 +1,6 @@
 package webdroid;
  
-public class TokenScanner {  
+public class CharacterScanner {  
     
     public enum TOKEN_CODE {
                 ERROR, 
@@ -17,7 +17,7 @@ public class TokenScanner {
     private char cchar;
     private String lexeme;
     
-    TokenScanner(){ //constractor initializing the object properties
+    CharacterScanner(){ //constractor initializing the object properties
         
         source = "";
         cchar = ' ';
@@ -123,15 +123,12 @@ public class TokenScanner {
               
             token = TOKEN_CODE.NUMBER;  //Setting the Token of the lexeme into WORD
       } 
-     
-     
+      
     //getter method
     public TOKEN_CODE getToken(){
          return token; 
     }
-    public String getLexeme(){
-                                    
-        return lexeme;
-        
+    public String getLexeme(){                                    
+        return lexeme;        
     }
 }
