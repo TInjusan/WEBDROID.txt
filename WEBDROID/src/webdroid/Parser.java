@@ -52,7 +52,7 @@ public class Parser {
                String string_element;
                 
                if(lexemes.get(i+1).equals("<")){
-                 nextLexeme("Element");
+                 nextLexeme();
                  
                  
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead assignment
@@ -60,7 +60,7 @@ public class Parser {
                    
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                        NV_tag_stack.push(lexemes.get(i+1).toLowerCase());  //Pushing a new Non void tag on top of the stack
-                       // System.out.println("Push: "+lexemes.get(i+1).toLowerCase());
+                        System.out.println("Push: "+lexemes.get(i+1).toLowerCase());
                        Non_void_element();
                        break;
                    case HTML_VOID_TAG:  //The lookahead statement if the lexeme is a void tag
@@ -76,8 +76,11 @@ public class Parser {
                         break;   
                     }
                 }
-                else
-                  string_element  =  String_element(""); 
+               else{
+                   string_element  =  String_element(""); 
+                   System.out.println("String element: "+string_element);
+               }
+                  
            
           // Create the Element node here using the Symbol Table class (pending)
           // This should also generate the HTML DOM tree including all the tag properties
@@ -89,10 +92,10 @@ public class Parser {
        public void Non_void_element(){
                 
                 
-                nextLexeme("Non_void_element"); //to move to the next lexeme after the tag name
+                nextLexeme(); //to move to the next lexeme after the tag name
                
                 do{
-                    nextLexeme("Attribute");  
+                    nextLexeme();  
                     kc = kw.SearchKeyword(lexemes.get(i));
                     Attribute();
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME);
@@ -107,14 +110,14 @@ public class Parser {
                 
                 if(lexemes.get(i).equals("<")){
                         if(lexemes.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
-                        nextLexeme("Non_void_element"); //move two lexemes to reach the tag name being closed
+                        nextLexeme(); //move two lexemes to reach the tag name being closed
                                               
                         String current_tag = (String) NV_tag_stack.peek(); // Get the current tag which is on top of the stack 
                        
                         if(current_tag.equals(lexemes.get(i+1))){  // Compare the name of the tag vs the one on top of the stack                      
-                                // System.out.println("Pop:  "+lexemes.get(i+1));
+                                 System.out.println("Pop:  "+lexemes.get(i+1));
                                 NV_tag_stack.pop();             // Removing of the top tag because it has been closed.
-                                nextLexeme("Non_void_element");
+                                nextLexeme();
                         }
                         else
                             Error(3);
@@ -123,7 +126,7 @@ public class Parser {
                            
                 }
                 if(lexemes.get(i+1).equals(">")){
-                    nextLexeme("Non_void_element");  //Move to the next lexeme which can be new element or string element
+                    nextLexeme();  //Move to the next lexeme which can be new element or string element
                   }
                 else{
                     Error(2);
@@ -133,10 +136,10 @@ public class Parser {
        }
       
        public void Void_element(){
-            nextLexeme("Void_element");
+            nextLexeme();
             
                do{
-                    nextLexeme("Attribute");  
+                    nextLexeme();  
                     kc = kw.SearchKeyword(lexemes.get(i));
 
                     Attribute();
@@ -153,11 +156,11 @@ public class Parser {
        public void Attribute(){
           
            if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
-                  nextLexeme("Attribute"); //  Store the property name into the symbol table (pending)
+                  nextLexeme(); //  Store the property name into the symbol table (pending)
                       // Look for the equal sign if the lexeme is a property  
                   
                         if(lexemes.get(i).equals("="))
-                            nextLexeme("Attribute"); 
+                            nextLexeme(); 
                         else
                             Error(2);
 
@@ -170,17 +173,18 @@ public class Parser {
        }
        
        private String String_element(String str){
-                 
+              //  System.out.println("i= "+i+"  String: "+str); 
                 if(!(lexemes.get(i+1).equals("<") )){
                    
-                    nextLexeme("String_element"); 
+                    nextLexeme();  
                     String_element(str+" "+lexemes.get(i)); 
                     //Concatenate the string element here separated by space (pending)
                 }
+             //    System.out.println("i= "+i+"  String: "+str); 
                 return str;
        }
        
-       private void nextLexeme(String c){ i++; }
+       private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.
        public void Error(int code){
            
            switch (code){

@@ -5,9 +5,8 @@
         <group>
             <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/Test_Module.java</file>
             <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/KeywordList.java</file>
-            <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/TokenScanner.java</file>
+            <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/CharacterScanner.java</file>
             <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/SymbolTable.java</file>
-            <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/CharMap.java</file>
             <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/WEBDROID.java</file>
             <file>file:/D:/Computer%20Science/Senior's%20Project/Prototype/WEBDROID.txt/WEBDROID/src/webdroid/Parser.java</file>
         </group>

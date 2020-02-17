@@ -8,6 +8,8 @@ public class CharacterScanner {
                 NUMBER, 
                 SPECIAL_CHARACTER, 
                 STRING, 
+                STRING_ELEMENT,
+                WHITESPACE,
                 EOF_TOKEN
     }
 
@@ -45,6 +47,13 @@ public class CharacterScanner {
       return c;  
     }
     
+    private char get_previous_char(){
+        return source.charAt(cchar_ptr+1);
+    }
+    private char get_next_char(){
+        return source.charAt(cchar_ptr-1);
+    }
+    
     private void skip_whitespace(){         
         if(Character.isWhitespace(cchar)) {
              cchar = get_source_char();    
@@ -59,6 +68,7 @@ public class CharacterScanner {
         skip_whitespace();
          
         //Grouping the characters into lexemes and associate token
+      
         
         if(Character.isLetter(cchar)){ 
                 get_letter_token(); 
@@ -70,6 +80,7 @@ public class CharacterScanner {
         else if(cchar=='\"'){  // Getting a string enclosed in quotations ("")
                 get_string_token();
         }
+      
         else if(cchar==127){
             lexeme = "";
             token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
@@ -110,8 +121,10 @@ public class CharacterScanner {
             
             cchar = get_source_char();   
             token = TOKEN_CODE.STRING;
-      }    
+      }   
      
+     
+          
       private void get_number_token(){
         
             lexeme = String.valueOf(cchar);   // Set the first character of the lexeme
