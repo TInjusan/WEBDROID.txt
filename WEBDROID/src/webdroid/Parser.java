@@ -77,8 +77,9 @@ public class Parser {
                     }
                 }
                else{
-                   string_element  =  String_element(""); 
-                   System.out.println("String element: "+string_element);
+                   //String element
+                   nextLexeme(); 
+                   System.out.println("String element: "+lexemes.get(i));
                }
                   
            
@@ -173,15 +174,13 @@ public class Parser {
        }
        
        private String String_element(String str){
-              //  System.out.println("i= "+i+"  String: "+str); 
-                if(!(lexemes.get(i+1).equals("<") )){
+                  if(!(lexemes.get(i+1).equals("<") )){
                    
                     nextLexeme();  
                     String_element(str+" "+lexemes.get(i)); 
                     //Concatenate the string element here separated by space (pending)
                 }
-             //    System.out.println("i= "+i+"  String: "+str); 
-                return str;
+                  return str;
        }
        
        private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.

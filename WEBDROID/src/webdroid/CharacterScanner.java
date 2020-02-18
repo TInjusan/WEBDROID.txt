@@ -17,6 +17,7 @@ public class CharacterScanner {
     public TOKEN_CODE token;
     private int cchar_ptr;
     private char cchar;
+    private char previous_cchar;
     private String lexeme;
     
     CharacterScanner(){ //constractor initializing the object properties
@@ -24,6 +25,7 @@ public class CharacterScanner {
         source = "";
         cchar = ' ';
         lexeme = "";
+        previous_cchar = ' ';
     }
     
     //setter method
@@ -48,11 +50,13 @@ public class CharacterScanner {
     }
     
     private char get_previous_char(){
-        return source.charAt(cchar_ptr+1);
+        if(cchar_ptr-2<0){
+            return source.charAt(cchar_ptr-1);
+        }
+        else
+            return source.charAt(cchar_ptr-2);
     }
-    private char get_next_char(){
-        return source.charAt(cchar_ptr-1);
-    }
+   
     
     private void skip_whitespace(){         
         if(Character.isWhitespace(cchar)) {
@@ -63,39 +67,47 @@ public class CharacterScanner {
     }
     
     public TOKEN_CODE next_token(){
-        
-        
-        skip_whitespace();
-         
+      
+        previous_cchar= get_previous_char(); //preserving the previous character before skipping whitespaace for string element extraction use.
+        skip_whitespace(); 
         //Grouping the characters into lexemes and associate token
-      
-        
-        if(Character.isLetter(cchar)){ 
-                get_letter_token(); 
+ 
+         if(previous_cchar=='>'&&cchar!='<'&&cchar!=127){ //Check statement to extract string element while not end of file
+            get_string_element();
         }
-        else if(Character.isDigit(cchar)){
-                get_number_token(); 
+        else{
+           
             
+
+            if(Character.isLetter(cchar)){ 
+                    get_letter_token(); 
+            }
+            else if(Character.isDigit(cchar)){
+                    get_number_token(); 
+
+            }
+            else if(cchar=='\"'){  // Getting a string enclosed in quotations ("")
+                    get_string_token();
+            }
+
+            else if(cchar==127){
+                lexeme = "";
+                token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
+            }
+            else if(cchar <= 32 && cchar >=126 ){  // These are the unsupported characters
+                token = TOKEN_CODE.ERROR;
+                cchar = get_source_char();
+            }
+            else {
+                lexeme = String.valueOf(cchar);
+                token  = TOKEN_CODE.SPECIAL_CHARACTER;
+                cchar  = get_source_char();
+            }  
+            previous_cchar = cchar;
+          
         }
-        else if(cchar=='\"'){  // Getting a string enclosed in quotations ("")
-                get_string_token();
-        }
-      
-        else if(cchar==127){
-            lexeme = "";
-            token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
-        }
-        else if(cchar <= 32 && cchar >=126 ){  // These are the unsupported characters
-            token = TOKEN_CODE.ERROR;
-            cchar = get_source_char();
-        }
-        else {
-            lexeme = String.valueOf(cchar);
-            token  = TOKEN_CODE.SPECIAL_CHARACTER;
-            cchar  = get_source_char();
-        }
-        
-             
+       
+           
         return token;
     } 
     
@@ -122,7 +134,20 @@ public class CharacterScanner {
             cchar = get_source_char();   
             token = TOKEN_CODE.STRING;
       }   
-     
+      private void get_string_element(){  
+               
+          
+                lexeme = String.valueOf(cchar);
+                while(cchar!='<'){
+                    cchar = get_source_char();
+                    
+                    if(cchar!='<')
+                    lexeme+=String.valueOf(cchar);
+                } 
+                
+         
+             token = TOKEN_CODE.STRING_ELEMENT;   
+      } 
      
           
       private void get_number_token(){
