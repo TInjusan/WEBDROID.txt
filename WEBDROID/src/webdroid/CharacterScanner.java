@@ -106,8 +106,6 @@ public class CharacterScanner {
             previous_cchar = cchar;
           
         }
-       
-           
         return token;
     } 
     
@@ -169,4 +167,7 @@ public class CharacterScanner {
     public String getLexeme(){                                    
         return lexeme;        
     }
+    
+    
+    
 }

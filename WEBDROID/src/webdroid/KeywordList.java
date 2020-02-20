@@ -61,12 +61,10 @@ public class KeywordList {
             Keyword.put("type",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("ul",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("value", HTML_CODE.HTML_PROPERTY_NAME);
-
-    }
+   }
      
      HTML_CODE SearchKeyword(String key){ 
-          
-         
+                   
           if(Keyword.containsKey(key.toLowerCase())) 
             return  Keyword.get(key.toLowerCase());                
           else

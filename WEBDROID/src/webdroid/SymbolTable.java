@@ -3,26 +3,26 @@ import java.util.List;
 import webdroid.KeywordList.HTML_CODE;
  
 
-//Symbol Table is the collection of element, its properties and how it they are constructed as trees
+//Symbol Table is the collection of element, its properties and how they are constructed as trees
 
 public class SymbolTable { 
-    String ID;
-    String Name;
-    String Tag;
-    String Class;
-    HTML_CODE Element_type;
-    String Style;
-    String Type;
-    String For;
-    String Action;
-    String Src;
-    String Parent_ID;
-    List<SymbolTable> Children_element;
+   private int ID;
+   private String Name;
+   private String Tag;
+   private String Class;
+   private HTML_CODE Element_type;
+   private String Style;
+   private String Type;
+   private String For;
+   private String Action;
+   private String Src;
+   private int Parent_ID;
+   private List<SymbolTable> Children_element;
     
                             //Constructor
         public SymbolTable(){    
                     try{   //initialization
-                            this.ID = null;	        
+                            this.ID = 0;	        
                             this.Name = null;
                             this.Tag = null;
                             this.Class = null;	        
@@ -32,7 +32,7 @@ public class SymbolTable {
                             this.For = null;	        
                             this.Action = null;
                             this.Src = null;
-                            this.Parent_ID = null;
+                            this.Parent_ID = 0;
                     }
                     catch (Exception e){
                                      System.err.println("Exception creating element:" + e);
@@ -41,8 +41,8 @@ public class SymbolTable {
         
      // Setters and Getters for each element properties
     //---------------------------------------------------------------------------//
-    void    setID(String id)    {  this.ID = id;  }               
-    String  getID()             {  return ID;     }
+    void    setID(int id)    {  this.ID = id;  }               
+    int  getID()             {  return ID;     }
     //--------------------------------------------------------------------------//
     void    setName(String name){ this.Name = name; }
     String  getName()           { return Name;      }
@@ -82,8 +82,13 @@ public class SymbolTable {
     String  getSrc()           { return Src;     }    
     //-------------------------------------------------------------------------//
     
-    void   setParent_ID(String Parent_ID){ this.Parent_ID = Parent_ID; }
-    String getParent_ID() {        return Parent_ID;     }
+    void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
+    int getParent_ID() {        return Parent_ID;     }
    //-------------------------------------------------------------------------// 
-    
+    void setChildrenElement (List<SymbolTable>  c){
+        this.Children_element = c;
+    }
+    List<SymbolTable>  getChildrenElement(){
+        return Children_element;
+    }
 }
