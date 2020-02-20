@@ -17,7 +17,7 @@ public class AbstractSymbolTree {
     	 private static List<SymbolTable> getChildrenById(int id) {
 		 List<SymbolTable> children = new ArrayList<>();
 		 for (SymbolTable e : html_element.values()) {
-                     if (e.getParent_ID() == id) {
+                       if (e.getParent_ID() == id) {
                         children.add(e);
                         
                      }
@@ -28,11 +28,10 @@ public class AbstractSymbolTree {
          
          private static void buildSymbolTree(SymbolTable rootelement) {
 		SymbolTable html_node = rootelement;
-		List<SymbolTable> children = getChildrenById(html_node.getParent_ID());
+		List<SymbolTable> children = getChildrenById(html_node.getID());
                 
                 
-                children.forEach( (child) -> System.out.println(child.getTag()));
-		html_node.setChildrenElement(children);
+                 html_node.setChildrenElement(children);
                 if (children.isEmpty()) {
                     return;
                 }
@@ -47,7 +46,7 @@ public class AbstractSymbolTree {
 			 System.out.print("\t");
 		 }		 
 		 System.out.println(rootelement.getTag());
-		 
+		  
 		 List<SymbolTable> children = rootelement.getChildrenElement();
 		 System.out.print(" ");
 		 for (SymbolTable e : children) {
@@ -58,8 +57,7 @@ public class AbstractSymbolTree {
           
         public void Run_Abstract_Symbol_Tree(){
              buildSymbolTree(root);
-//            printSymbolTree(root,0);
-        //    System.out.println(root.getID()+" "+root.getTag());
-                }  
+             printSymbolTree(root,0);
+                  }  
          
 }

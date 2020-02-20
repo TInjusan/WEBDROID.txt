@@ -49,7 +49,7 @@ public class Parser {
            else i--;  //If no DOCTYPE declaration then deduct one so the checking of element starts with zero
                        
            Element(); 
-           html_element.forEach((key,value) -> System.out.println(key + " = " + value.getTag()));
+        //   html_element.forEach((key,value) -> System.out.println(key + " = " + value.getTag()));
          
        } 
        
@@ -96,7 +96,7 @@ public class Parser {
                 node.setName("Sting_element"+Integer.toString(id));
                 node.setParent_ID(html_element_stack.peek().getID());
                 //end of initialization
-                System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
+               //  System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
                 html_element.put(node.getID(), node);
                 
               
@@ -136,7 +136,7 @@ public class Parser {
                   if(node.getParent_ID()==-1){
                     root= node;
                 }
-                System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
+              //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 html_element_stack.push(node);
              //   System.out.println("Push: "+node.getTag());
                 id++;
@@ -198,7 +198,7 @@ public class Parser {
                 
               
                 html_element.put(node.getID(), node);
-                System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
+              //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 id++;
             if(!(lexemes.get(i).equals(">"))) 
                  Error(1);  //Move to the next lexeme which can be new element or string element
