@@ -78,7 +78,7 @@ public class WEBDROID extends Application {
 //                   Test_Module Test = new Test_Module();
 //                   Test.Extraction_Method(HTMLText);
                     
-                    //Parsing phase
+//                    //Parsing phase
                    Parser Parser = new Parser();
                    Parser.Set_Parser(HTMLText);
                    Parser.PARSE();

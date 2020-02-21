@@ -117,6 +117,10 @@ public class CharacterScanner {
                     cchar = get_source_char();
               }
               
+            if(lexeme.equals("h")&&Character.isDigit(cchar)){
+                    lexeme+=String.valueOf(cchar); //Concatenate the characters into the lexeme
+                    cchar = get_source_char();
+            }  
             token = TOKEN_CODE.WORD;  //Setting the Token of the lexeme into WORD
       }
        

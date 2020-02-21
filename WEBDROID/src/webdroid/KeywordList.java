@@ -15,10 +15,11 @@ public class KeywordList {
             Keyword.put("/",HTML_CODE.HTML_SPECIAL_CHARACTER);
             Keyword.put("<",HTML_CODE.HTML_SPECIAL_CHARACTER);
             Keyword.put(">",HTML_CODE.HTML_SPECIAL_CHARACTER);
-            Keyword.put("a",HTML_CODE.HTML_VOID_TAG);
+            Keyword.put("a",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("action",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("body",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("br",HTML_CODE.HTML_VOID_TAG);
+            Keyword.put("link",HTML_CODE.HTML_VOID_TAG);
             Keyword.put("button",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("checkbox",HTML_CODE.HTML_FORM_TYPE);
             Keyword.put("color",HTML_CODE.HTML_PROPERTY_NAME);
@@ -27,6 +28,12 @@ public class KeywordList {
             Keyword.put("div",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("DOCTYPE",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("for",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("placeholder",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("src",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("alt",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("height",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("href",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("width",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("email",HTML_CODE.HTML_FORM_TYPE);
             Keyword.put("form",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("font",HTML_CODE.HTML_NONVOID_TAG);
