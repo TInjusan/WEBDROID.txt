@@ -61,7 +61,7 @@ public class Parser {
                  
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead assignment
                  switch(kc){                               //The lookahead statement
-                   
+                   case HTML_NONVOID_PROPERTY:
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                                             
                        try{
@@ -117,12 +117,12 @@ public class Parser {
                 
                 nextLexeme(); //to move to the next lexeme after the tag name
                 String current_tag = lexemes.get(i);
-                
+                System.out.println("Push: "+lexemes.get(i));
                 do{
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexemes.get(i));
                     Attribute();
-                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME);
+                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
                 //initiate node html tag node properties
                 SymbolTable  node = new SymbolTable();
@@ -138,7 +138,7 @@ public class Parser {
                 }
               //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 html_element_stack.push(node);
-             //   System.out.println("Push: "+node.getTag());
+                
                 id++;
                 
                 if(!(lexemes.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
@@ -156,7 +156,7 @@ public class Parser {
                          // Get the current tag which is on top of the stack 
                        
                         if(current_tag.equals(lexemes.get(i+1))){  // Compare the name of the tag vs the one on top of the stack                      
-                            //    System.out.println("Pop:  "+html_element_stack.peek().getTag());
+                              System.out.println("Pop:  "+html_element_stack.peek().getTag());
                                 html_element_stack.pop();           // Removing of the top tag because it has been closed.
                                 nextLexeme();
                         }
@@ -194,7 +194,7 @@ public class Parser {
 
                     Attribute();
                     
-                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME);
+                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
               
                 html_element.put(node.getID(), node);
@@ -208,7 +208,7 @@ public class Parser {
        
        public void Attribute(){
           
-           if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
+           if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY){
                   nextLexeme(); //  Store the property name into the symbol table (pending)
                       // Look for the equal sign if the lexeme is a property  
                   
@@ -222,7 +222,7 @@ public class Parser {
                         if(!(tokens.get(i)== TOKEN_CODE.STRING)) 
                             Error(2); //Store the value of the property here (pending)
             }
-            
+            System.out.println("This is the last lexeme before going out of attribute method: "+lexemes.get(i));
        }
        
       
