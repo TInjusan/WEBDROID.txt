@@ -27,7 +27,7 @@ public class Parser {
                     t = scan.next_token();
                     kc = kw.SearchKeyword(scan.getLexeme());
                      //Printing of token stream // Testing
-                     // System.out.println(scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc);
+                    System.out.println(scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc);
                                  
                     lexemes.add(scan.getLexeme());
                     tokens.add(scan.getToken());

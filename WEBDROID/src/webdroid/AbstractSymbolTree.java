@@ -98,50 +98,65 @@ public class AbstractSymbolTree {
                                  String st;
                                  System.out.println(element.getUserDefinedProperties().get("type"));
                                  switch(element.getUserDefinedProperties().get("type")){
-                                     case "\"submit\"":
-                                     case "\"button\"":
-                                         st = element.getUserDefinedProperties().get("value");
-                                         if(st.equals(""))
-                                             st = "blank";
+                                     case "submit":
+                                     case "button":
                                          
+                                         try{
+                                               st = element.getUserDefinedProperties().get("value");
+                                         }catch(NullPointerException e){
+                                             st = "blank";
+                                         }
+                                         
+                                          if(st==null)
+                                              st = "blank";
+                                         else
+                                              string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
+                            
                                          layout_xml = layout_xml+"            <Button\n" +
                                                                 "                android:id=\"@+id/button"+element.getID()+"\"\n" +
                                                                 "                android:layout_width=\"match_parent\"\n" +
                                                                 "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:text=\"@string/"+st+"\n" ;
+                                                                "                android:text=\"@string/"+st+"\"/> \n" ;
                                                                  
                                          
                                          break;
-                                     case "\"text\"":
+                                     case "text":
                                          try{
                                                st = element.getUserDefinedProperties().get("placeholder");
                                          }catch(NullPointerException e){
                                              st = "blank";
                                          }
-                                       
+                                         
+                                         string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
+                            
                                          
                                          layout_xml = layout_xml+"            <EditText\n" +
                                                                 "                android:id=\"@+id/editText"+element.getID()+"\"\n" +
                                                                 "                android:layout_width=\"match_parent\"\n" +
                                                                 "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:hint=\"@string/"+st.replace("\"", "")+"\"\n" +
+                                                                "                android:hint=\"@string/"+st+"\"\n" +
                                                                 "                android:inputType=\"text\"\n" +
                                                                 "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
 
                                          break;
-                                     case "\"password\"":
+                                     case "password":
                                          try{
                                                st = element.getUserDefinedProperties().get("placeholder");
-                                         }catch(Exception e){
+                                         }catch(NullPointerException e){
                                              st = "blank";
                                          }
                                          
+                                         if(st==null)
+                                              st = "blank";
+                                         else
+                                              string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
+                            
                                          layout_xml = layout_xml+"            <EditText\n" +
                                                                 "                android:id=\"@+id/editText"+element.getID()+"\"\n" +
                                                                 "                android:layout_width=\"match_parent\"\n" +
                                                                 "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:hint=\"@string/"+st.replace("\"", "")+"\"\n" +
-                                                                "                android:inputType=\"password\"\n" +
+                                                                "                android:hint=\"@string/"+st+"\"\n" +
+                                                                "                android:inputType=\"textPassword\"\n" +
                                                                 "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
 
                                          break;

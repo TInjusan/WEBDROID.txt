@@ -134,7 +134,7 @@ public class CharacterScanner {
                     lexeme+=String.valueOf(cchar);
 
                 }while(cchar != '\"');
-            
+            lexeme=lexeme.replace("\"", "");
             cchar = get_source_char();   
             token = TOKEN_CODE.STRING;
       }   
