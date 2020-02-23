@@ -1,7 +1,7 @@
 package webdroid;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+ 
 import webdroid.KeywordList.HTML_CODE;
 //Symbol Table is the collection of element, its properties and how they are constructed as trees
 // UDP stands for User Defined Properties

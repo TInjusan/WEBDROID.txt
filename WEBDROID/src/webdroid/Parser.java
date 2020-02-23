@@ -101,18 +101,10 @@ public class Parser {
                   //end of initialization
                //  System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
                 html_element.put(node.getID(), node);
-                   
                 id++;
                  }
                   
-           
-          // Create the Element node here using the Symbol Table class (pending)
-          // This should also generate the HTML DOM tree including all the tag properties
-               
-               
        }
-       
-       
        public void Non_void_element(int current_parent){
                 HashMap<String, String> Attribute = new HashMap<>();
                 

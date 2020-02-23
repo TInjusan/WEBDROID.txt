@@ -1,5 +1,7 @@
+// The task of this class is scanning each and every character in the file
+// and identify them if they are digit, letter, etc., and group them into one string called lexeme
+// The lexeme is then associated with TOKEN_CODE of which the string belongs to.
 package webdroid;
- 
 public class CharacterScanner {  
     
     public enum TOKEN_CODE {
