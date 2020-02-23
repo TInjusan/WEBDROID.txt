@@ -67,7 +67,7 @@ public class WEBDROID extends Application {
                     fileChooser.getExtensionFilters().add(extFilter);
                     
                     //Please change the initial directory if this program is running on a different system
-                    fileChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID.txt\\WEBDROID\\src\\HTML CSS Files"));
+                    fileChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID.txt\\WEBDROID\\test\\HTML CSS Files"));
                     File file = fileChooser.showOpenDialog(primaryStage);
                     
                     FilePath= file.getAbsoluteFile().toString();

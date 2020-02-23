@@ -8,12 +8,9 @@ import java.util.HashMap;
 public class KeywordList {
     
     
-    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_FORM_TYPE, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT};
+    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT};
     //initializing the collection of keywords in key value pair of hashmap
     HashMap<String, HTML_CODE> Keyword = new HashMap<>();
-    private ArrayList<String> View = new ArrayList<>();
-    private ArrayList<String> ViewGroup = new ArrayList<>();
-    
     
      //constructor initializing the keywords
      KeywordList(){
@@ -21,7 +18,8 @@ public class KeywordList {
             Keyword.put("/",HTML_CODE.HTML_SPECIAL_CHARACTER);
             Keyword.put("<",HTML_CODE.HTML_SPECIAL_CHARACTER);
             Keyword.put(">",HTML_CODE.HTML_SPECIAL_CHARACTER);
-           
+            Keyword.put("!",HTML_CODE.HTML_SPECIAL_CHARACTER);
+            
             Keyword.put("action",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("color",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("class",HTML_CODE.HTML_PROPERTY_NAME);
@@ -35,15 +33,9 @@ public class KeywordList {
             Keyword.put("value", HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("id",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("name",HTML_CODE.HTML_PROPERTY_NAME);
-            Keyword.put("style",HTML_CODE.HTML_NONVOID_PROPERTY);
-            
-            Keyword.put("checkbox",HTML_CODE.HTML_FORM_TYPE);
-            Keyword.put("date",HTML_CODE.HTML_FORM_TYPE);
-            Keyword.put("email",HTML_CODE.HTML_FORM_TYPE);
-            Keyword.put("password",HTML_CODE.HTML_FORM_TYPE);
-            Keyword.put("submit",HTML_CODE.HTML_FORM_TYPE);
-            Keyword.put("radio",HTML_CODE.HTML_FORM_TYPE);
-            
+            Keyword.put("type",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("style",HTML_CODE.HTML_NONVOID_PROPERTY);             
+                  
             Keyword.put("br",HTML_CODE.HTML_VOID_TAG);
             Keyword.put("link",HTML_CODE.HTML_VOID_TAG);
             Keyword.put("input",HTML_CODE.HTML_VOID_TAG);
@@ -69,36 +61,15 @@ public class KeywordList {
             Keyword.put("option",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("p",HTML_CODE.HTML_NONVOID_TAG);                        
             Keyword.put("select",HTML_CODE.HTML_NONVOID_TAG);
-            
-            
             Keyword.put("table",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("td",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("text",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("textarea",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("time",HTML_CODE.HTML_FORM_TYPE);
+            Keyword.put("td",HTML_CODE.HTML_NONVOID_TAG);            
+            Keyword.put("textarea",HTML_CODE.HTML_NONVOID_TAG);            
             Keyword.put("title",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("tr",HTML_CODE.HTML_NONVOID_TAG);
-            Keyword.put("type",HTML_CODE.HTML_PROPERTY_NAME);
+            Keyword.put("tr",HTML_CODE.HTML_NONVOID_TAG);            
             Keyword.put("ul",HTML_CODE.HTML_NONVOID_TAG);
-            
-            Keyword.put("number",HTML_CODE.HTML_FORM_TYPE);
-            
-            View.add("input");
-            View.add("button");
-            View.add("select");
-            View.add("label");
-            View.add("p");
-            View.add("h1");
-            View.add("h2");
-            View.add("h3");
-            View.add("img");
-            View.add("a");
-            
-            ViewGroup.add("form");
-            ViewGroup.add("html");
-            ViewGroup.add("head");
-            ViewGroup.add("body");
-            ViewGroup.add("div");
+             
+             
+             
             
    }
      
@@ -110,6 +81,7 @@ public class KeywordList {
             return HTML_CODE.NOT_FOUND;      
      }
      
+  
      
   }
      

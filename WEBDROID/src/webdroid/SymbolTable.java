@@ -49,8 +49,6 @@ public class SymbolTable {
     void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
     int getParent_ID() {        return Parent_ID;     }
    //-------------------------------------------------------------------------// 
-    void setChildrenElement (List<SymbolTable>  c){        this.Children_element = c;
-    }
-    List<SymbolTable>  getChildrenElement(){        return Children_element;
-    }
+    void setChildrenElement (List<SymbolTable>  c){        this.Children_element = c;    }
+    List<SymbolTable>  getChildrenElement(){        return Children_element;    }
 }
