@@ -74,11 +74,8 @@ public class WEBDROID extends Application {
                     HTMLTextField.setText( ReadHTMLFile());
                     HTMLText = HTMLTextField.getText();
                     
-                    //This is where you pick which test case would you like to use
-                   Test_Module Test = new Test_Module();
-                   Test.Extraction_Method(HTMLText);
-                    
-//                    //Parsing phase
+ 
+                   //Parsing phase
                    Parser Parser = new Parser();
                    Parser.Set_Parser(HTMLText);
                    Parser.PARSE();

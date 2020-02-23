@@ -1,12 +1,12 @@
-// This is the implementation of Recursive Descent Parser with depth first algorithm to track the closing of non-void tags
-// DF ReD means Depth First Recursive Descent 
+// This is the implementation of Recursive Descent Parser with stack data structure to track the closing of non-void tags
 package webdroid;
 import java.util.ArrayList; 
 import java.util.*;
 import webdroid.CharacterScanner.TOKEN_CODE;
+import webdroid.KeywordList.HTML_CODE;
 
 public class Parser {
-    private HashMap<Integer, SymbolTable> html_element = new HashMap<>();;
+    private HashMap<Integer, SymbolTable> html_element = new HashMap<>();
     private SymbolTable root;
     private ArrayList<String> lexemes = new ArrayList<>();
     private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
@@ -26,12 +26,16 @@ public class Parser {
                 do{
                     t = scan.next_token();
                     kc = kw.SearchKeyword(scan.getLexeme());
+                     //Printing of token stream // Testing
+                     // System.out.println(scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc);
+                                 
                     lexemes.add(scan.getLexeme());
                     tokens.add(scan.getToken());
-                    
+                   
                    }while(t != CharacterScanner.TOKEN_CODE.EOF_TOKEN);
       }
        
+      
        public void PARSE(){
            HTML();
            System.out.println("Success! Zero Error found");
@@ -61,7 +65,7 @@ public class Parser {
                  
                  kc = kw.SearchKeyword(lexemes.get(i+1));  //The lookahead assignment
                  switch(kc){                               //The lookahead statement
-                   case HTML_NONVOID_PROPERTY:
+                   case HTML_NONVOID_PROPERTY:  //special case for style since it is both nonvoid tag and a property
                    case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                                             
                        try{
@@ -89,20 +93,17 @@ public class Parser {
                    //String element
                    nextLexeme(); 
                    //initiate node html tag node properties
-                SymbolTable  node = new SymbolTable();
+                HashMap<String, String> Attribute = new HashMap<>();
+                Attribute.put("text", lexemes.get(i));
+                SymbolTable  node = new SymbolTable(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
                 
-                node.setID(id);
-                node.setTag(lexemes.get(i));
-                node.setName("Sting_element"+Integer.toString(id));
-                node.setParent_ID(html_element_stack.peek().getID());
-                //end of initialization
+                
+                  //end of initialization
                //  System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
                 html_element.put(node.getID(), node);
-                
-              
+                   
                 id++;
-                  // System.out.println("String element: "+lexemes.get(i));
-               }
+                 }
                   
            
           // Create the Element node here using the Symbol Table class (pending)
@@ -113,32 +114,25 @@ public class Parser {
        
        
        public void Non_void_element(int current_parent){
-                
+                HashMap<String, String> Attribute = new HashMap<>();
                 
                 nextLexeme(); //to move to the next lexeme after the tag name
                 String current_tag = lexemes.get(i);
-                System.out.println("Push: "+lexemes.get(i));
-                do{
+                   do{
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexemes.get(i));
-                    Attribute();
+                    Attribute.putAll(Attribute());    // Calling of Attribute method and getting the properties
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
                 //initiate node html tag node properties
-                SymbolTable  node = new SymbolTable();
-                
-                node.setID(id);
-                node.setTag(current_tag);
-                node.setName(current_tag+Integer.toString(id));
-                node.setParent_ID(current_parent);
-              //  end of initialization
+                SymbolTable  node = new SymbolTable(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent );
+               //  end of initialization
+               
                 html_element.put(node.getID(), node);
                   if(node.getParent_ID()==-1){
                     root= node;
                 }
-              //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 html_element_stack.push(node);
-                
                 id++;
                 
                 if(!(lexemes.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
@@ -156,7 +150,7 @@ public class Parser {
                          // Get the current tag which is on top of the stack 
                        
                         if(current_tag.equals(lexemes.get(i+1))){  // Compare the name of the tag vs the one on top of the stack                      
-                              System.out.println("Pop:  "+html_element_stack.peek().getTag());
+                              //System.out.println("Pop:  "+html_element_stack.peek().getTag());
                                 html_element_stack.pop();           // Removing of the top tag because it has been closed.
                                 nextLexeme();
                         }
@@ -177,25 +171,20 @@ public class Parser {
        }
       
        public void Void_element(){
+            HashMap<String, String> Attribute = new HashMap<>();
             nextLexeme();
-              
-                //initiate node html tag node properties
-                SymbolTable  node = new SymbolTable();
-                
-                node.setID(id);
-                node.setTag(lexemes.get(i));
-                node.setName(lexemes.get(i)+Integer.toString(id));
-                node.setParent_ID(html_element_stack.peek().getID());
-                //end of initialization
-               
+            String current_tag = lexemes.get(i);  
+           
                 do{
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexemes.get(i));
 
-                    Attribute();
+                     Attribute.putAll(Attribute());  
                     
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
+                SymbolTable  node = new SymbolTable(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID() );
+            
               
                 html_element.put(node.getID(), node);
               //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
@@ -206,14 +195,22 @@ public class Parser {
 
        }
        
-       public void Attribute(){
-          
+       public HashMap<String, String> Attribute(){
+           HashMap<String, String> Attribute = new HashMap<>();
+           String property;
+           
            if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY){
-                  nextLexeme(); //  Store the property name into the symbol table (pending)
+               property = lexemes.get(i);   //storing the property name to be passed to the hashmap return key
+               
+               nextLexeme(); //  Store the property name into the symbol table (pending)
                       // Look for the equal sign if the lexeme is a property  
                   
-                        if(lexemes.get(i).equals("="))
-                            nextLexeme(); 
+                        if(lexemes.get(i).equals("=")){
+                             
+                            nextLexeme();
+                            
+                        }
+                             
                         else
                             Error(2);
 
@@ -221,9 +218,12 @@ public class Parser {
                          // Checking if the next lexeme is a string
                         if(!(tokens.get(i)== TOKEN_CODE.STRING)) 
                             Error(2); //Store the value of the property here (pending)
-            }
-            System.out.println("This is the last lexeme before going out of attribute method: "+lexemes.get(i));
-       }
+                        else
+                            Attribute.put(property, lexemes.get(i));
+           }
+           
+           return Attribute;
+        }
        
       
        private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.

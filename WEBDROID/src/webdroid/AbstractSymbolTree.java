@@ -44,8 +44,13 @@ public class AbstractSymbolTree {
           private static void printSymbolTree(SymbolTable rootelement, int level) {
 		 for (int i = 0; i < level; i++) {
 			 System.out.print("\t");
-		 }		 
-		 System.out.println(rootelement.getTag());
+		 }		
+                 
+                 if(rootelement.getElement_type() == KeywordList.HTML_CODE.HTML_STRING_ELEMENT){
+                     System.out.println(  rootelement.getUserDefinedProperties().get("text"));
+                 }
+                 else
+                    System.out.println(rootelement.getTag()); 
 		  
 		 List<SymbolTable> children = rootelement.getChildrenElement();
 		 System.out.print(" ");
