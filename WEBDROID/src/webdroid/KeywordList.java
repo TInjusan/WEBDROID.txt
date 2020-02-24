@@ -67,9 +67,7 @@ public class KeywordList {
             Keyword.put("title",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("tr",HTML_CODE.HTML_NONVOID_TAG);            
             Keyword.put("ul",HTML_CODE.HTML_NONVOID_TAG);
-             
-             
-             
+                   
             
    }
      

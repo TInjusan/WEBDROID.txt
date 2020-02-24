@@ -12,36 +12,38 @@ public class AbstractSymbolTree {
          static String string_xml="";
          static String layout_xml="";
          static String color_xml="";
-         
+         static String current_select="";
+         static List<SymbolTable> children;
+         static int radiobuttoncount = 0;
+         static int radiobuttonparent = 0;
          public void set_html_element(Map<Integer, SymbolTable> h,SymbolTable r){
             html_element = h;
             root = r;
          }
                
     	 private static List<SymbolTable> getChildrenById(int id) {
-		 List<SymbolTable> children = new ArrayList<>();
+		 List<SymbolTable> children_ = new ArrayList<>();
 		 for (SymbolTable e : html_element.values()) {
                        if (e.getParent_ID() == id) {
-                        children.add(e);
+                        children_.add(e);
                         
                      }
 		 }
-		 return children;
+		 return children_;
 	 }
         
          
          private static void buildSymbolTree(SymbolTable element) {
-		SymbolTable html_node = element;
-		List<SymbolTable> children = getChildrenById(html_node.getID());
-                
-                
+		 SymbolTable html_node = element;
+		 children = getChildrenById(html_node.getID());
+                                 
                  html_node.setChildrenElement(children);
                 if (children.isEmpty()) {
                     return;
                 }
 
-                for (SymbolTable e : children) {
-                        buildSymbolTree(e);
+                for (SymbolTable child_node : children) {
+                        buildSymbolTree(child_node);
                 }
 	 }
          
@@ -66,10 +68,10 @@ public class AbstractSymbolTree {
                  } 
                  // end of printing the node //
                  
-		 List<SymbolTable> children = element.getChildrenElement();
+		 children = element.getChildrenElement();
 		 System.out.print(" ");
-		 for (SymbolTable e : children) {
-			 printSymbolTree(e, level + 1);
+		 for (SymbolTable child_node : children) {
+			 printSymbolTree(child_node, level + 1);
 		 }
                   
                  
@@ -160,25 +162,68 @@ public class AbstractSymbolTree {
                                                                 "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
 
                                          break;
+                                     case "checkbox":
+                                                            layout_xml=layout_xml+"<CheckBox\n" +
+                                                                  "        android:id=\"@+id/spinner"+element.getID()+"\"\n" +
+                                                                  "        android:layout_width=\"match_parent\"\n" +
+                                                                  "        android:layout_height=\"wrap_content\"\n" +
+                                                                  "        android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\"/>\n";
+                                       
+                                         break;
+                                     case "radio":
+                                            if(radiobuttoncount == 0){
+                                                //initialize radio button
+                                                String rbg= "    <RadioGroup\n" +
+                                                            "        android:layout_width=\"wrap_content\"\n" +
+                                                            "        android:layout_height=\"wrap_content\" >\n";
+                                                String rb = "       <RadioButton\n" +
+                                                            "            android:id=\"@+id/radioButton"+element.getID()+"\"\n" +
+                                                            "            android:layout_width=\"match_parent\"\n" +
+                                                            "            android:layout_height=\"wrap_content\"\n" +
+                                                            "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n";
+                                            }
+                                         
+                                            break;
                                      default:
                                          break;
-                                                 
-                                     
-                                 }
-                                 
+                                 }                                
                                  
                              }
-                             
                              
                              break;
                          case HTML_NONVOID_TAG:
                              
-                             
-                                List<SymbolTable> children = element.getChildrenElement();
-                                for (SymbolTable child_node : children) {
-                                        GENERATE_XML(child_node, element.getUserDefinedProperties());
-                                }
-                  
+                                    if(element.getTag().equals("select")){
+
+                                       current_select = element.getUserDefinedProperties().get("name");
+                                       layout_xml=layout_xml+"<Spinner\n" +
+                                                                  "        android:id=\"@+id/spinner"+element.getID()+"\"\n" +
+                                                                  "        android:layout_width=\"match_parent\"\n" +
+                                                                  "        android:layout_height=\"wrap_content\"\n" +
+                                                                  "        android:entries=\"@array/"+current_select+"\"/>\n";
+                                        String arraylist = "<string-array name=\""+current_select+"\">\n";
+                                        
+                                        children = element.getChildrenElement();
+                                        for (SymbolTable child_node : children) {
+                                              arraylist = arraylist+  "<item>"+GetChildString(child_node)+"</item>\n";
+                                        }
+                                        arraylist = arraylist+"</string-array>\n";
+                                        string_xml = string_xml + arraylist;
+                                   }
+                                  
+                                    else if(element.getTag().equals("label") && element.getUserDefinedProperties().get("for")!=null){
+                                       
+                                              String label_name =  element.getUserDefinedProperties().get("for");
+                                              string_xml = string_xml+"<string name=\""+label_name+"\">"+GetChildString(element)+"</string>\n";
+                                     }
+                                    
+                                   else{
+                                      children = element.getChildrenElement();
+                                    for (SymbolTable child_node : children) {
+                                            GENERATE_XML(child_node, element.getUserDefinedProperties());
+                                    }
+                                   }
+                                   
                              
                              break;
                          
@@ -186,11 +231,13 @@ public class AbstractSymbolTree {
                              break;
                                                       
              }
-        }          
-        
-        public static String GetStringElement(SymbolTable element){
-            String s = element.getUserDefinedProperties().get("text");
-            return s;
+        }           
+        public static String GetChildString(SymbolTable element){
+                String s = "";
+                children = element.getChildrenElement();
+                for (SymbolTable child_node : children)  
+                      s = child_node.getUserDefinedProperties().get("text");
+                return s;
         }
         
         public void Run_Abstract_Symbol_Tree(){
