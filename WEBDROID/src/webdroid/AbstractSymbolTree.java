@@ -15,7 +15,8 @@ public class AbstractSymbolTree {
          static String current_select="";
          static List<SymbolTable> children;
          static int radiobuttoncount = 0;
-         static int radiobuttonparent = 0;
+         static int radiobuttonparent = -1;
+         static String rb = "";
          public void set_html_element(Map<Integer, SymbolTable> h,SymbolTable r){
             html_element = h;
             root = r;
@@ -98,7 +99,13 @@ public class AbstractSymbolTree {
                              
                              if(element.getTag().equals("input")){
                                  String st;
-                                 System.out.println(element.getUserDefinedProperties().get("type"));
+                                 try{
+                                   System.out.println(element.getUserDefinedProperties().get("type"));
+                                   
+                                 }catch(NullPointerException e){
+                                     System.out.println(element.getTag());
+                                 }
+                                 
                                  switch(element.getUserDefinedProperties().get("type")){
                                      case "submit":
                                      case "button":
@@ -109,28 +116,30 @@ public class AbstractSymbolTree {
                                              st = "blank";
                                          }
                                          
-                                          if(st==null)
-                                              st = "blank";
-                                         else
-                                              string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
-                            
-                                         layout_xml = layout_xml+"            <Button\n" +
-                                                                "                android:id=\"@+id/button"+element.getID()+"\"\n" +
-                                                                "                android:layout_width=\"match_parent\"\n" +
-                                                                "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:text=\"@string/"+st+"\"/> \n" ;
-                                                                 
-                                         
+                                            if(st==null)
+                                                st = "blank";
+                                            else
+                                                 string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
+
+                                            layout_xml = layout_xml+"            <Button\n" +
+                                                                   "                android:id=\"@+id/button"+element.getID()+"\"\n" +
+                                                                   "                android:layout_width=\"wrap_content\"\n" +
+                                                                   "                android:layout_height=\"wrap_content\"\n" +
+                                                                   "                android:text=\"@string/"+st+"\"/> \n" ;
+
+
                                          break;
                                      case "text":
-                                         try{
+                                         if(element.getUserDefinedProperties().get("placeholder")==null) {
+                                             st = "blank"; 
+                                             string_xml = string_xml+"<string name=\"blank\"></string>\n"; 
+                                         }
+                                         else{
                                                st = element.getUserDefinedProperties().get("placeholder");
-                                         }catch(NullPointerException e){
-                                             st = "blank";
+                                               string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
                                          }
                                          
-                                         string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
-                            
+                                        
                                          
                                          layout_xml = layout_xml+"            <EditText\n" +
                                                                 "                android:id=\"@+id/editText"+element.getID()+"\"\n" +
@@ -165,24 +174,47 @@ public class AbstractSymbolTree {
                                      case "checkbox":
                                                             layout_xml=layout_xml+"<CheckBox\n" +
                                                                   "        android:id=\"@+id/spinner"+element.getID()+"\"\n" +
-                                                                  "        android:layout_width=\"match_parent\"\n" +
+                                                                  "        android:layout_width=\"wrap_content\"\n" +
                                                                   "        android:layout_height=\"wrap_content\"\n" +
                                                                   "        android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\"/>\n";
                                        
                                          break;
                                      case "radio":
-                                            if(radiobuttoncount == 0){
-                                                //initialize radio button
-                                                String rbg= "    <RadioGroup\n" +
-                                                            "        android:layout_width=\"wrap_content\"\n" +
-                                                            "        android:layout_height=\"wrap_content\" >\n";
-                                                String rb = "       <RadioButton\n" +
+                                             
+                                                //add to existing radio button
+                                            if(radiobuttonparent==element.getParent_ID() && radiobuttoncount >0){
+                                                
+                                                StringBuffer layout = new StringBuffer("layout_xml");  
+                                                
+                                                rb =        "   <RadioButton\n" +
                                                             "            android:id=\"@+id/radioButton"+element.getID()+"\"\n" +
                                                             "            android:layout_width=\"match_parent\"\n" +
                                                             "            android:layout_height=\"wrap_content\"\n" +
-                                                            "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n";
+                                                            "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n"+
+                                                            "    </RadioGroup>";
+                                                 
+                                                String original_layout = layout_xml.substring(0, layout_xml.lastIndexOf("</RadioGroup>"));
+                                                original_layout = original_layout + rb;
+                                                layout_xml = original_layout;
+                                                
+                                                radiobuttoncount++;
+                                                
                                             }
-                                         
+                                            else{
+                                                //initialize radio button
+                                                radiobuttonparent = element.getParent_ID();
+                                                layout_xml=layout_xml+  "    <RadioGroup\n" +
+                                                                        "        android:layout_width=\"wrap_content\"\n" +
+                                                                        "        android:layout_height=\"wrap_content\" >\n"+
+                                                                        "       <RadioButton\n" +
+                                                                        "            android:id=\"@+id/radioButton"+element.getID()+"\"\n" +
+                                                                        "            android:layout_width=\"match_parent\"\n" +
+                                                                        "            android:layout_height=\"wrap_content\"\n" +
+                                                                        "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n"+
+                                                                        "    </RadioGroup>";
+                                                radiobuttoncount++;
+                                            }
+                                            
                                             break;
                                      default:
                                          break;
