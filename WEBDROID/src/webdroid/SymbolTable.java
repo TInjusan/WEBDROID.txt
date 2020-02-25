@@ -1,7 +1,6 @@
 package webdroid;
 import java.util.HashMap;
-import java.util.List;
- 
+import java.util.List; 
 import webdroid.KeywordList.HTML_CODE;
 //Symbol Table is the collection of element, its properties and how they are constructed as trees
 // UDP stands for User Defined Properties
@@ -51,4 +50,7 @@ public class SymbolTable {
    //-------------------------------------------------------------------------// 
     void setChildrenElement (List<SymbolTable>  c){        this.Children_element = c;    }
     List<SymbolTable>  getChildrenElement(){        return Children_element;    }
+    
+    
+    
 }

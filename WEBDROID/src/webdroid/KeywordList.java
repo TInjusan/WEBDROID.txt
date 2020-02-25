@@ -2,7 +2,6 @@
 // It will return a value from a given string that define its HTML_CODE
 
 package webdroid; 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KeywordList {
@@ -66,9 +65,7 @@ public class KeywordList {
             Keyword.put("textarea",HTML_CODE.HTML_NONVOID_TAG);            
             Keyword.put("title",HTML_CODE.HTML_NONVOID_TAG);
             Keyword.put("tr",HTML_CODE.HTML_NONVOID_TAG);            
-            Keyword.put("ul",HTML_CODE.HTML_NONVOID_TAG);
-                   
-            
+            Keyword.put("ul",HTML_CODE.HTML_NONVOID_TAG);                  
    }
      
      HTML_CODE SearchKeyword(String key){ 
@@ -79,7 +76,28 @@ public class KeywordList {
             return HTML_CODE.NOT_FOUND;      
      }
      
-  
+     private String clean(String s){
+         return s.trim().replaceAll("\\s", "_").replaceAll(":", "");
+     }
+     
+     public String string_element(String id, String s){
+         id = clean(id);
+         return "<string name=\""+id+"\">"+s+"</string>\n";
+     }
+     
+     public String layout_textview(int id, String s){
+         
+         s = clean(s);
+         
+         return " <TextView\n" +
+                "        android:id=\"@+id/text"+id+"\"\n" +
+                "        android:layout_width=\"wrap_content\"\n" +
+                "        android:layout_height=\"wrap_content\"\n" +
+                "        android:text=\"@string/"+s+"\"\n" +
+                "        android:textIsSelectable=\"false\"\n" +
+                "        android:textStyle=\"bold\" />\n";
+     }
+     
      
   }
      

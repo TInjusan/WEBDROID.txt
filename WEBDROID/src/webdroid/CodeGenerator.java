@@ -1,12 +1,9 @@
 package webdroid;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class AbstractSymbolTree {
+public class CodeGenerator {
          static Map<Integer, SymbolTable> html_element;
          static SymbolTable root;
          static String string_xml="";
@@ -17,99 +14,35 @@ public class AbstractSymbolTree {
          static int radiobuttoncount = 0;
          static int radiobuttonparent = -1;
          static String rb = "";
+         static KeywordList k = new KeywordList();
          public void set_html_element(Map<Integer, SymbolTable> h,SymbolTable r){
             html_element = h;
             root = r;
          }
                
-    	 private static List<SymbolTable> getChildrenById(int id) {
-		 List<SymbolTable> children_ = new ArrayList<>();
-		 for (SymbolTable e : html_element.values()) {
-                       if (e.getParent_ID() == id) {
-                        children_.add(e);
-                        
-                     }
-		 }
-		 return children_;
-	 }
-        
-         
-         private static void buildSymbolTree(SymbolTable element) {
-		 SymbolTable html_node = element;
-		 children = getChildrenById(html_node.getID());
-                                 
-                 html_node.setChildrenElement(children);
-                if (children.isEmpty()) {
-                    return;
-                }
-
-                for (SymbolTable child_node : children) {
-                        buildSymbolTree(child_node);
-                }
-	 }
-         
-         
-          // This is a post-order tree traversal
-         
-          private static void printSymbolTree(SymbolTable element, int level) {
-		 for (int i = 0; i < level; i++) {
-			 System.out.print("\t");
-		 }		
-                 
-                 // printing the node - extracting data //
-                 if(element.getElement_type() == KeywordList.HTML_CODE.HTML_STRING_ELEMENT){
-                     System.out.println(  element.getUserDefinedProperties().get("text"));
-                 }
-                 else{
-                     if(element.getTag().equals("input")){
-                        System.out.println(element.getUserDefinedProperties().get("type"));                        
-                     }
-                     else
-                        System.out.println(element.getTag()); 
-                 } 
-                 // end of printing the node //
-                 
-		 children = element.getChildrenElement();
-		 System.out.print(" ");
-		 for (SymbolTable child_node : children) {
-			 printSymbolTree(child_node, level + 1);
-		 }
-                  
-                 
-	 }
-        
+    	 
+      
         private static void GENERATE_XML(SymbolTable element, HashMap<String, String> parent_attribute){
                 
             switch(element.getElement_type()){
                          case HTML_STRING_ELEMENT:
                              String s = element.getUserDefinedProperties().get("text");
-                             
-                             layout_xml=layout_xml+" <TextView\n" +
-                                        "        android:id=\"@+id/text"+element.getID()+"\"\n" +
-                                        "        android:layout_width=\"wrap_content\"\n" +
-                                        "        android:layout_height=\"wrap_content\"\n" +
-                                        "        android:text=\"@string/"+s.trim().replaceAll("\\s", "_").replaceAll(":", "").replace(".", "")+"\"\n" +
-                                        "        android:textIsSelectable=\"false\"\n" +
-                                        "        android:textStyle=\"bold\" />\n";
-                             
-                             //inserting the string value to the string.xml
-                             string_xml = string_xml+"<string name=\""+s.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+s+"</string>\n";
+                             layout_xml=layout_xml+ k.layout_textview(element.getID(),s); //inserting the TextView element to the layout.xml
+                             string_xml = string_xml+k.string_element(s, s);  //inserting the string value to the string.xml
                              break;
-                         case HTML_VOID_TAG:
                              
+                         case HTML_VOID_TAG:                             
                              if(element.getTag().equals("input")){
                                  String st;
-                                 try{
-                                   System.out.println(element.getUserDefinedProperties().get("type"));
-                                   
-                                 }catch(NullPointerException e){
-                                     System.out.println(element.getTag());
-                                 }
-                                 
-                                 switch(element.getUserDefinedProperties().get("type")){
+                                 String type;
+                                 if(element.getUserDefinedProperties().get("type") == null)
+                                     type="text";
+                                 else
+                                     type=element.getUserDefinedProperties().get("type");
+                                   switch(type){
+                                     
                                      case "submit":
-                                     case "button":
-                                         
+                                     case "button":                                         
                                          try{
                                                st = element.getUserDefinedProperties().get("value");
                                          }catch(NullPointerException e){
@@ -119,8 +52,7 @@ public class AbstractSymbolTree {
                                             if(st==null)
                                                 st = "blank";
                                             else
-                                                 string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
-
+                                            string_xml = string_xml+k.string_element(st, st);  //inserting the string value to the string.xml
                                             layout_xml = layout_xml+"            <Button\n" +
                                                                    "                android:id=\"@+id/button"+element.getID()+"\"\n" +
                                                                    "                android:layout_width=\"wrap_content\"\n" +
@@ -256,7 +188,6 @@ public class AbstractSymbolTree {
                                     }
                                    }
                                    
-                             
                              break;
                          
                          default:
@@ -272,9 +203,8 @@ public class AbstractSymbolTree {
                 return s;
         }
         
-        public void Run_Abstract_Symbol_Tree(){
-             buildSymbolTree(root);
-             printSymbolTree(root,0);
+        public void Run_Code_Generator(){
+             
              GENERATE_XML(root, root.getUserDefinedProperties());
              
              string_xml = "<resources>\n"+string_xml+"</resources>";
@@ -294,8 +224,7 @@ public class AbstractSymbolTree {
                             "    </ScrollView>";
              
              System.out.println(layout_xml);    
-             System.out.println(string_xml);
-         
+             System.out.println(string_xml);         
         }  
          
 }

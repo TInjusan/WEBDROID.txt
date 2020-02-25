@@ -80,9 +80,9 @@ public class WEBDROID extends Application {
                    Parser.Set_Parser(HTMLText);
                    Parser.PARSE();
                    
-                   AbstractSymbolTree Tree = new AbstractSymbolTree();
-                   Tree.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
-                   Tree.Run_Abstract_Symbol_Tree();
+                   CodeGenerator XML_Code = new CodeGenerator();
+                   XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
+                   XML_Code.Run_Code_Generator();
                     
             });
              
@@ -118,8 +118,7 @@ public class WEBDROID extends Application {
     }
     
     public static void main(String[] args) {
-        launch(args);
-        
+        launch(args);        
     }
      
 }

@@ -6,7 +6,8 @@ import webdroid.CharacterScanner.TOKEN_CODE;
 import webdroid.KeywordList.HTML_CODE;
 
 public class Parser {
-    private HashMap<Integer, SymbolTable> html_element = new HashMap<>();
+    private static HashMap<Integer, SymbolTable> html_element = new HashMap<>();
+    private static List<SymbolTable> children;
     private SymbolTable root;
     private ArrayList<String> lexemes = new ArrayList<>();
     private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
@@ -38,7 +39,10 @@ public class Parser {
       
        public void PARSE(){
            HTML();
-           System.out.println("Success! Zero Error found");
+           System.out.println("Success! Zero Error found");  //HTML CSS Files are good to go.
+           
+           buildSymbolTree(root);    // Building of Abstract Syntax Tree
+       //  printSymbolTree(root,0);  //Viewing the hierarchy of each tag
        }
     
        
@@ -233,11 +237,65 @@ public class Parser {
             }
            System.exit(0);         
        }
-       
+                
+        private static void buildSymbolTree(SymbolTable element) {
+		 SymbolTable html_node = element;
+		 children = getChildrenById(html_node.getID());
+                                 
+                 html_node.setChildrenElement(children);
+                    if (children.isEmpty())  
+                        return;                
+
+                    for (SymbolTable child_node : children)  
+                        buildSymbolTree(child_node);
+                 
+	 }
+        private static List<SymbolTable> getChildrenById(int id) {
+                List<SymbolTable> children_ = new ArrayList<>();
+                for (SymbolTable e : html_element.values()) {
+                      if (e.getParent_ID() == id) {
+                       children_.add(e);
+
+                    }
+                }
+            return children_;
+	 }
+        
+              
+          // This is a post-order tree traversal printing of tree
+         
+          private static void printSymbolTree(SymbolTable element, int level) {
+		 for (int i = 0; i < level; i++) {
+			 System.out.print("\t");
+		 }		
+                 
+                 // printing the node - extracting data //
+                 if(element.getElement_type() == KeywordList.HTML_CODE.HTML_STRING_ELEMENT){
+                     System.out.println(  element.getUserDefinedProperties().get("text"));
+                 }
+                 else{
+                     if(element.getTag().equals("input")){
+                        System.out.println(element.getUserDefinedProperties().get("type"));                        
+                     }
+                     else
+                        System.out.println(element.getTag()); 
+                 } 
+                 // end of printing the node //
+                 
+		 children = element.getChildrenElement();
+		 System.out.print(" ");
+		 for (SymbolTable child_node : children) {
+			 printSymbolTree(child_node, level + 1);
+		 }                
+            }
+        
+          
        public HashMap<Integer, SymbolTable> getHTML_Elements(){
            return html_element;
        }
        public SymbolTable getroot(){
            return root;
        }
+       
+       
 }

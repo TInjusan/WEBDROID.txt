@@ -57,8 +57,7 @@ public class CharacterScanner {
         }
         else
             return source.charAt(cchar_ptr-2);
-    }
-   
+    }   
     
     private void skip_whitespace(){         
         if(Character.isWhitespace(cchar)) {
@@ -78,8 +77,6 @@ public class CharacterScanner {
             get_string_element();
         }
         else{
-           
-            
 
             if(Character.isLetter(cchar)){ 
                     get_letter_token(); 
