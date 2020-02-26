@@ -188,15 +188,11 @@ public class Parser {
                nextLexeme(); //  Store the property name into the symbol table (pending)
                       // Look for the equal sign if the lexeme is a property  
                   
-                        if(lexeme.get(i).equals("=")){
-                             
-                            nextLexeme();
-                            
-                        }
-                             
+                        if(lexeme.get(i).equals("=")){                             
+                            nextLexeme();                            
+                        }                             
                         else
                             Error(2);
-
                        
                          // Checking if the next lexeme is a string
                         if(!(token.get(i)== TOKEN_CODE.STRING)) 

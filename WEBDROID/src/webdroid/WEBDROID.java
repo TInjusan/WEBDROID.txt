@@ -95,7 +95,11 @@ public class WEBDROID extends Application {
                    Parser Parser = new Parser();
                    Parser.Set_Parser(HTMLText);
                    Parser.PARSE();
-                
+                   
+                   PropertyChecker property = new PropertyChecker();
+                   property.set_tree(Parser.getHTML_Elements(), Parser.getroot());
+                   property.property_check();
+                   
                    //Generating the XML files based from the output of the parser: AST
                    CodeGenerator XML_Code = new CodeGenerator();
                    XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
