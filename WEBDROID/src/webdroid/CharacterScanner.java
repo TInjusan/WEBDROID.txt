@@ -2,6 +2,9 @@
 // and identify them if they are digit, letter, etc., and group them into one string called lexeme
 // The lexeme is then associated with TOKEN_CODE of which the string belongs to.
 package webdroid;
+
+import java.util.ArrayList;
+
 public class CharacterScanner {  
     
     public enum TOKEN_CODE {
@@ -17,13 +20,17 @@ public class CharacterScanner {
 
     public String source;
     public TOKEN_CODE token;
+    private TOKEN_CODE t;
     private int cchar_ptr;
     private char cchar;
     private char previous_cchar;
     private String lexeme;
+    private ArrayList<String> lexemes = new ArrayList<>();
+    private ArrayList<TOKEN_CODE> tokens = new ArrayList<>();
+    KeywordList kw = new KeywordList();
+    KeywordList.HTML_CODE kc;
     
     CharacterScanner(){ //constractor initializing the object properties
-        
         source = "";
         cchar = ' ';
         lexeme = "";
@@ -79,7 +86,7 @@ public class CharacterScanner {
         else{
 
             if(Character.isLetter(cchar)){ 
-                    get_letter_token(); 
+                    get_word_token(); 
             }
             else if(Character.isDigit(cchar)){
                     get_number_token(); 
@@ -108,7 +115,7 @@ public class CharacterScanner {
         return token;
     } 
     
-    private void get_letter_token(){
+    private void get_word_token(){
             lexeme = "";   // Set the first character of the lexeme
               
               while(Character.isLetter(cchar)){
@@ -171,6 +178,29 @@ public class CharacterScanner {
         return lexeme;        
     }
     
+    public void Run_Character_Scanner(String s){
+        
+                setSource(s);
+               
+                do{
+                    t = next_token();
+                    kc = kw.SearchKeyword(getLexeme());
+                     //Printing of token stream // Testing
+                     // System.out.println(scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc);
+                                 
+                    lexemes.add(getLexeme());
+                    tokens.add(getToken());
+                   
+                   }while(t != TOKEN_CODE.EOF_TOKEN);
+                
+    }
+        
+    public ArrayList<String> getLexemeStream(){
+        return lexemes;
+    }
+    public ArrayList<TOKEN_CODE> getTokenStream(){
+        return tokens;
+    }
     
     
 }

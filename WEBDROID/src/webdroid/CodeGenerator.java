@@ -4,104 +4,85 @@ import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator {
-         static Map<Integer, SymbolTable> html_element;
-         static SymbolTable root;
-         static String string_xml="";
-         static String layout_xml="";
-         static String color_xml="";
+         static Map<Integer, AstNode> html_element;
+         static AstNode root;
+         static String string_xml;
+         static String layout_xml;
+         static String color_xml;
          static String current_select="";
-         static List<SymbolTable> children;
+         static List<AstNode> children;
          static int radiobuttoncount = 0;
          static int radiobuttonparent = -1;
          static String rb = "";
          static KeywordList k = new KeywordList();
-         public void set_html_element(Map<Integer, SymbolTable> h,SymbolTable r){
+         public void set_html_element(Map<Integer, AstNode> h,AstNode r){
             html_element = h;
             root = r;
          }
-               
+         
+         CodeGenerator(){
+             string_xml="";
+             layout_xml="";
+             color_xml="";
+         }
     	 
       
-        private static void GENERATE_XML(SymbolTable element, HashMap<String, String> parent_attribute){
+        private static void GENERATE_XML(AstNode element, HashMap<String, String> parent_attribute){
                 
             switch(element.getElement_type()){
                          case HTML_STRING_ELEMENT:
                              String s = element.getUserDefinedProperties().get("text");
+                             
+                             
                              layout_xml=layout_xml+ k.layout_textview(element.getID(),s); //inserting the TextView element to the layout.xml
-                             string_xml = string_xml+k.string_element(s, s);  //inserting the string value to the string.xml
+                             if(!string_xml.contains(k.string_element(s, s)))
+                                string_xml = string_xml+k.string_element(s, s);  //inserting the string value to the string.xml
                              break;
                              
                          case HTML_VOID_TAG:                             
                              if(element.getTag().equals("input")){
-                                 String st;
+                                
                                  String type;
+                                 String value;
+                                 String placeholder;
+                                 
                                  if(element.getUserDefinedProperties().get("type") == null)
                                      type="text";
                                  else
                                      type=element.getUserDefinedProperties().get("type");
+                                 
+                                 if(element.getUserDefinedProperties().get("value") == null)
+                                     value="blank";
+                                 else
+                                     value=element.getUserDefinedProperties().get("value");
+                                 
+                                 if(element.getUserDefinedProperties().get("placeholder") == null)
+                                     placeholder="blank";
+                                 else
+                                     placeholder=element.getUserDefinedProperties().get("placeholder");
+                                            
                                    switch(type){
                                      
                                      case "submit":
                                      case "button":                                         
-                                         try{
-                                               st = element.getUserDefinedProperties().get("value");
-                                         }catch(NullPointerException e){
-                                             st = "blank";
-                                         }
                                          
-                                            if(st==null)
-                                                st = "blank";
-                                            else
-                                            string_xml = string_xml+k.string_element(st, st);  //inserting the string value to the string.xml
+                                         if(!string_xml.contains(k.string_element(value, value)))
+                                              string_xml = string_xml+k.string_element(value, value);  //inserting the string value to the string.xml
                                             layout_xml = layout_xml+"            <Button\n" +
                                                                    "                android:id=\"@+id/button"+element.getID()+"\"\n" +
                                                                    "                android:layout_width=\"wrap_content\"\n" +
                                                                    "                android:layout_height=\"wrap_content\"\n" +
-                                                                   "                android:text=\"@string/"+st+"\"/> \n" ;
+                                                                   "                android:text=\"@string/"+value+"\"/> \n" ;
 
 
                                          break;
-                                     case "text":
-                                         if(element.getUserDefinedProperties().get("placeholder")==null) {
-                                             st = "blank"; 
-                                             string_xml = string_xml+"<string name=\"blank\"></string>\n"; 
-                                         }
-                                         else{
-                                               st = element.getUserDefinedProperties().get("placeholder");
-                                               string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
-                                         }
-                                         
-                                        
-                                         
-                                         layout_xml = layout_xml+"            <EditText\n" +
-                                                                "                android:id=\"@+id/editText"+element.getID()+"\"\n" +
-                                                                "                android:layout_width=\"match_parent\"\n" +
-                                                                "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:hint=\"@string/"+st+"\"\n" +
-                                                                "                android:inputType=\"text\"\n" +
-                                                                "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
-
-                                         break;
+                                     case "text": 
                                      case "password":
-                                         try{
-                                               st = element.getUserDefinedProperties().get("placeholder");
-                                         }catch(NullPointerException e){
-                                             st = "blank";
-                                         }
-                                         
-                                         if(st==null)
-                                              st = "blank";
-                                         else
-                                              string_xml = string_xml+"<string name=\""+st.trim().replaceAll("\\s", "_").replaceAll(":", "")+"\">"+st+"</string>\n";
-                            
-                                         layout_xml = layout_xml+"            <EditText\n" +
-                                                                "                android:id=\"@+id/editText"+element.getID()+"\"\n" +
-                                                                "                android:layout_width=\"match_parent\"\n" +
-                                                                "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:hint=\"@string/"+st+"\"\n" +
-                                                                "                android:inputType=\"textPassword\"\n" +
-                                                                "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
-
+                                     case "email":           
+                                         if(!string_xml.contains(k.string_element(placeholder, placeholder)))
+                                            string_xml = string_xml+k.string_element(placeholder, placeholder);  //inserting the string value to the string.xml
+                                         layout_xml = layout_xml+ k.layout_textbox(element.getID(),placeholder, type);
+                                                         
                                          break;
                                      case "checkbox":
                                                             layout_xml=layout_xml+"<CheckBox\n" +
@@ -123,9 +104,9 @@ public class CodeGenerator {
                                                             "            android:layout_width=\"match_parent\"\n" +
                                                             "            android:layout_height=\"wrap_content\"\n" +
                                                             "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n"+
-                                                            "    </RadioGroup>";
+                                                            "    </RadioGroup>\n";
                                                  
-                                                String original_layout = layout_xml.substring(0, layout_xml.lastIndexOf("</RadioGroup>"));
+                                                String original_layout = layout_xml.substring(0, layout_xml.lastIndexOf("</RadioGroup>\n"));
                                                 original_layout = original_layout + rb;
                                                 layout_xml = original_layout;
                                                 
@@ -143,7 +124,7 @@ public class CodeGenerator {
                                                                         "            android:layout_width=\"match_parent\"\n" +
                                                                         "            android:layout_height=\"wrap_content\"\n" +
                                                                         "            android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\" />\n"+
-                                                                        "    </RadioGroup>";
+                                                                        "    </RadioGroup>\n";
                                                 radiobuttoncount++;
                                             }
                                             
@@ -167,24 +148,30 @@ public class CodeGenerator {
                                                                   "        android:entries=\"@array/"+current_select+"\"/>\n";
                                         String arraylist = "<string-array name=\""+current_select+"\">\n";
                                         
-                                        children = element.getChildrenElement();
-                                        for (SymbolTable child_node : children) {
-                                              arraylist = arraylist+  "<item>"+GetChildString(child_node)+"</item>\n";
-                                        }
-                                        arraylist = arraylist+"</string-array>\n";
-                                        string_xml = string_xml + arraylist;
+                                       
+                                        
+                                            children = element.getChildrenElement();
+                                            for (AstNode child_node : children) {
+                                                  arraylist = arraylist+  "<item>"+GetChildString(child_node)+"</item>\n";
+                                            }
+                                            arraylist = arraylist+"</string-array>\n";
+                                            string_xml = string_xml + arraylist;
+                                         
                                    }
                                   
                                     else if(element.getTag().equals("label") && element.getUserDefinedProperties().get("for")!=null){
                                        
                                               String label_name =  element.getUserDefinedProperties().get("for");
-                                              string_xml = string_xml+"<string name=\""+label_name+"\">"+GetChildString(element)+"</string>\n";
+                                               
+                                              if(!string_xml.contains(k.string_element(label_name, GetChildString(element))))
+                                                    string_xml = string_xml+k.string_element(label_name, GetChildString(element)); 
+                                              
                                      }
                                     
                                    else{
                                       children = element.getChildrenElement();
-                                    for (SymbolTable child_node : children) {
-                                            GENERATE_XML(child_node, element.getUserDefinedProperties());
+                                        for (AstNode child_node : children) {
+                                                GENERATE_XML(child_node, element.getUserDefinedProperties());
                                     }
                                    }
                                    
@@ -195,10 +182,10 @@ public class CodeGenerator {
                                                       
              }
         }           
-        public static String GetChildString(SymbolTable element){
+        public static String GetChildString(AstNode element){
                 String s = "";
                 children = element.getChildrenElement();
-                for (SymbolTable child_node : children)  
+                for (AstNode child_node : children)  
                       s = child_node.getUserDefinedProperties().get("text");
                 return s;
         }
@@ -207,24 +194,14 @@ public class CodeGenerator {
              
              GENERATE_XML(root, root.getUserDefinedProperties());
              
-             string_xml = "<resources>\n"+string_xml+"</resources>";
-             layout_xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                            "<ScrollView \n" +
-                            "        xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
-                            "        android:layout_width=\"match_parent\"\n" +
-                            "        android:layout_height=\"wrap_content\"\n" +
-                            "        android:orientation=\"vertical\">\n" +
-                            "        <LinearLayout\n" +
-                            "            android:id=\"@+id/parentlinearlayout\"\n" +
-                            "            android:layout_width=\"match_parent\"\n" +
-                            "            android:layout_height=\"wrap_content\"\n" +
-                            "            android:orientation=\"vertical\"\n" +
-                            "            android:layout_gravity=\"top\">\n"+layout_xml+
-                            "        </LinearLayout>\n" +
-                            "    </ScrollView>";
-             
-             System.out.println(layout_xml);    
-             System.out.println(string_xml);         
+             string_xml = "<resources>\n<string name=\"app_name\">Test App</string>\n"+string_xml+"</resources>";
+             layout_xml = k.layout_xml(layout_xml);
         }  
+        public String get_layout_xml(){
+            return layout_xml;
+        }
+        public String get_string_xml(){
+            return string_xml;
+        }
          
 }

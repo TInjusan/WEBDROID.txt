@@ -1,19 +1,24 @@
 HTML				:== ["<!DOCTYPE html>"] { Element } 
 Element				:==  Non-void_element | Void_element | String_element
-Non-void_element	:== '<'  Non_void_tag  {Attribute}'>'  [Element] '<' '/' Non_void_tag   '>'				
-Void_element		:==  '<'  Void_tag  {Attribute} '>'
+Non-void_element	:== '<'  Non_void_tag  {Attribute}'>'  [Element] 
+						'<' '/' Non_void_tag   '>'				
+Void_element		:== '<'  Void_tag  {Attribute} '>'
 Non_void_tag		:== html | body | title | form | ...
-Void_tag			:== img | br | input 
+Void_tag			:==	input | img | br | link
 Attribute 			:== Property '=' String_element 
-Property			:== id | style | class | type | value | text  | for
+Property			:== id | style | class | type | value | text  | for | action | placeholder | src | href
 String_element		:== * (Alphanumeric | Letter | Special_character | Number)
 String				:== '"' String_element '"'
 Alphanumeric		:== { Letter | Number }
 Word				:== {Letter}
 Number				:== {Number}
-Digit				:==  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-Letter				:== A-Z | a-z
+Digit				:==  0 - 9
+Letter				:== A - Z | a - z
 
-
-
-3801404236
+------------------------------------------------------------------------------------------
+CSS					:== {Definition}
+Definition			:== ( Tag | Id | Class ) '{' Attribute '}'
+Id					:== '#' Id_Name
+Class				:== '.' Class_Name
+Tag					:== html | body | title | form | img | input | head...
+Attribute			:== Property ':' Value ';'

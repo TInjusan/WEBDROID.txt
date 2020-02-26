@@ -28,10 +28,12 @@ public class WEBDROID extends Application {
         @Override
         public void start(Stage primaryStage) {
             primaryStage.setTitle("WEBDROID");
+            
             Label HTMLLabel = new Label("HTML Code:");
-            Label CSSLabel = new Label("CSS Code:");
+            Label Android_Layout_XML_label = new Label("Android Layout  XML:");
+            Label Android_String_XML_label = new Label("Android String  XML:");
             Group root = new Group();
-            Scene scene = new Scene(root, 1225, 600, Color.WHITE);
+            Scene scene = new Scene(root, 1700, 700, Color.WHITE);
             GridPane gridpane = new GridPane();
             gridpane.setPadding(new Insets(5));
             gridpane.setHgap(10);
@@ -45,22 +47,35 @@ public class WEBDROID extends Application {
             HTMLTextField.setPrefHeight(300);
             GridPane.setHalignment(HTMLTextField, HPos.CENTER);
             
-            TextArea CSSTextField = new TextArea();
-            CSSTextField.setPrefRowCount(100);
-            CSSTextField.setPrefColumnCount(100);
-            CSSTextField.setWrapText(true);
-            CSSTextField.setPrefWidth(600);
-            CSSTextField.setPrefHeight(300);
-            GridPane.setHalignment(CSSTextField, HPos.CENTER);
             
-            gridpane.add(HTMLLabel, 0, 1);
-            gridpane.add(CSSLabel, 1, 1);
+            gridpane.add(HTMLLabel, 0, 1);             
             gridpane.add(HTMLTextField, 0, 2);
-            gridpane.add(CSSTextField, 1, 2);
-            
+          
             root.getChildren().add(gridpane); 
 
-              Button button_browse = new Button("Browse HTML");
+            TextArea Android_Layout_XML = new TextArea();
+            Android_Layout_XML.setPrefRowCount(100);
+            Android_Layout_XML.setPrefColumnCount(100);
+            Android_Layout_XML.setWrapText(true);
+            Android_Layout_XML.setPrefWidth(600);
+            Android_Layout_XML.setPrefHeight(300);
+            GridPane.setHalignment(Android_Layout_XML, HPos.CENTER);
+            
+            gridpane.add(Android_Layout_XML_label, 0, 4);             
+            gridpane.add(Android_Layout_XML, 0, 5);
+            
+            TextArea Android_String_XML = new TextArea();
+            Android_String_XML.setPrefRowCount(100);
+            Android_String_XML.setPrefColumnCount(100);
+            Android_String_XML.setWrapText(true);
+            Android_String_XML.setPrefWidth(600);
+            Android_String_XML.setPrefHeight(300);
+            GridPane.setHalignment(Android_String_XML, HPos.CENTER);
+            
+            gridpane.add(Android_String_XML_label, 1, 4);             
+            gridpane.add(Android_String_XML, 1, 5);
+            
+                Button button_browse = new Button("Browse HTML");
                 button_browse.setOnAction((ActionEvent arg0) -> {
                     FileChooser fileChooser = new FileChooser();
                     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("HTML files (*.html, *css)", "*.html","*.css");
@@ -71,6 +86,7 @@ public class WEBDROID extends Application {
                     File file = fileChooser.showOpenDialog(primaryStage);
                     
                     FilePath= file.getAbsoluteFile().toString();
+                    HTMLTextField.clear();
                     HTMLTextField.setText( ReadHTMLFile());
                     HTMLText = HTMLTextField.getText();
                     
@@ -79,16 +95,25 @@ public class WEBDROID extends Application {
                    Parser Parser = new Parser();
                    Parser.Set_Parser(HTMLText);
                    Parser.PARSE();
-                   
+                
+                   //Generating the XML files based from the output of the parser: AST
                    CodeGenerator XML_Code = new CodeGenerator();
                    XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
                    XML_Code.Run_Code_Generator();
+                   
+                   
+                   //printing of the output - result
+                   Android_Layout_XML.clear();
+                   Android_Layout_XML.setText( XML_Code.get_layout_xml());
+                   Android_String_XML.clear();
+                   Android_String_XML.setText(XML_Code.get_string_xml());
                     
             });
+            
              
                 
-            gridpane.add(button_browse, 0, 3);
-           
+            gridpane.add(button_browse, 1, 2);
+               
             Image anotherIcon = new Image("/Webdroid Icon Initial.png");
             primaryStage.getIcons().add(anotherIcon);
 
