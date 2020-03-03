@@ -49,14 +49,17 @@ public class Parser {
            buildSymbolTree(root);    // Building of Abstract Syntax Tree
            printSymbolTree(root,0);  //Viewing the hierarchy of each tag
            setCSS(root);
-           System.out.println(CSS);
-           CharacterScanner CSS_Scanner = new CharacterScanner();
+           if(!CSS.equals("")){
+                System.out.println(CSS);
+            CharacterScanner CSS_Scanner = new CharacterScanner();
             CSS_Scanner.Run_Character_Scanner(CSS);
             lexeme.clear();
             token.clear();
             
             lexeme = CSS_Scanner.getLexemeStream();
-            token  = CSS_Scanner.getTokenStream();
+            token  = CSS_Scanner.getTokenStream(); 
+           }
+         
        }
            
        public void HTML(){
