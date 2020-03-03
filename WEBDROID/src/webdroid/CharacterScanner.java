@@ -74,6 +74,11 @@ public class CharacterScanner {
          
     }
     
+    /**
+     * 
+     * @return 
+     */
+    
     public TOKEN_CODE next_token(){
       
         previous_cchar= get_previous_char(); //preserving the previous character before skipping whitespaace for string element extraction use.
@@ -118,7 +123,7 @@ public class CharacterScanner {
     private void get_word_token(){
             lexeme = "";   // Set the first character of the lexeme
               
-              while(Character.isLetter(cchar)){
+              while(Character.isLetter(cchar) || cchar == '-'){
                     lexeme+=String.valueOf(cchar); //Concatenate the characters into the lexeme
                     cchar = get_source_char();
               }
@@ -186,7 +191,7 @@ public class CharacterScanner {
                     t = next_token();
                     kc = kw.SearchKeyword(getLexeme());
                      //Printing of token stream // Testing
-                     // System.out.println(scan.getLexeme()+"\t\t\t\t\t"+"- "+scan.getToken()+"\t\t\t\t\t\t"+"- "+ kc);
+                     //  System.out.println(getLexeme()+"\t\t\t\t\t"+"- "+getToken()+"\t\t\t\t\t\t"+"- "+ kc);
                                  
                     lexemes.add(getLexeme());
                     tokens.add(getToken());

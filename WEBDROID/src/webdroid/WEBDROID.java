@@ -1,5 +1,4 @@
 package webdroid; 
-
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javafx.geometry.HPos;
@@ -93,10 +92,11 @@ public class WEBDROID extends Application {
  
                    //Parsing phase
                    Parser Parser = new Parser();
-                   Parser.Set_Parser(HTMLText);
+                   Parser.setHTMLParser(HTMLText);
                    Parser.PARSE();
                    
                    PropertyChecker property = new PropertyChecker();
+                   
                    property.set_tree(Parser.getHTML_Elements(), Parser.getroot());
                    property.property_check();
                    

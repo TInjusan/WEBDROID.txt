@@ -14,6 +14,7 @@ public class CodeGenerator {
          static int radiobuttoncount = 0;
          static int radiobuttonparent = -1;
          static String rb = "";
+         static String App_name="";
          static KeywordList k = new KeywordList();
          public void set_html_element(Map<Integer, AstNode> h,AstNode r){
             html_element = h;
@@ -41,25 +42,11 @@ public class CodeGenerator {
                              
                          case HTML_VOID_TAG:                             
                              if(element.getTag().equals("input")){
-                                
-                                 String type;
-                                 String value;
-                                 String placeholder;
-                                 
-                                 if(element.getUserDefinedProperties().get("type") == null)
-                                     type="text";
-                                 else
-                                     type=element.getUserDefinedProperties().get("type");
-                                 
-                                 if(element.getUserDefinedProperties().get("value") == null)
-                                     value="blank";
-                                 else
-                                     value=element.getUserDefinedProperties().get("value");
-                                 
-                                 if(element.getUserDefinedProperties().get("placeholder") == null)
-                                     placeholder="blank";
-                                 else
-                                     placeholder=element.getUserDefinedProperties().get("placeholder");
+                                //this is the shorthand if statement to assign value to type variable
+                                String id = element.getUserDefinedProperties().get("id") == null? element.getUserDefinedProperties().get("id") : "id_"+element.getID();
+                                String type = element.getUserDefinedProperties().get("type") == null? element.getUserDefinedProperties().get("type") : "text";
+                                String value = element.getUserDefinedProperties().get("value") == null? "blank" : element.getUserDefinedProperties().get("value"); 
+                                String placeholder = element.getUserDefinedProperties().get("placeholder") == null? "blank" : element.getUserDefinedProperties().get("placeholder");
                                             
                                    switch(type){
                                      
@@ -81,7 +68,7 @@ public class CodeGenerator {
                                      case "email":           
                                          if(!string_xml.contains(k.string_element(placeholder, placeholder)))
                                             string_xml = string_xml+k.string_element(placeholder, placeholder);  //inserting the string value to the string.xml
-                                         layout_xml = layout_xml+ k.layout_textbox(element.getID(),placeholder, type);
+                                         layout_xml = layout_xml+ k.layout_textbox(id,placeholder, type);
                                                          
                                          break;
                                      case "checkbox":
@@ -89,7 +76,7 @@ public class CodeGenerator {
                                                                   "        android:id=\"@+id/spinner"+element.getID()+"\"\n" +
                                                                   "        android:layout_width=\"wrap_content\"\n" +
                                                                   "        android:layout_height=\"wrap_content\"\n" +
-                                                                  "        android:text=\"@string/"+element.getUserDefinedProperties().get("id")+"\"/>\n";
+                                                                  "        android:text=\"@string/"+id+"\"/>\n";
                                        
                                          break;
                                      case "radio":
@@ -158,6 +145,10 @@ public class CodeGenerator {
                                             string_xml = string_xml + arraylist;
                                          
                                    }
+                                    else if(element.getTag().equals("title")){
+                                        App_name = GetChildString(element);
+                                         
+                                    }
                                   
                                     else if(element.getTag().equals("label") && element.getUserDefinedProperties().get("for")!=null){
                                        
@@ -194,7 +185,7 @@ public class CodeGenerator {
              
              GENERATE_XML(root, root.getUserDefinedProperties());
              
-             string_xml = "<resources>\n<string name=\"app_name\">Test App</string>\n"+string_xml+"</resources>";
+             string_xml = "<resources>\n<string name=\"app_name\">"+App_name+"</string>\n"+string_xml+"</resources>";
              layout_xml = k.layout_xml(layout_xml);
         }  
         public String get_layout_xml(){

@@ -16,22 +16,47 @@ public class Parser {
     private Stack<AstNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     private int current_parent_id;    
     KeywordList kw = new KeywordList();
-    KeywordList.HTML_CODE kc;
-    CharacterScanner scan = new CharacterScanner();
-    CharacterScanner.TOKEN_CODE t;
-     
-       public void Set_Parser(String s){
-            scan.Run_Character_Scanner(s);
-            lexeme = scan.getLexemeStream();
-            token  = scan.getTokenStream();
+    KeywordList.HTML_CODE kc;    
+    public String CSS ="";
+    
+       public void setHTMLParser(String s){
+            CharacterScanner HTML_Scanner = new CharacterScanner();
+            HTML_Scanner.Run_Character_Scanner(s);
+            lexeme = HTML_Scanner.getLexemeStream();
+            token  = HTML_Scanner.getTokenStream();
       }
-             
+                 
+      private void setCSS(AstNode element) {
+               
+                children = getChildrenById(element.getID()); 
+                 
+                 if(  kw.SearchKeyword(element.getTag()) ==  KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY){                    
+                     for (AstNode child_node : children)  
+                      CSS = child_node.getUserDefinedProperties().get("text");
+                     
+                 }
+                 
+                 if (CSS.equals("")){    
+                    for (AstNode child_node : children)  
+                        setCSS(child_node);
+                    
+                 }                     
+                 
+        }
        public void PARSE(){
            HTML();
-           System.out.println("Success! Zero Error found");  //HTML CSS Files are good to go.
            
            buildSymbolTree(root);    // Building of Abstract Syntax Tree
            printSymbolTree(root,0);  //Viewing the hierarchy of each tag
+           setCSS(root);
+           System.out.println(CSS);
+           CharacterScanner CSS_Scanner = new CharacterScanner();
+            CSS_Scanner.Run_Character_Scanner(CSS);
+            lexeme.clear();
+            token.clear();
+            
+            lexeme = CSS_Scanner.getLexemeStream();
+            token  = CSS_Scanner.getTokenStream();
        }
            
        public void HTML(){
@@ -178,6 +203,7 @@ public class Parser {
 
        }
        
+      
        public HashMap<String, String> Attribute(){
            HashMap<String, String> Attribute = new HashMap<>();
            String property;
@@ -220,7 +246,13 @@ public class Parser {
             }
            System.exit(0);         
        }
-                
+        
+   
+        public void CSS(){
+            
+            
+        }
+        
         private static void buildSymbolTree(AstNode element) {
 		 AstNode html_node = element;
 		 children = getChildrenById(html_node.getID());

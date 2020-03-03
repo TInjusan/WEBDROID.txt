@@ -7,7 +7,9 @@ import java.util.HashMap;
 public class KeywordList {
     
     
-    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT};
+    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, 
+                           HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT,
+                            CSS_PROPERTY};
     //initializing the collection of keywords in key value pair of hashmap
     HashMap<String, HTML_CODE> Keyword = new HashMap<>();
     HashMap<String, String> html_xml = new HashMap<>();
@@ -60,12 +62,22 @@ public class KeywordList {
             Keyword.put("textarea",HTML_CODE.HTML_NONVOID_TAG);            
             Keyword.put("title",HTML_CODE.HTML_NONVOID_TAG);
              
+            Keyword.put("background-color",HTML_CODE.CSS_PROPERTY); 
+            Keyword.put("color",HTML_CODE.CSS_PROPERTY); 
+            Keyword.put("font-family",HTML_CODE.CSS_PROPERTY); 
+            Keyword.put("text-align",HTML_CODE.CSS_PROPERTY); 
+            Keyword.put("font-family",HTML_CODE.CSS_PROPERTY);
             
             
             html_xml.put("text", "text");
             html_xml.put("password", "textPassword");
             html_xml.put("email", "textEmailAddress");
             html_xml.put("password", "textPassword");
+            
+            html_xml.put("submit", "Button");
+            html_xml.put("button", "Button");
+            html_xml.put("select", "Spinner");
+            html_xml.put("radio", "RadioButton");
             
    }
      
@@ -105,10 +117,10 @@ public class KeywordList {
                 "        android:textStyle=\"bold\" />\n";
      }
      
-     public String layout_textbox(int id, String s, String type){
+     public String layout_textbox(String id, String s, String type){
          
          return "            <EditText\n" +
-                                                                "                android:id=\"@+id/editText"+id+"\"\n" +
+                                                                "                android:id=\"@+id/"+id+"\"\n" +
                                                                 "                android:layout_width=\"match_parent\"\n" +
                                                                 "                android:layout_height=\"wrap_content\"\n" +
                                                                 "                android:hint=\"@string/"+s+"\"\n" +
