@@ -95,22 +95,19 @@ public class WEBDROID extends Application {
                    Parser.setHTMLParser(HTMLText);
                    Parser.PARSE();
                    
-                   PropertyChecker property = new PropertyChecker();
-                   
-                   property.set_tree(Parser.getHTML_Elements(), Parser.getroot());
-                   property.property_check();
-                   
+                   SemanticAnalyzer Semantic = new SemanticAnalyzer();
+                    
                    //Generating the XML files based from the output of the parser: AST
-                   CodeGenerator XML_Code = new CodeGenerator();
-                   XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
-                   XML_Code.Run_Code_Generator();
-                   
+//                   CodeGenerator XML_Code = new CodeGenerator();
+//                   XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
+//                   XML_Code.Run_Code_Generator();
+//                   
                    
                    //printing of the output - result
-                   Android_Layout_XML.clear();
-                   Android_Layout_XML.setText( XML_Code.get_layout_xml());
-                   Android_String_XML.clear();
-                   Android_String_XML.setText(XML_Code.get_string_xml());
+//                   Android_Layout_XML.clear();
+//                   Android_Layout_XML.setText( XML_Code.get_layout_xml());
+//                   Android_String_XML.clear();
+//                   Android_String_XML.setText(XML_Code.get_string_xml());
                     
             });
             

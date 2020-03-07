@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.*;
 import webdroid.CharacterScanner.TOKEN_CODE;
 import webdroid.KeywordList.HTML_CODE;
+import webdroid.SymbolTable.ElementNode;
 
 public class Parser {
-    private static HashMap<Integer, AstNode> html_element = new HashMap<>();
-    private static List<AstNode> children;
-    private AstNode root;
     private ArrayList<String> lexeme = new ArrayList<>();
     private ArrayList<TOKEN_CODE> token = new ArrayList<>();
     private int i = 0; //iteration variable to select each lexeme genarated from TokenScanner. Every iteration of i means point to the next lexeme  
     private int id = 0;
-    private Stack<AstNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
+    private Stack<ElementNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     private int current_parent_id;    
+    private SymbolTable table = new SymbolTable();
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
     public String CSS ="";
@@ -26,29 +25,10 @@ public class Parser {
             token  = HTML_Scanner.getTokenStream();
       }
                  
-      private void setCSS(AstNode element) {
-               
-                children = getChildrenById(element.getID()); 
-                 
-                 if(  kw.SearchKeyword(element.getTag()) ==  KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY){                    
-                     for (AstNode child_node : children)  
-                      CSS = child_node.getUserDefinedProperties().get("text");
-                     
-                 }
-                 
-                 if (CSS.equals("")){    
-                    for (AstNode child_node : children)  
-                        setCSS(child_node);
-                    
-                 }                     
-                 
-        }
+   
        public void PARSE(){
            HTML();
-           
-           buildSymbolTree(root);    // Building of Abstract Syntax Tree
-           printSymbolTree(root,0);  //Viewing the hierarchy of each tag
-           setCSS(root);
+                      
            if(!CSS.equals("")){
                 System.out.println(CSS);
             CharacterScanner CSS_Scanner = new CharacterScanner();
@@ -114,12 +94,13 @@ public class Parser {
                    //initiate node html tag node properties
                 HashMap<String, String> Attribute = new HashMap<>();
                 Attribute.put("text", lexeme.get(i));
-                AstNode  node = new AstNode(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
+                ElementNode node = new ElementNode();
+                node.ElementNodeProperties(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
                 
                 
-                  //end of initialization
+               //  end of initialization
                //  System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
-                html_element.put(node.getID(), node);
+                SymbolTable.entry.add(node);
                 id++;
                  }
                   
@@ -136,13 +117,15 @@ public class Parser {
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
                 //initiate node html tag node properties
-                AstNode  node = new AstNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent );
+                SymbolTable.ElementNode  node = new SymbolTable.ElementNode();
+                
+                node.ElementNodeProperties(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent );
                // end of initialization
-               
-                html_element.put(node.getID(), node);
-                  if(node.getParent_ID()==-1){
-                    root= node;
-                }
+                 SymbolTable.entry.add(node);
+                
+                  if(node.getParent_ID()==-1) 
+                    SymbolTable.root= node;
+              
                 html_element_stack.push(node);
                 id++;
                 
@@ -194,10 +177,11 @@ public class Parser {
                     
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
-                AstNode  node = new AstNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID() );
+                ElementNode  node = new ElementNode();
+                node.ElementNodeProperties(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID() );
             
               
-                html_element.put(node.getID(), node);
+                SymbolTable.entry.add(node);
               //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 id++;
             if(!(lexeme.get(i).equals(">"))) 
@@ -233,7 +217,6 @@ public class Parser {
            return Attribute;
         }
        
-      
        private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.
        private void Error(int code){
            
@@ -249,68 +232,9 @@ public class Parser {
             }
            System.exit(0);         
        }
-        
-   
-        public void CSS(){
-            
-            
-        }
-        
-        private static void buildSymbolTree(AstNode element) {
-		 AstNode html_node = element;
-		 children = getChildrenById(html_node.getID());
-                                 
-                 html_node.setChildrenElement(children);
-                    if (children.isEmpty())  
-                        return;                
-
-                    for (AstNode child_node : children)  
-                        buildSymbolTree(child_node);
-                 
-	 }
-        private static List<AstNode> getChildrenById(int id) {
-                List<AstNode> children_ = new ArrayList<>();
-                for (AstNode e : html_element.values()) {
-                      if (e.getParent_ID() == id) {
-                       children_.add(e);
-
-                    }
-                }
-            return children_;
-	 }
-        
-              
-          // This is a post-order tree traversal printing of tree
          
-          private static void printSymbolTree(AstNode element, int level) {
-		 for (int i = 0; i < level; i++) {
-			 System.out.print("\t");
-		 }		
-                 
-                 // printing the node - extracting data //
-                 if(element.getElement_type() == KeywordList.HTML_CODE.HTML_STRING_ELEMENT){
-                     System.out.println(  element.getUserDefinedProperties().get("text"));
-                 }
-                 else{
-                     if(element.getTag().equals("input")){
-                        System.out.println(element.getUserDefinedProperties().get("type"));                        
-                     }
-                     else
-                        System.out.println(element.getTag()); 
-                 } 
-                 // end of printing the node //
-                 
-		 children = element.getChildrenElement();
-		 System.out.print(" ");
-		 for (AstNode child_node : children) {
-			 printSymbolTree(child_node, level + 1);
-		 }                
-            }        
-          
-       public HashMap<Integer, AstNode> getHTML_Elements(){
-           return html_element;
-       }
-       public AstNode getroot(){
-           return root;
-       }     
+        public void CSS(){ 
+            
+        } 
+      
 }

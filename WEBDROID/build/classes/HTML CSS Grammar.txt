@@ -28,7 +28,7 @@
 							h1 | h2 | h3 | a | textarea | p | div | button
 							head | nav | textarea | input | img | br | link
 	Attribute			::= Property ':' Value ';'
-	Property			::= 
+	Property			::= background-color | color | font-size | font-family | text-align
 
 
 
