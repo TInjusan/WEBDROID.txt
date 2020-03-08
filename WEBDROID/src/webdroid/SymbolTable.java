@@ -58,7 +58,7 @@ public class SymbolTable {
 
     public static List<ElementNode>  entry = new ArrayList<>();
     public static ElementNode root;
-    public static HashMap<String, ArrayList<String> > ArrayString;
+    public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
     
     public void AddToTable(ElementNode e){
         entry.add(e);

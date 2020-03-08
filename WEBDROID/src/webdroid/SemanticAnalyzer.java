@@ -8,15 +8,19 @@ public class SemanticAnalyzer {
    private static List<ElementNode> children;
    private   List<ElementNode> removal = new ArrayList<>();
    SemanticAnalyzer(){
-           printSymbolTable();
-           buildSymbolTree(SymbolTable.root);    // Building of Abstract Syntax Tree
-           printSymbolTree(SymbolTable.root,0);  //Viewing the hierarchy of each tag
+           buildSymbolTree(SymbolTable.root);    //First build after Syntax Analysis - Abstract Syntax Tree
            
+   }  
+   
+   public void ExecuteAnalyzer(){
            analyze();
            removeElements();
-           buildSymbolTree(SymbolTable.root);    // Building of Abstract Syntax Tree
+           printSymbolTable();
+          
+           buildSymbolTree(SymbolTable.root);    //Second build (improved and specified) after Semantic Analysis Abstract Syntax Tree
            printSymbolTree(SymbolTable.root,0);  //Viewing the hierarchy of each tag
-   }  
+
+   }
         private static void printSymbolTable(){
             for (ElementNode e : SymbolTable.entry) {
                      String tablerow = "";
@@ -85,7 +89,7 @@ public class SemanticAnalyzer {
                      }
                          
                  }
-                 if(e.getTag().equals("p") || e.getTag().equals("label") || e.getTag().equals("h1") || e.getTag().equals("h2") || e.getTag().equals("h3")){
+                 if(e.getTag().equals("p") || e.getTag().equals("label") || e.getTag().equals("h1") || e.getTag().equals("h2") || e.getTag().equals("h3") || e.getTag().equals("title")){
                      children = getChildrenById(e.getID());
                      if(children.size()>1){
                          System.out.println("Error. Text Tags should only have one child");
@@ -114,23 +118,26 @@ public class SemanticAnalyzer {
                                    System.exit(0);
                               }
                            }
-
-
                        }
-                        
                  }
                  if(e.getTag().equals("select")){
                       ArrayList<String> R = new ArrayList<>();
-                      children = getChildrenById(e.getID());
-                      for (ElementNode child_node : children)  {
-                          R.add(GetChildString(child_node));
-                     //     SymbolTable.entry.remove(child_node);
-                          removal.add(child_node);
-                      }                             
+                      if(e.getUDP().get("name")==null){
+                          System.out.println("Error. Please make sure to assign a name to the select tag.");
+                          System.exit(0);
+                      }
+                      else{
+                          String selectname= e.getUDP().get("name");
+                          
+                            children = getChildrenById(e.getID());
+                            for (ElementNode child_node : children)  {
+                                R.add(GetChildString(child_node)); 
+                                removal.add(child_node);
+                            }   
+                          SymbolTable.ArrayString.put(selectname, R);
+                      }
                  }
-                 
-                 
-            }    
+             }    
         }
         
         private void removeElements(){
@@ -160,11 +167,14 @@ public class SemanticAnalyzer {
             }  
             
         }
-         public static String GetChildString(ElementNode element){
+         public String GetChildString(ElementNode element){
                 String s = "";
                 children = element.getChildrenElement();
-                for (ElementNode child_node : children)  
-                      s = child_node.getUDP().get("text");
+                for (ElementNode child_node : children){
+                    s = child_node.getUDP().get("text");
+                     removal.add(child_node);
+                }  
+                      
                 return s;
         }
 

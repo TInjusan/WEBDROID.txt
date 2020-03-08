@@ -52,9 +52,7 @@ public class Parser {
            }
            else i--;  //If no DOCTYPE declaration then deduct one so the checking of element starts with zero
                        
-           Element(); 
-        //   html_element.forEach((key,value) -> System.out.println(key + " = " + value.getTag()));
-         
+           Element();             
        } 
        
        public void Element(){
@@ -91,17 +89,21 @@ public class Parser {
                else{
                    //String element
                    nextLexeme(); 
-                   //initiate node html tag node properties
-                HashMap<String, String> Attribute = new HashMap<>();
-                Attribute.put("text", lexeme.get(i));
-                ElementNode node = new ElementNode();
-                node.ElementNodeProperties(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
-                
-                
-               //  end of initialization
-               //  System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());                
-                SymbolTable.entry.add(node);
-                id++;
+                  
+                    HashMap<String, String> Attribute = new HashMap<>();
+                    Attribute.put("text", lexeme.get(i));
+                    ElementNode node = new ElementNode();
+
+                      try{
+                         node.ElementNodeProperties(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
+                      }
+                      catch(EmptyStackException e){
+                               Error(5); 
+                      }
+
+
+                    SymbolTable.entry.add(node);
+                    id++;
                  }
                   
        }
@@ -222,15 +224,17 @@ public class Parser {
            
            switch (code){
                //Generic Error Message:
-               case -1: System.out.println("DOCTYPE: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 0: System.out.println("Element: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 1: System.out.println("Void: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 2: System.out.println("Attribute: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 3: System.out.println("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)+" Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
-               case 4: System.out.println("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
+               case -1: WEBDROID.ErrorMessagePopup("DOCTYPE: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
+               case 0: WEBDROID.ErrorMessagePopup("Element: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
+               case 1: WEBDROID.ErrorMessagePopup("Void: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
+               case 2: WEBDROID.ErrorMessagePopup("Attribute: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break; 
+               case 3: WEBDROID.ErrorMessagePopup("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)+" Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
+               case 4: WEBDROID.ErrorMessagePopup("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
+               case 5: WEBDROID.ErrorMessagePopup("HTML file should start with a non-void tag not random string."); break; 
               
             }
-           System.exit(0);         
+            WEBDROID.ErrorDetected =true;
+                        
        }
          
         public void CSS(){ 
