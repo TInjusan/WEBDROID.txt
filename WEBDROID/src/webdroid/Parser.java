@@ -13,7 +13,7 @@ public class Parser {
     private int id = 0;
     private Stack<ElementNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     private int current_parent_id;    
-    private String current_tag ="";
+    private SymbolTable table = new SymbolTable();
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
     public String CSS ="";
@@ -48,7 +48,7 @@ public class Parser {
                 if( (lexeme.get(i) + lexeme.get(i+1) + lexeme.get(i+2) + " "+lexeme.get(i+3)+lexeme.get(i+4)) . equals("<!DOCTYPE html>"))
                     i+=4;  // proceed to the first element
                 else
-                    Error(-1);
+                    Error(-1,"");
            }
            else i--;  //If no DOCTYPE declaration then deduct one so the checking of element starts with zero
                        
@@ -82,7 +82,7 @@ public class Parser {
                        break;
                    default:
                          
-                        Error(0);
+                        Error(0,"");
                         break;   
                     }
                 }
@@ -98,7 +98,7 @@ public class Parser {
                          node.ElementNodeProperties(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
                       }
                       catch(EmptyStackException e){
-                               Error(5); 
+                               Error(5,""); 
                       }
 
 
@@ -111,7 +111,7 @@ public class Parser {
                 HashMap<String, String> Attribute = new HashMap<>();
                 
                 nextLexeme(); //to move to the next lexeme after the tag name
-                current_tag = lexeme.get(i);
+                String current_tag = lexeme.get(i);
                    do{
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexeme.get(i));
@@ -132,7 +132,7 @@ public class Parser {
                 id++;
                 
                 if(!(lexeme.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
-                        Error(1);
+                        Error(1,current_tag);
                  
                 
                 while(!(lexeme.get(i)+lexeme.get(i+1)).equals("</")){  //Repeating element lookahead
@@ -151,7 +151,7 @@ public class Parser {
                                 nextLexeme();
                         }
                         else
-                            Error(3);
+                            Error(3,"");
                     }
                           
                            
@@ -160,7 +160,7 @@ public class Parser {
                     nextLexeme();  //Move to the next lexeme which can be new element or string element
                   }
                 else{
-                    Error(2);
+                    Error(1,current_tag);
                 }    
                  
                  
@@ -169,7 +169,7 @@ public class Parser {
        public void Void_element(){
             HashMap<String, String> Attribute = new HashMap<>();
             nextLexeme();
-            current_tag = lexeme.get(i);  
+            String current_tag = lexeme.get(i);  
            
                 do{
                     nextLexeme();  
@@ -187,7 +187,7 @@ public class Parser {
               //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
                 id++;
             if(!(lexeme.get(i).equals(">"))) 
-                 Error(1);  //Move to the next lexeme which can be new element or string element
+                 Error(1,current_tag);  //Move to the next lexeme which can be new element or string element
             
 
        }
@@ -207,11 +207,11 @@ public class Parser {
                             nextLexeme();                            
                         }                             
                         else
-                            Error(2);
+                            Error(2,property);
                        
                          // Checking if the next lexeme is a string
                         if(!(token.get(i)== TOKEN_CODE.STRING)) 
-                            Error(2); //Store the value of the property here (pending)
+                            Error(6,"");  
                         else
                             Attribute.put(property, lexeme.get(i));
            }
@@ -220,18 +220,20 @@ public class Parser {
         }
        
        private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.
-       private void Error(int code){
+       private void Error(int code, String s){
            
            switch (code){
                //Generic Error Message:
                case -1: WEBDROID.ErrorMessagePopup("Syntax Error","Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
                case 0: WEBDROID.ErrorMessagePopup("Syntax Error","Invalid start tag."); break;
-               case 1: WEBDROID.ErrorMessagePopup("Syntax Error","Missing closing angle bracket '>' for the tag: "+current_tag); break;
-               case 2: WEBDROID.ErrorMessagePopup("Syntax Error","Missing equal sign '=' for an attribute of "+current_tag); break; 
+               case 1: WEBDROID.ErrorMessagePopup("Syntax Error","Missing closing angle bracket '>' for the tag: "+s); break;
+               case 2: WEBDROID.ErrorMessagePopup("Syntax Error","Missing equal sign '=' for an attribute of "+s); break; 
                case 3: WEBDROID.ErrorMessagePopup("Syntax Error","Error: for tag: "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
                case 4: WEBDROID.ErrorMessagePopup("Syntax Error","Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
                case 5: WEBDROID.ErrorMessagePopup("Syntax Error","HTML file should start with a non-void tag not random string."); break; 
-               }
+               case 6: WEBDROID.ErrorMessagePopup("Syntax Error","Property value should be a string enclosed in quotation marks (\") "); break; 
+               
+            }
             WEBDROID.ErrorDetected =true;
                         
        }
