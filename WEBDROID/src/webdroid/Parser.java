@@ -13,7 +13,7 @@ public class Parser {
     private int id = 0;
     private Stack<ElementNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     private int current_parent_id;    
-    private SymbolTable table = new SymbolTable();
+    private String current_tag ="";
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
     public String CSS ="";
@@ -111,7 +111,7 @@ public class Parser {
                 HashMap<String, String> Attribute = new HashMap<>();
                 
                 nextLexeme(); //to move to the next lexeme after the tag name
-                String current_tag = lexeme.get(i);
+                current_tag = lexeme.get(i);
                    do{
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexeme.get(i));
@@ -132,7 +132,7 @@ public class Parser {
                 id++;
                 
                 if(!(lexeme.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
-                        Error(4);
+                        Error(1);
                  
                 
                 while(!(lexeme.get(i)+lexeme.get(i+1)).equals("</")){  //Repeating element lookahead
@@ -169,7 +169,7 @@ public class Parser {
        public void Void_element(){
             HashMap<String, String> Attribute = new HashMap<>();
             nextLexeme();
-            String current_tag = lexeme.get(i);  
+            current_tag = lexeme.get(i);  
            
                 do{
                     nextLexeme();  
@@ -224,15 +224,14 @@ public class Parser {
            
            switch (code){
                //Generic Error Message:
-               case -1: WEBDROID.ErrorMessagePopup("DOCTYPE: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 0: WEBDROID.ErrorMessagePopup("Element: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 1: WEBDROID.ErrorMessagePopup("Void: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 2: WEBDROID.ErrorMessagePopup("Attribute: Syntax Error at"+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 3: WEBDROID.ErrorMessagePopup("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)+" Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
-               case 4: WEBDROID.ErrorMessagePopup("Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 5: WEBDROID.ErrorMessagePopup("HTML file should start with a non-void tag not random string."); break; 
-              
-            }
+               case -1: WEBDROID.ErrorMessagePopup("Syntax Error","Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
+               case 0: WEBDROID.ErrorMessagePopup("Syntax Error","Invalid start tag."); break;
+               case 1: WEBDROID.ErrorMessagePopup("Syntax Error","Missing closing angle bracket '>' for the tag: "+current_tag); break;
+               case 2: WEBDROID.ErrorMessagePopup("Syntax Error","Missing equal sign '=' for an attribute of "+current_tag); break; 
+               case 3: WEBDROID.ErrorMessagePopup("Syntax Error","Error: for tag: "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
+               case 4: WEBDROID.ErrorMessagePopup("Syntax Error","Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
+               case 5: WEBDROID.ErrorMessagePopup("Syntax Error","HTML file should start with a non-void tag not random string."); break; 
+               }
             WEBDROID.ErrorDetected =true;
                         
        }

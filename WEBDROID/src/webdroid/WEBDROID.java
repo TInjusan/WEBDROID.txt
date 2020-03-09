@@ -29,19 +29,19 @@ public class WEBDROID extends Application {
       Button button_browse, button_convert;
       TextArea HTMLTextField, Android_Layout_XML, Android_String_XML, Android_Color_XML;
       private static Stage stage;
-      public static boolean ErrorDetected;
+      public static boolean ErrorDetected =false;
       
-       public static void ErrorMessagePopup(String Error_Message){
-            Label Error = new Label(Error_Message);
+       public static void ErrorMessagePopup(String Error, String Error_Message){
+            Label message = new Label(Error_Message);
  
             StackPane secondaryLayout = new StackPane();
-            secondaryLayout.getChildren().add(Error);
+            secondaryLayout.getChildren().add(message);
  
-            Scene secondScene = new Scene(secondaryLayout, 230, 100);
+            Scene secondScene = new Scene(secondaryLayout, 500, 250);
  
             // New window (Stage)
             Stage newWindow = new Stage();
-            newWindow.setTitle("Error Message");
+            newWindow.setTitle(Error);
             newWindow.setScene(secondScene);
  
             // Specifies the modality for new window.
@@ -49,10 +49,11 @@ public class WEBDROID extends Application {
  
             // Specifies the owner Window (parent) for new window
             newWindow.initOwner(stage);
- 
+            Image WEBDROIDIcon = new Image("/ErrorIcon.jpg");
+            newWindow.getIcons().add(WEBDROIDIcon);
             // Set position of second window, related to primary window.
-            newWindow.setX(stage.getX() + 600);
-            newWindow.setY(stage.getY() + 500);
+            newWindow.setX(stage.getX() + 300);
+            newWindow.setY(stage.getY() + 200);
  
             newWindow.show();
             
@@ -83,9 +84,10 @@ public class WEBDROID extends Application {
             HTMLTextField = new TextArea();
             HTMLTextField.setPrefRowCount(100);
             HTMLTextField.setPrefColumnCount(100);
-            HTMLTextField.setWrapText(true);
+            HTMLTextField.setWrapText(false);
             HTMLTextField.setPrefWidth(600);
             HTMLTextField.setPrefHeight(600);
+             
             GridPane.setHalignment(HTMLTextField, HPos.CENTER);
             gridpane0.add(HTMLLabel, 0, 1);             
             gridpane0.add(HTMLTextField, 0, 2);
@@ -154,8 +156,8 @@ public class WEBDROID extends Application {
             gridpane.add(gridpane0,0,0);
             gridpane.add(scrollPane,1,0);
    
-            Image anotherIcon = new Image("/Webdroid Icon Initial.png");
-            primaryStage.getIcons().add(anotherIcon);
+            Image WEBDROIDIcon = new Image("/Webdroid Icon Initial.png");
+            primaryStage.getIcons().add(WEBDROIDIcon);
 
             primaryStage.setScene(scene);
             primaryStage.show();

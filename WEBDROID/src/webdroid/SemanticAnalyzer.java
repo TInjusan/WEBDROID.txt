@@ -21,44 +21,27 @@ public class SemanticAnalyzer {
            printSymbolTree(SymbolTable.root,0);  //Viewing the hierarchy of each tag
 
    }
-        private static void printSymbolTable(){
-            for (ElementNode e : SymbolTable.entry) {
-                     String tablerow = "";
-                     tablerow = tablerow +  e.getID() +"\t";
-                     tablerow = tablerow + e.getTag() + "\t";
-                     tablerow = tablerow + e.getElement_type() +"\t";
-                     tablerow = tablerow + e.getParent_ID() +"\t";
-                     System.out.println(tablerow);
-                     
-                    }
-        }
-        
         private  void analyze(){
              for (ElementNode e : SymbolTable.entry) {
                  //Checking the validity of the id name if it doesn't begin with a digit and number of usage should only be one.  
                  if(e.getUDP().get("id")!=null){
                       String ID = e.getUDP().get("id");                      
-                      if(  Character.isDigit( ID.charAt(0))){  //check if valid id by getting the first character, it should not be a digit
-                         System.out.println("Error! Invalid id: "+ID+". First character should not be a number");
-                         System.exit(0);
-                      }
+                      if(  Character.isDigit( ID.charAt(0)))   //check if valid id by getting the first character, it should not be a digit
+                            Error(4,ID); 
+                   
                      else{
-                          if(searchID(ID)>1){
-                           System.out.println("Error! Multiple usage of id: "+ID+" is not allowed.");
-                           System.exit(0); 
-                          }
+                          if(searchID(ID)>1)                           
+                           Error(5,ID);                           
                       }
                   }  
                  //Checking the validity of the class name if it doesn't begin with a digit
                  if(e.getUDP().get("class")!=null){
                       String classname = e.getUDP().get("class");                      
-                      if(  Character.isDigit( classname.charAt(0))){   
-                         System.out.println("Error! Invalid class: "+classname+". First character should not be a digit");
-                         System.exit(0);
-                      }
+                      if(  Character.isDigit( classname.charAt(0)))   
+                           Error(3,classname);                       
                  }
                 
-                 //specifying input elements
+                 //specifying input elements - replacing the input tag name with the appropriate one
                  if(e.getTag().equals("input")){
                      if(e.getUDP().get("type")==null || e.getUDP().get("type").equals("text")){
                          e.setTag("textbox");
@@ -82,8 +65,7 @@ public class SemanticAnalyzer {
                                       e.setTag("button");
                                       break;
                              default:
-                                       System.out.println("Error. Unsupported type for input tag.");
-                                       System.exit(0);
+                                       Error(0,e.getUDP().get("type"));
                                        break;
                          }
                      }
@@ -97,7 +79,6 @@ public class SemanticAnalyzer {
                      //Setting the text from its child string element
                      else{
                           e.addUDP("text", children.get(0).getUDP().get("text")); 
-                        //  SymbolTable.entry.remove(children.get(0));
                           removal.add(children.get(0));
                      }
                      
@@ -110,21 +91,18 @@ public class SemanticAnalyzer {
 
                               if( searchID(id)>0 ){
                                    setText(id, text);
-                               //    SymbolTable.entry.remove(e);
                                    removal.add(e);
                               }
-                              else{
-                                   System.out.println("Error! Label for: "+id+" not found.");
-                                   System.exit(0);
-                              }
+                              else
+                                   Error(1,id);
+                               
                            }
                        }
                  }
                  if(e.getTag().equals("select")){
                       ArrayList<String> R = new ArrayList<>();
                       if(e.getUDP().get("name")==null){
-                          System.out.println("Error. Please make sure to assign a name to the select tag.");
-                          System.exit(0);
+                          Error(2,"");
                       }
                       else{
                           String selectname= e.getUDP().get("name");
@@ -199,7 +177,33 @@ public class SemanticAnalyzer {
             return children_;
 	 }
         
-              
+         private void Error(int code, String s){
+           
+           switch (code){
+               //Generic Error Message:
+               
+               case 0: WEBDROID.ErrorMessagePopup("Semantic Error","Input type: "+s+" is not a supported type for input tag."); break;
+               case 1: WEBDROID.ErrorMessagePopup("Semantic Error","Label attribute \"for: "+s+"\". Doesn't exist"); break;
+               case 2: WEBDROID.ErrorMessagePopup("Semantic Error","Please make sure to assign a name to each select tag."); break;
+               case 3: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid class: "+s+". First character should not be a digit"); break; 
+               case 4: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid id: "+s+". First character should not be a number"); break;
+               case 5: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id: "+s+" is not allowed."); break;
+               }
+            WEBDROID.ErrorDetected =true;
+         
+         }
+        
+        private static void printSymbolTable(){
+            for (ElementNode e : SymbolTable.entry) {
+                     String tablerow = "";
+                     tablerow = tablerow +  e.getID() +"\t";
+                     tablerow = tablerow + e.getTag() + "\t";
+                     tablerow = tablerow + e.getElement_type() +"\t";
+                     tablerow = tablerow + e.getParent_ID() +"\t";
+                     System.out.println(tablerow);
+                     
+                    }
+        }
           // This is a post-order tree traversal printing of tree
          
           private void printSymbolTree(ElementNode element, int level) {
