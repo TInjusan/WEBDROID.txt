@@ -3,6 +3,7 @@
 
 package webdroid; 
 import java.util.HashMap;
+import webdroid.SymbolTable.XML_node;
 
 public class KeywordList {
     
@@ -10,9 +11,12 @@ public class KeywordList {
     public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, 
                            HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT,
                             CSS_PROPERTY};
+    
     //initializing the collection of keywords in key value pair of hashmap
-    HashMap<String, HTML_CODE> Keyword = new HashMap<>();
-    HashMap<String, String> html_xml = new HashMap<>();
+    private  HashMap<String, HTML_CODE> Keyword = new HashMap<>();
+    private HashMap<String, XML_node> html_xml = new HashMap<>();
+    
+    
      //constructor initializing the keywords
      KeywordList(){
             
@@ -69,18 +73,59 @@ public class KeywordList {
             Keyword.put("font-family",HTML_CODE.CSS_PROPERTY);
             
             
-            html_xml.put("text", "text");
-            html_xml.put("password", "textPassword");
-            html_xml.put("email", "textEmailAddress");
-            html_xml.put("password", "textPassword");
+            // initialization of android xml attributes
+
             
-            html_xml.put("submit", "Button");
-            html_xml.put("button", "Button");
-            html_xml.put("select", "Spinner");
-            html_xml.put("radio", "RadioButton");
+            // translation from HTML tag to Android XML tag
+            SymbolTable x = new SymbolTable();
             
+            SymbolTable.XML_node LinearLayout = x.new XML_node(); 
+            LinearLayout.setXML_node("LinearLayout","111000000000110");
+            html_xml.put("body", LinearLayout);
+            html_xml.put("form", LinearLayout);
+            
+            SymbolTable.XML_node ScrollView = x.new XML_node(); 
+            ScrollView.setXML_node("ScrollView","011000000000101");
+            html_xml.put("html",ScrollView);
+            
+            
+            SymbolTable.XML_node RadioButton = x.new XML_node(); 
+            RadioButton.setXML_node("RadioButton","111101110000000");
+            html_xml.put("radiobutton", RadioButton);
+            
+            SymbolTable.XML_node CheckBox = x.new XML_node(); 
+            CheckBox.setXML_node("CheckBox","111101110000000");
+            html_xml.put("checkbox", CheckBox);
+            
+            SymbolTable.XML_node Button = x.new XML_node(); 
+            Button.setXML_node("Button","111101110000000");
+            html_xml.put("button", Button);
+            
+           
+            
+            SymbolTable.XML_node EditText = x.new XML_node();  
+            EditText.setXML_node("EditText", "111101111110000");
+            html_xml.put("textbox", EditText);
+            
+            SymbolTable.XML_node TextView = x.new XML_node();  
+            TextView.setXML_node("TextView","111111100000000");
+            html_xml.put("label", TextView);
+            html_xml.put("p", TextView);
+            html_xml.put("h1", TextView);
+            html_xml.put("h2", TextView);
+            html_xml.put("h3", TextView);
+            html_xml.put("String_element", TextView);
+            
+            SymbolTable.XML_node Spinner = x.new XML_node(); 
+            Spinner.setXML_node("Spinner","111100000001000");
+            html_xml.put("select", Spinner);
+            
+                                    
    }
-     
+     XML_node getXMLNode(String key){         
+         return html_xml.get(key);
+     }
+          
      HTML_CODE SearchKeyword(String key){ 
                    
           if(Keyword.containsKey(key.toLowerCase())) 
@@ -89,64 +134,7 @@ public class KeywordList {
             return HTML_CODE.NOT_FOUND;      
      }
      
-     private String clean(String s){
-         return (s.trim().replaceAll("\\s", "_").replaceAll(":", "")).replaceAll("\\.", "").replaceAll("\'", "");
-     }
      
-     public String string_element(String id, String s){
-         id = clean(id);
-         
-        s = (s.replaceAll("\'", "\\'")).replaceAll("\"", "\\\"");
-         
-         
-         if(s.equals("blank"))
-             s ="";
-         return "<string name=\""+id+"\">"+s+"</string>\n";
-     }
-     
-     public String layout_textview(int id, String s){
-         
-         s = clean(s);
-         
-         return " <TextView\n" +
-                "        android:id=\"@+id/text"+id+"\"\n" +
-                "        android:layout_width=\"wrap_content\"\n" +
-                "        android:layout_height=\"wrap_content\"\n" +
-                "        android:text=\"@string/"+s+"\"\n" +
-                "        android:textIsSelectable=\"false\"\n" +
-                "        android:textStyle=\"bold\" />\n";
-     }
-     
-     public String layout_textbox(String id, String s, String type){
-         
-         return "            <EditText\n" +
-                                                                "                android:id=\"@+id/"+id+"\"\n" +
-                                                                "                android:layout_width=\"match_parent\"\n" +
-                                                                "                android:layout_height=\"wrap_content\"\n" +
-                                                                "                android:hint=\"@string/"+s+"\"\n" +
-                                                                "                android:inputType=\""+html_xml.get(type)+"\"\n" +
-                                                                "                android:importantForAutofill=\"no\" />  <!-- Additional attribute if there's no hint or there's any error-->\n";
-
-                                         
-     }
-     
-     public String layout_xml(String s){
-         
-         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                            "<ScrollView \n" +
-                            "        xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
-                            "        android:layout_width=\"match_parent\"\n" +
-                            "        android:layout_height=\"wrap_content\"\n" +
-                            "        android:orientation=\"vertical\">\n" +
-                            "        <LinearLayout\n" +
-                            "            android:id=\"@+id/parentlinearlayout\"\n" +
-                            "            android:layout_width=\"match_parent\"\n" +
-                            "            android:layout_height=\"wrap_content\"\n" +
-                            "            android:orientation=\"vertical\"\n" +
-                            "            android:layout_gravity=\"top\">\n"+s+
-                            "        </LinearLayout>\n" +
-                            "    </ScrollView>";
-     }
      
   }
      

@@ -205,7 +205,5 @@ public class CharacterScanner {
     }
     public ArrayList<TOKEN_CODE> getTokenStream(){
         return tokens;
-    }
-    
-    
+    }  
 }

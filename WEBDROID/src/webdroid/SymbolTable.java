@@ -2,14 +2,16 @@ package webdroid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List; 
+import java.util.Map;
 import webdroid.KeywordList.HTML_CODE;
+
 //Symbol Table is the collection of element, its properties and how they are constructed as trees
 // UDP stands for User Defined Properties
 
 
 public class SymbolTable { 
    
-     public static class ElementNode{
+     public  class ElementNode{
             private int ID;
             private String Tag;
             private HTML_CODE Element_type;
@@ -18,7 +20,7 @@ public class SymbolTable {
             private List<ElementNode> Children_element;
 
                         
-            public void ElementNodeProperties(int id, String tag, HTML_CODE element_type, HashMap<String, String> udp, int parent_id  ){    
+            ElementNode(int id, String tag, HTML_CODE element_type, HashMap<String, String> udp, int parent_id  ){    
                             try{   //initialization
                                     this.ID = id;
                                     this.Tag = tag;
@@ -56,12 +58,65 @@ public class SymbolTable {
             List<ElementNode>  getChildrenElement(){        return Children_element;    }
     }
 
-    public static List<ElementNode>  entry = new ArrayList<>();
+     public class XML_node{
+         private int xml_id;
+         private String xml_tag;
+         private HashMap<String, String>  xml_udp = new HashMap<>();
+         private HashMap<String, String> xml_properties = new HashMap<>();
+         
+         XML_node(){
+            this.xml_id=-1;
+            xml_properties.put("android:id","\"@+id/[]\"");
+            xml_properties.put("android:layout_width","\"wrap_content\"");
+            xml_properties.put("android:layout_height","\"wrap_content\"");
+            xml_properties.put("android:text","\"@string/labelValue\"");
+            xml_properties.put("android:textIsSelectable","\"false\"");
+            xml_properties.put("android:textStyle","\"normal\"");
+            xml_properties.put("android:textSize","\"20sp\"");
+            xml_properties.put("android:textColor","\"@color/blue\"");
+            xml_properties.put("android:importantForAutofill","\"no\"");
+            xml_properties.put("android:hint","\"@string/placeholder\"");
+            xml_properties.put("android:inputType","\"text\"");
+            xml_properties.put("android:entries","\"@array/string-array \"");
+            xml_properties.put("android:orientation","\"vertical\"");
+            xml_properties.put("android:layout_gravity","\"top\"");
+            xml_properties.put("xmlns:android","\"http://schemas.android.com/apk/res/android\"");
+         }
+         
+         public void setXML_node(String XML_tag, String assigned_properties){
+             int i=0;
+             this.xml_tag=XML_tag;
+                for (Map.Entry e : xml_properties.entrySet()) { 
+                  if(assigned_properties.charAt(i)=='1')
+                      this.xml_udp.put((String)e.getKey(), (String)e.getValue());
+                  i++;
+              }
+             
+         }
+         
+         
+          // Setters and Getters for each element properties
+         void    setID(int id)    {  this.xml_id = id;  }               
+         int  getID()             {  return xml_id;     }
+                    
+         void setXMLUDP(HashMap<String, String> udp)   { this.xml_udp = udp; }
+         void addXMLUDP(String property, String value)   { this.xml_udp.put(property, value); }
+         HashMap<String, String> getXMLUDP()         { return xml_udp;   }  
+         
+         void    setXMLTag(String tag){ this.xml_tag = tag; }
+         String  getXMLTag()          { return xml_tag;     }
+         //----------------------------------------------                                                    
+                  
+     }
+          
+     
+    public static List<ElementNode> html_entry = new ArrayList<>();
     public static ElementNode root;
     public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
+    public static List<ElementNode> xml_entry = new ArrayList<>();
     
     public void AddToTable(ElementNode e){
-        entry.add(e);
+        html_entry.add(e);
     }
     public void setRoot(ElementNode e){
 

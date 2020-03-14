@@ -56,7 +56,7 @@ public class WEBDROID extends Application {
             newWindow.setY(stage.getY() + 200);
  
             newWindow.show();
-            
+            ErrorDetected =false;
     }  
       
       
@@ -179,9 +179,14 @@ public class WEBDROID extends Application {
                     fileChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID.txt\\WEBDROID\\test\\HTML CSS Files"));
                     File file = fileChooser.showOpenDialog(stage);
                     
-                    FilePath= file.getAbsoluteFile().toString();
-                    HTMLTextField.clear();
-                    HTMLTextField.setText( ReadHTMLFile());
+                    try{
+                          FilePath= file.getAbsoluteFile().toString();
+                          HTMLTextField.clear();
+                          HTMLTextField.setText( ReadHTMLFile());
+                    }catch(NullPointerException e){
+                        System.out.println("No file selected");
+                    }
+                  
                     
         }
         else if (event.getTarget()==button_convert){
@@ -195,15 +200,11 @@ public class WEBDROID extends Application {
                    if(!ErrorDetected){
                        SemanticAnalyzer Semantic = new SemanticAnalyzer();
                        Semantic.ExecuteAnalyzer();
+                       
+                       CodeGenerator CD = new CodeGenerator();
+                       CD.directTranslation();
                    }
-                    
-                    
-//                   Generating the XML files based from the output of the parser: AST
-//                   CodeGenerator XML_Code = new CodeGenerator();
-//                   XML_Code.set_html_element(Parser.getHTML_Elements(), Parser.getroot());
-//                   XML_Code.Run_Code_Generator();
-//                   
-                   
+                         
 //                   printing of the output - result
 //                   Android_Layout_XML.clear();
 //                   Android_Layout_XML.setText( XML_Code.get_layout_xml());
@@ -232,9 +233,6 @@ public class WEBDROID extends Application {
         
         return s;
     }
-    
-     
-        
-     
+         
 }
 

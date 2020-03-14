@@ -22,7 +22,7 @@ public class SemanticAnalyzer {
 
    }
         private  void analyze(){
-             for (ElementNode e : SymbolTable.entry) {
+             for (ElementNode e : SymbolTable.html_entry) {
                  //Checking the validity of the id name if it doesn't begin with a digit and number of usage should only be one.  
                  if(e.getUDP().get("id")!=null){
                       String ID = e.getUDP().get("id");                      
@@ -62,7 +62,20 @@ public class SemanticAnalyzer {
                                       break;
                              case "button":
                              case "submit":
-                                      e.setTag("button");
+                                      try{
+                                          if (e.getUDP().get("value").equals("")){
+                                          Error(6,"");
+                                      }
+                                      else{ //put the value of value property to text so that the code generator will only take
+                                            //text property in xml
+                                          e.addUDP("text", e.getUDP().get("value")); 
+                                          e.setTag("button");
+                                      }
+                                      
+                                      }catch(NullPointerException ee){
+                                           Error(6,"");
+                                      }
+                                    
                                       break;
                              default:
                                        Error(0,e.getUDP().get("type"));
@@ -120,13 +133,13 @@ public class SemanticAnalyzer {
         
         private void removeElements(){
             for (ElementNode remove : removal)  {
-                SymbolTable.entry.remove(remove);
+                SymbolTable.html_entry.remove(remove);
             }
             
         }
         private int searchID(String ID){
             int i = 0;
-            for (ElementNode e : SymbolTable.entry) {
+            for (ElementNode e : SymbolTable.html_entry) {
                  if(e.getUDP().get("id")!=null){
                     if (ID.equals( e.getUDP().get("id") )){
                         i++;
@@ -136,7 +149,7 @@ public class SemanticAnalyzer {
             return i;
         }
         private void setText(String ID, String Text){
-             for (ElementNode e : SymbolTable.entry) {
+             for (ElementNode e : SymbolTable.html_entry) {
                  if(e.getUDP().get("id")!=null){
                     if (ID.equals( e.getUDP().get("id") )){
                       e.addUDP("text", Text);
@@ -156,7 +169,7 @@ public class SemanticAnalyzer {
                 return s;
         }
 
-        private void buildSymbolTree(ElementNode element) {
+        public void buildSymbolTree(ElementNode element) {
 		 children = getChildrenById(element.getID());             
                  element.setChildrenElement(children);
                     if (children.isEmpty())  
@@ -166,9 +179,9 @@ public class SemanticAnalyzer {
                         buildSymbolTree(child_node);
                  
 	 }
-        private  List<ElementNode> getChildrenById(int id) {
+        public  List<ElementNode> getChildrenById(int id) {
                 List<ElementNode> children_ = new ArrayList<>();
-                for (ElementNode e : SymbolTable.entry) {
+                for (ElementNode e : SymbolTable.html_entry) {
                       if (e.getParent_ID() == id) {
                        children_.add(e);
 
@@ -188,13 +201,15 @@ public class SemanticAnalyzer {
                case 3: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid class: "+s+". First character should not be a digit"); break; 
                case 4: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid id: "+s+". First character should not be a number"); break;
                case 5: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id: "+s+" is not allowed."); break;
-               }
+               case 6: WEBDROID.ErrorMessagePopup("Semantic Error","Please make sure to set the value property of a button as it is the text of button itself"); break;
+               
+           }
             WEBDROID.ErrorDetected =true;
          
          }
         
         private static void printSymbolTable(){
-            for (ElementNode e : SymbolTable.entry) {
+            for (ElementNode e : SymbolTable.html_entry) {
                      String tablerow = "";
                      tablerow = tablerow +  e.getID() +"\t";
                      tablerow = tablerow + e.getTag() + "\t";
@@ -212,16 +227,13 @@ public class SemanticAnalyzer {
 		 }		
                  
                  // printing the node - extracting data //
-                 if(element.getElement_type() == KeywordList.HTML_CODE.HTML_STRING_ELEMENT){
-                     System.out.println(  element.getUDP().get("text"));
-                 }
-                 else{
-                     if(element.getTag().equals("input")){
-                        System.out.println(element.getUDP().get("type"));                        
+              
+                     if(element.getTag().equals("button")){
+                         System.out.println("button - "+element.getUDP().get("text"));
                      }
                      else
                         System.out.println(element.getTag()); 
-                 } 
+                  
                  // end of printing the node //
                  
 		 children = element.getChildrenElement();

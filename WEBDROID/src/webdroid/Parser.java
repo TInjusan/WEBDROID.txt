@@ -13,7 +13,6 @@ public class Parser {
     private int id = 0;
     private Stack<ElementNode> html_element_stack  = new Stack<>();  //NV_tag_stack or Non-void tag Stack is the storage of the Non-void tags in a first-in last-out implementation
     private int current_parent_id;    
-    private SymbolTable table = new SymbolTable();
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
     public String CSS ="";
@@ -92,17 +91,18 @@ public class Parser {
                   
                     HashMap<String, String> Attribute = new HashMap<>();
                     Attribute.put("text", lexeme.get(i));
-                    ElementNode node = new ElementNode();
-
+                    SymbolTable x = new SymbolTable();
+                   
                       try{
-                         node.ElementNodeProperties(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
+                         SymbolTable.ElementNode node = x.new ElementNode(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
+                         SymbolTable.html_entry.add(node);
                       }
                       catch(EmptyStackException e){
                                Error(5,""); 
                       }
 
 
-                    SymbolTable.entry.add(node);
+                   
                     id++;
                  }
                   
@@ -119,11 +119,11 @@ public class Parser {
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
                 //initiate node html tag node properties
-                SymbolTable.ElementNode  node = new SymbolTable.ElementNode();
-                
-                node.ElementNodeProperties(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent );
+                    SymbolTable x = new SymbolTable();
+                    SymbolTable.ElementNode node = x.new ElementNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent);
+ 
                // end of initialization
-                 SymbolTable.entry.add(node);
+                 SymbolTable.html_entry.add(node);
                 
                   if(node.getParent_ID()==-1) 
                     SymbolTable.root= node;
@@ -179,13 +179,10 @@ public class Parser {
                     
                 }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
                 
-                ElementNode  node = new ElementNode();
-                node.ElementNodeProperties(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID() );
-            
-              
-                SymbolTable.entry.add(node);
-              //   System.out.println(id+" Tag:= "+node.getName()+"  Parent:= "+node.getParent_ID());
-                id++;
+                SymbolTable x = new SymbolTable();
+                SymbolTable.ElementNode node = x.new ElementNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID());
+                SymbolTable.html_entry.add(node);
+                 id++;
             if(!(lexeme.get(i).equals(">"))) 
                  Error(1,current_tag);  //Move to the next lexeme which can be new element or string element
             
@@ -235,7 +232,6 @@ public class Parser {
                
             }
             WEBDROID.ErrorDetected =true;
-                        
        }
          
         public void CSS(){ 
