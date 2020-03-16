@@ -77,6 +77,7 @@ public class SemanticAnalyzer {
                                       }
                                     
                                       break;
+                            
                              default:
                                        Error(0,e.getUDP().get("type"));
                                        break;
@@ -127,6 +128,9 @@ public class SemanticAnalyzer {
                             }   
                           SymbolTable.ArrayString.put(selectname, R);
                       }
+                 }
+                 if(e.getTag().equals("br")){
+                     removal.add(e);
                  }
              }    
         }

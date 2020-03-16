@@ -33,23 +33,36 @@ public class CodeGenerator {
             String tab =  "\t";
             for (int i = 0; i < level; i++)   tab+="\t";
 		    
-             if(!element.getTag().equals("br")){
+             
                  KeywordList kw = new KeywordList();
                  SymbolTable x = new SymbolTable();
                  SymbolTable.XML_node xml_node = x.new XML_node();
+                 
                  if(kw.getXMLNode(element.getTag())!=null){
-                     xml_node = kw.getXMLNode(element.getTag());
+                        xml_node = kw.getXMLNode(element.getTag());
+                        
+                     
+                        
                         System.out.println(tab+xml_node.getXMLTag());
-
-
+                        
                        for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
-                            System.out.println(tab+"\t"+e.getKey()+" = "+e.getValue());
+                          System.out.println(tab+"\t"+e.getKey()+" = "+e.getValue());
                         }
+                      
+                       for (Map.Entry e : element.getUDP().entrySet()) { 
+                          System.out.println(tab+"\t"+e.getKey()+" = "+e.getValue());
+                        }
+                       
+                        if(xml_node.getXMLTag().equals("ScrollView")){
+                              xml_node.setParent_ID(-1);
+                              xml_node.setID(element.getID());
+                              SymbolTable.xml_entry.add(xml_node);
+                        }
+                     
                  }
                  else
                      System.out.println(tab+"No equivalent Android XML: "+element.getTag());
-                 
-              }
+             
               
              children = element.getChildrenElement();
 	     System.out.print(" ");

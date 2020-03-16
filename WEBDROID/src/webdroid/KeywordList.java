@@ -79,36 +79,39 @@ public class KeywordList {
             // translation from HTML tag to Android XML tag
             SymbolTable x = new SymbolTable();
             
-            SymbolTable.XML_node LinearLayout = x.new XML_node(); 
-            LinearLayout.setXML_node("LinearLayout","111000000000110");
-            html_xml.put("body", LinearLayout);
-            html_xml.put("form", LinearLayout);
-            
             SymbolTable.XML_node ScrollView = x.new XML_node(); 
             ScrollView.setXML_node("ScrollView","011000000000101");
             html_xml.put("html",ScrollView);
             
+            SymbolTable.XML_node LinearLayout = x.new XML_node(); 
+            LinearLayout.setXML_node("LinearLayout","111000000000110");
+            html_xml.put("body", LinearLayout);
+            html_xml.put("form", LinearLayout);
+            html_xml.put("div", LinearLayout);
+            
+            SymbolTable.XML_node RadioGroup = x.new XML_node(); 
+            RadioGroup.setXML_node("RadioGroup","011000000000000");
+            html_xml.put("html",ScrollView);
             
             SymbolTable.XML_node RadioButton = x.new XML_node(); 
-            RadioButton.setXML_node("RadioButton","111101110000000");
+            RadioButton.setXML_node("RadioButton","111000000000000");
             html_xml.put("radiobutton", RadioButton);
             
             SymbolTable.XML_node CheckBox = x.new XML_node(); 
-            CheckBox.setXML_node("CheckBox","111101110000000");
+            CheckBox.setXML_node("CheckBox","111000000000000");
             html_xml.put("checkbox", CheckBox);
             
             SymbolTable.XML_node Button = x.new XML_node(); 
-            Button.setXML_node("Button","111101110000000");
+            Button.setXML_node("Button","111000000000000");
             html_xml.put("button", Button);
             
-           
             
             SymbolTable.XML_node EditText = x.new XML_node();  
-            EditText.setXML_node("EditText", "111101111110000");
+            EditText.setXML_node("EditText", "111000001000000");
             html_xml.put("textbox", EditText);
             
             SymbolTable.XML_node TextView = x.new XML_node();  
-            TextView.setXML_node("TextView","111111100000000");
+            TextView.setXML_node("TextView","111010000000000");
             html_xml.put("label", TextView);
             html_xml.put("p", TextView);
             html_xml.put("h1", TextView);
@@ -117,7 +120,7 @@ public class KeywordList {
             html_xml.put("String_element", TextView);
             
             SymbolTable.XML_node Spinner = x.new XML_node(); 
-            Spinner.setXML_node("Spinner","111100000001000");
+            Spinner.setXML_node("Spinner","111100000000000");
             html_xml.put("select", Spinner);
             
                                     

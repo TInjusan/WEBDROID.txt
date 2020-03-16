@@ -1,6 +1,7 @@
 package webdroid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List; 
 import java.util.Map;
 import webdroid.KeywordList.HTML_CODE;
@@ -61,23 +62,25 @@ public class SymbolTable {
      public class XML_node{
          private int xml_id;
          private String xml_tag;
-         private HashMap<String, String>  xml_udp = new HashMap<>();
-         private HashMap<String, String> xml_properties = new HashMap<>();
-         
+         private Map<String, String>  xml_udp = new LinkedHashMap<>();
+         private Map<String, String> xml_properties = new LinkedHashMap<>();
+         private int Parent_ID;
+         private List<ElementNode> Children_element;
+            
          XML_node(){
             this.xml_id=-1;
-            xml_properties.put("android:id","\"@+id/[]\"");
+            xml_properties.put("android:id","");
             xml_properties.put("android:layout_width","\"wrap_content\"");
             xml_properties.put("android:layout_height","\"wrap_content\"");
-            xml_properties.put("android:text","\"@string/labelValue\"");
+            xml_properties.put("android:text","");
             xml_properties.put("android:textIsSelectable","\"false\"");
-            xml_properties.put("android:textStyle","\"normal\"");
-            xml_properties.put("android:textSize","\"20sp\"");
-            xml_properties.put("android:textColor","\"@color/blue\"");
+            xml_properties.put("android:textStyle","");
+            xml_properties.put("android:textSize","");
+            xml_properties.put("android:textColor","");
             xml_properties.put("android:importantForAutofill","\"no\"");
-            xml_properties.put("android:hint","\"@string/placeholder\"");
-            xml_properties.put("android:inputType","\"text\"");
-            xml_properties.put("android:entries","\"@array/string-array \"");
+            xml_properties.put("android:hint","");
+            xml_properties.put("android:inputType","");
+            xml_properties.put("android:entries","");
             xml_properties.put("android:orientation","\"vertical\"");
             xml_properties.put("android:layout_gravity","\"top\"");
             xml_properties.put("xmlns:android","\"http://schemas.android.com/apk/res/android\"");
@@ -86,12 +89,15 @@ public class SymbolTable {
          public void setXML_node(String XML_tag, String assigned_properties){
              int i=0;
              this.xml_tag=XML_tag;
+                
                 for (Map.Entry e : xml_properties.entrySet()) { 
-                  if(assigned_properties.charAt(i)=='1')
-                      this.xml_udp.put((String)e.getKey(), (String)e.getValue());
+                  if(assigned_properties.charAt(i)=='1'){
+                       this.xml_udp.put((String)e.getKey(), (String)e.getValue());
+                       }
+                  //  System.out.println("\t"+(String)e.getKey()+" = "+(String)e.getValue()); 
                   i++;
-              }
-             
+                }     
+              
          }
          
          
@@ -101,10 +107,16 @@ public class SymbolTable {
                     
          void setXMLUDP(HashMap<String, String> udp)   { this.xml_udp = udp; }
          void addXMLUDP(String property, String value)   { this.xml_udp.put(property, value); }
-         HashMap<String, String> getXMLUDP()         { return xml_udp;   }  
+         Map<String, String> getXMLUDP()         { return xml_udp;   }  
          
          void    setXMLTag(String tag){ this.xml_tag = tag; }
          String  getXMLTag()          { return xml_tag;     }
+         
+          void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
+            int getParent_ID() {        return Parent_ID;     }
+           //-------------------------------------------------------------------------// 
+            void setChildrenElement (List<ElementNode>  c){        this.Children_element = c;    }
+            List<ElementNode>  getChildrenElement(){        return Children_element;    }
          //----------------------------------------------                                                    
                   
      }
@@ -112,8 +124,12 @@ public class SymbolTable {
      
     public static List<ElementNode> html_entry = new ArrayList<>();
     public static ElementNode root;
+    
     public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
-    public static List<ElementNode> xml_entry = new ArrayList<>();
+    public static HashMap<String, String> string_literals = new HashMap<>();
+    
+    public static List<XML_node> xml_entry = new ArrayList<>();
+    public static XML_node xml_root;
     
     public void AddToTable(ElementNode e){
         html_entry.add(e);
