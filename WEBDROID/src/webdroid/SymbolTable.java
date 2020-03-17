@@ -43,6 +43,7 @@ public class SymbolTable {
             HashMap<String, String> getUDP()         { return UDP;   }    
             void setUDP(HashMap<String, String> udp)   { this.UDP = udp; }
             void addUDP(String property, String value)   { this.UDP.put(property, value); }
+            void removeUDP(String property )   { this.UDP.remove(property); }
             //--------------------------------------------------------------------------//
             void    setTag(String tag){ this.Tag = tag; }
             String  getTag()          { return Tag;     }

@@ -56,26 +56,30 @@ public class SemanticAnalyzer {
                                     break;
                              case "radio":
                                      e.setTag("radiobutton");
+                                     e.removeUDP("type");
                                      break;
                              case "checkbox":
                                       e.setTag("checkbox");
+                                      e.removeUDP("type");
                                       break;
                              case "button":
                              case "submit":
                                       try{
-                                          if (e.getUDP().get("value").equals("")){
-                                          Error(6,"");
-                                      }
-                                      else{ //put the value of value property to text so that the code generator will only take
-                                            //text property in xml
-                                          e.addUDP("text", e.getUDP().get("value")); 
-                                          e.setTag("button");
-                                      }
+                                            if (e.getUDP().get("value").equals("")){
+                                                Error(6,"");
+                                            }
+                                            else{ //put the value of value property to text so that the code generator will only take
+                                                  //text property in xml
+                                                e.addUDP("text", e.getUDP().get("value")); 
+                                                e.setTag("button");
+                                                e.removeUDP("type");
+                                                e.removeUDP("value");
+                                            }
                                       
                                       }catch(NullPointerException ee){
                                            Error(6,"");
                                       }
-                                    
+                                      
                                       break;
                             
                              default:

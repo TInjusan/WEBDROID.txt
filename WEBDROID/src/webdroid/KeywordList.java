@@ -120,7 +120,7 @@ public class KeywordList {
             html_xml.put("String_element", TextView);
             
             SymbolTable.XML_node Spinner = x.new XML_node(); 
-            Spinner.setXML_node("Spinner","111100000000000");
+            Spinner.setXML_node("Spinner","111000000000000");
             html_xml.put("select", Spinner);
             
                                     
