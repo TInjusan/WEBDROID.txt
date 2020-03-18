@@ -1,6 +1,5 @@
 package webdroid; 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,11 +42,16 @@ public class CodeGenerator {
                  KeywordList kw = new KeywordList();
                  SymbolTable x = new SymbolTable();
                  SymbolTable.XML_node xml_node = x.new XML_node();
-                 
+                  SymbolTable.XML_node xml_node_group = x.new XML_node();
                  if(kw.getXMLNode(element.getTag())!=null){
                         xml_node = kw.getXMLNode(element.getTag());
                                                 
-                        System.out.println(tab+xml_node.getXMLTag());
+                        
+                        if(xml_node.getXMLTag().equals("RadioButton")){
+                            xml_node_group = kw.getXMLNode("RadioButtonGroup");
+                        }
+                        
+                          WEBDROID.Android_Layout_XML.appendText(tab+xml_node.getXMLTag()+"\n");
                         
                         //lambda expression
                         id =  kw.getXMLNode(element.getTag())!=null? 
@@ -82,11 +86,11 @@ public class CodeGenerator {
                      
                        
                        for (Map.Entry e : element.getUDP().entrySet()) { 
-                          System.out.println(tab+"\t"+e.getKey()+" = "+e.getValue());
+                         WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
                         }
                        
                        for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
-                          System.out.println(tab+"\t"+e.getKey()+" = "+e.getValue());
+                         WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
                         }
                       
                        
@@ -95,15 +99,19 @@ public class CodeGenerator {
                               xml_node.setParent_ID(-1);
                               xml_node.setID(element.getID());
                               SymbolTable.xml_entry.add(xml_node);
+                        }else{
+                              xml_node.setParent_ID(element.getParent_ID());
+                              xml_node.setID(element.getID());
+                              SymbolTable.xml_entry.add(xml_node); 
                         }
                      
                  }
-                 else
-                     System.out.println(tab+"No equivalent Android XML: "+element.getTag());
-             
+//                 else
+//                    System.out.println(tab+"No equivalent Android XML: "+element.getTag());
+//             
               
              children = element.getChildrenElement();
-	     System.out.print(" ");
+	     WEBDROID.Android_Layout_XML.appendText(" ");
              for (ElementNode child_node : children) {
 			 GENERATE_XML(child_node, level + 1);
 		 }   
@@ -115,29 +123,20 @@ public class CodeGenerator {
         }
         
         private void printString(){
-            
-            System.out.println("<resources>");
+            WEBDROID.Android_String_XML.appendText("<resources>\n");
+             
             for (Map.Entry e :   string_literals.entrySet())  
-               System.out.println("\t<string name=\""+e.getKey()+"\">"+e.getValue()+"</string>");
-            
-//            for (Map.Entry e : ArrayString.entrySet()) { 
-//                       
-//                       System.out.println(e.getValue());
-                       
-//                         for (String item : e.getValue(). ) { 		      
-//                            System.out.println(item); 		
-//                       }
-
-
+                 WEBDROID.Android_String_XML.appendText(" <string name=\""+e.getKey()+"\">"+e.getValue()+"</string>\n");
+    
                 for (Entry<String, ArrayList<String>> entry : ArrayString.entrySet()) {
-                      System.out.println("<string-array name=\""+(String)entry.getKey()+"\">");
+                        WEBDROID.Android_String_XML.appendText(" <string-array name=\""+(String)entry.getKey()+"\">\n");
                       for(String item : entry.getValue()){
-                          System.out.println(item); 
+                            WEBDROID.Android_String_XML.appendText("\t<item>"+item+"<item>\n"); 
                       }
-        
+                        WEBDROID.Android_String_XML.appendText(" </string-array>\n");
                 }       
             
-           System.out.println("</resources>");           
+             WEBDROID.Android_String_XML.appendText("</resources>\n");           
         }
 
 }

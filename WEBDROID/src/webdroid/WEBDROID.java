@@ -26,8 +26,8 @@ public class WEBDROID extends Application {
     
       public static String HTMLText = "";
       private static String FilePath=""; 
-      Button button_browse, button_convert;
-      TextArea HTMLTextField, Android_Layout_XML, Android_String_XML, Android_Color_XML;
+      public static Button button_browse, button_convert;
+      public static TextArea HTMLTextField, Android_Layout_XML, Android_String_XML, Android_Color_XML;
       private static Stage stage;
       public static boolean ErrorDetected =false;
       

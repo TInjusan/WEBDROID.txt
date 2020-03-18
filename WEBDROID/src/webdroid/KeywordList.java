@@ -91,7 +91,7 @@ public class KeywordList {
             
             SymbolTable.XML_node RadioGroup = x.new XML_node(); 
             RadioGroup.setXML_node("RadioGroup","011000000000000");
-            html_xml.put("html",ScrollView);
+            html_xml.put("RadioButtonGroup", RadioGroup);
             
             SymbolTable.XML_node RadioButton = x.new XML_node(); 
             RadioButton.setXML_node("RadioButton","111000000000000");
