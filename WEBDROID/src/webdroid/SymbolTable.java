@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List; 
 import java.util.Map;
 import webdroid.KeywordList.HTML_CODE;
+import webdroid.KeywordList.XML_CODE;
 
 //Symbol Table is the collection of element, its properties and how they are constructed as trees
 // UDP stands for User Defined Properties
@@ -63,24 +64,24 @@ public class SymbolTable {
      public class XML_node{
          private int xml_id;
          private String xml_tag;
+         private XML_CODE XML_type;
          private Map<String, String>  xml_udp = new LinkedHashMap<>();
          private int Parent_ID;
          private List<XML_node> Children_element;
             
          XML_node(){
             this.xml_id=-1;
-            
          }
          
-         public void setXML_node(String XML_tag, String assigned_properties){
-             int i=0;
-             this.xml_tag=XML_tag;
-                
+         public void setXML_node(String XML_tag, String assigned_properties, XML_CODE xml_type){
+             int i = 0;
+             this.xml_tag = XML_tag;
+             this.XML_type = xml_type;
+             
                 for (Map.Entry e : KeywordList.get_xml_properties().entrySet()) { 
                   if(assigned_properties.charAt(i)=='1'){
                        this.xml_udp.put((String)e.getKey(), (String)e.getValue());
                        }
-                  //  System.out.println("\t"+(String)e.getKey()+" = "+(String)e.getValue()); 
                   i++;
                 }     
               
@@ -98,12 +99,21 @@ public class SymbolTable {
          void    setXMLTag(String tag){ this.xml_tag = tag; }
          String  getXMLTag()          { return xml_tag;     }
          
-          void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
-            int getParent_ID() {        return Parent_ID;     }
-           //-------------------------------------------------------------------------// 
-            void setChildrenElement (List<XML_node>  c){        this.Children_element = c;    }
-            List<XML_node>  getChildrenElement(){        return Children_element;    }
-         //----------------------------------------------                                                    
+         void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
+         int getParent_ID() {        return Parent_ID;     }
+           
+         void setChildrenElement (List<XML_node>  c){        this.Children_element = c;    }
+         List<XML_node>  getChildrenElement(){        return Children_element;    }
+         
+         void setXML_type(XML_CODE xml_type){
+              this.XML_type = xml_type;
+         }
+          XML_CODE getXML_type(){
+              return XML_type;
+         }
+         
+         
+          //----------------------------------------------                                                    
                   
      }
                

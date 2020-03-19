@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import webdroid.KeywordList.XML_CODE;
 import static webdroid.SymbolTable.ArrayString;
 import static webdroid.SymbolTable.string_literals;
 import webdroid.SymbolTable.ElementNode;
@@ -164,14 +165,23 @@ public class CodeGenerator {
          private void printLayoutXML(XML_node xml_node, String tab){
             tab = tab+"\t";
             
-            System.out.println(tab+xml_node.getXMLTag());
-            WEBDROID.Android_Layout_XML.appendText(tab+xml_node.getXMLTag().trim()+"\n");
+             WEBDROID.Android_Layout_XML.appendText(tab+"<"+xml_node.getXMLTag().trim()+"\n");
 
-
+            int i = 0;
             for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
-             WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
-            }
+                WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue());
+                xml_node.getXMLUDP().size();
+             
+                WEBDROID.Android_Layout_XML.appendText(
+                        i+1 == xml_node.getXMLUDP().size()? 
+                        xml_node.getXML_type()==XML_CODE.XML_VOID? "/>\n" : ">\n"
+                        :"\n"
+                );
+                i++;
 
+            }
+         
+            
              xmlchildren = xml_node.getChildrenElement();
 	     
              for (XML_node child_node : xmlchildren)  

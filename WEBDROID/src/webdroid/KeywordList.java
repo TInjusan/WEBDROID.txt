@@ -13,7 +13,8 @@ public class KeywordList {
     public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, 
                            HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT,
                             CSS_PROPERTY};
-    
+    public enum XML_CODE { XML_NONVOID, XML_VOID };
+                                    
     //initializing the collection of keywords in key value pair of hashmap
     private  HashMap<String, HTML_CODE> Keyword = new HashMap<>();
     private HashMap<String, XML_node> html_xml = new HashMap<>();
@@ -96,38 +97,38 @@ public class KeywordList {
             SymbolTable x = new SymbolTable();
             
             SymbolTable.XML_node ScrollView = x.new XML_node(); 
-            ScrollView.setXML_node("ScrollView","011000000000101");
+            ScrollView.setXML_node("ScrollView","011000000000101", XML_CODE.XML_NONVOID );
             html_xml.put("html",ScrollView);
             
             SymbolTable.XML_node LinearLayout = x.new XML_node(); 
-            LinearLayout.setXML_node("LinearLayout","111000000000110");
+            LinearLayout.setXML_node("LinearLayout","111000000000110", XML_CODE.XML_NONVOID);
             html_xml.put("body", LinearLayout);
             html_xml.put("form", LinearLayout);
             html_xml.put("div", LinearLayout);
             
             SymbolTable.XML_node RadioGroup = x.new XML_node(); 
-            RadioGroup.setXML_node("RadioGroup","011000000000000");
+            RadioGroup.setXML_node("RadioGroup","011000000000000", XML_CODE.XML_NONVOID);
             html_xml.put("RadioButtonGroup", RadioGroup);
             
             SymbolTable.XML_node RadioButton = x.new XML_node(); 
-            RadioButton.setXML_node("RadioButton","111000000000000");
+            RadioButton.setXML_node("RadioButton","111000000000000", XML_CODE.XML_VOID);
             html_xml.put("radiobutton", RadioButton);
             
             SymbolTable.XML_node CheckBox = x.new XML_node(); 
-            CheckBox.setXML_node("CheckBox","111000000000000");
+            CheckBox.setXML_node("CheckBox","111000000000000", XML_CODE.XML_VOID);
             html_xml.put("checkbox", CheckBox);
             
             SymbolTable.XML_node Button = x.new XML_node(); 
-            Button.setXML_node("Button","111000000000000");
+            Button.setXML_node("Button","111000000000000", XML_CODE.XML_VOID);
             html_xml.put("button", Button);
             
             
             SymbolTable.XML_node EditText = x.new XML_node();  
-            EditText.setXML_node("EditText", "111000001000000");
+            EditText.setXML_node("EditText", "111000001000000", XML_CODE.XML_VOID);
             html_xml.put("textbox", EditText);
             
             SymbolTable.XML_node TextView = x.new XML_node();  
-            TextView.setXML_node("TextView","111010000000000");
+            TextView.setXML_node("TextView","111010000000000", XML_CODE.XML_VOID);
             html_xml.put("label", TextView);
             html_xml.put("p", TextView);
             html_xml.put("h1", TextView);
@@ -136,7 +137,7 @@ public class KeywordList {
             html_xml.put("String_element", TextView);
             
             SymbolTable.XML_node Spinner = x.new XML_node(); 
-            Spinner.setXML_node("Spinner","111000000000000");
+            Spinner.setXML_node("Spinner","111000000000000", XML_CODE.XML_VOID);
             html_xml.put("select", Spinner);
             
                                     
