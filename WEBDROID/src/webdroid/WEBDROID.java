@@ -191,8 +191,9 @@ public class WEBDROID extends Application {
         }
         else if (event.getTarget()==button_convert){
                     HTMLText = HTMLTextField.getText();
-                    
- 
+                    Android_String_XML.clear();
+                    Android_Layout_XML.clear();
+                    Android_Color_XML.clear();
                    //Parsing phase
                    Parser Parser = new Parser();
                    Parser.setHTMLParser(HTMLText);

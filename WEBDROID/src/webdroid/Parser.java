@@ -95,7 +95,7 @@ public class Parser {
                    
                       try{
                          SymbolTable.ElementNode node = x.new ElementNode(id,  "String_element",HTML_CODE.HTML_STRING_ELEMENT, Attribute,html_element_stack.peek().getID() );
-                         SymbolTable.html_entry.add(node);
+                         SymbolTable.AddToTable(node);
                       }
                       catch(EmptyStackException e){
                                Error(5,""); 
@@ -123,7 +123,7 @@ public class Parser {
                     SymbolTable.ElementNode node = x.new ElementNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,current_parent);
  
                // end of initialization
-                 SymbolTable.html_entry.add(node);
+                 SymbolTable.AddToTable(node);
                 
                   if(node.getParent_ID()==-1) 
                     SymbolTable.root= node;
@@ -181,7 +181,7 @@ public class Parser {
                 
                 SymbolTable x = new SymbolTable();
                 SymbolTable.ElementNode node = x.new ElementNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID());
-                SymbolTable.html_entry.add(node);
+                SymbolTable.AddToTable(node);
                  id++;
             if(!(lexeme.get(i).equals(">"))) 
                  Error(1,current_tag);  //Move to the next lexeme which can be new element or string element

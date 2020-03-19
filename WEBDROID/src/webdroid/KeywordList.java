@@ -3,6 +3,8 @@
 
 package webdroid; 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import webdroid.SymbolTable.XML_node;
 
 public class KeywordList {
@@ -15,7 +17,7 @@ public class KeywordList {
     //initializing the collection of keywords in key value pair of hashmap
     private  HashMap<String, HTML_CODE> Keyword = new HashMap<>();
     private HashMap<String, XML_node> html_xml = new HashMap<>();
-    
+    private static Map<String, String> xml_properties = new LinkedHashMap<>();
     
      //constructor initializing the keywords
      KeywordList(){
@@ -72,10 +74,24 @@ public class KeywordList {
             Keyword.put("text-align",HTML_CODE.CSS_PROPERTY); 
             Keyword.put("font-family",HTML_CODE.CSS_PROPERTY);
             
-            
             // initialization of android xml attributes
-
+            xml_properties.put("android:id","");
+            xml_properties.put("android:layout_width","\"wrap_content\"");
+            xml_properties.put("android:layout_height","\"wrap_content\"");
+            xml_properties.put("android:text","");
+            xml_properties.put("android:textIsSelectable","\"false\"");
+            xml_properties.put("android:textStyle","");
+            xml_properties.put("android:textSize","");
+            xml_properties.put("android:textColor","");
+            xml_properties.put("android:importantForAutofill","\"no\"");
+            xml_properties.put("android:hint","");
+            xml_properties.put("android:inputType","");
+            xml_properties.put("android:entries","");
+            xml_properties.put("android:orientation","\"vertical\"");
+            xml_properties.put("android:layout_gravity","\"top\"");
+            xml_properties.put("xmlns:android","\"http://schemas.android.com/apk/res/android\"");
             
+              
             // translation from HTML tag to Android XML tag
             SymbolTable x = new SymbolTable();
             
@@ -128,7 +144,10 @@ public class KeywordList {
      XML_node getXMLNode(String key){         
          return html_xml.get(key);
      }
-          
+    public static Map<String, String> get_xml_properties(){        
+        return xml_properties;
+    }       
+     
      HTML_CODE SearchKeyword(String key){ 
                    
           if(Keyword.containsKey(key.toLowerCase())) 

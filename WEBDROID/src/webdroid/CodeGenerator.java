@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import static webdroid.SymbolTable.ArrayString;
 import static webdroid.SymbolTable.string_literals;
 import webdroid.SymbolTable.ElementNode;
+import webdroid.SymbolTable.XML_node;
 
 public class CodeGenerator {
          static Map<Integer, SymbolTable> html_element;
@@ -15,44 +16,51 @@ public class CodeGenerator {
          static String color_xml;
          static String current_select="";
          static List<ElementNode> children;
-         static int radiobuttoncount = 0;
-         static int radiobuttonparent = -1;
-         static String rb = "";
-         static String App_name="";
-          
+         static List<XML_node> xmlchildren;
+         static int rbcount = 0;
+         static int rbparent = -1;
+         static int current_rb = -1;
+         static int xml_id = SymbolTable.get_html_table().size();
          static KeywordList k = new KeywordList();
-         public void set_html_element(Map<Integer, SymbolTable> h,SymbolTable r){
-            html_element = h;
-            root = r;
-         }
-         
-         CodeGenerator(){
-             string_xml="";
-             layout_xml="";
-             color_xml="";
-         }
-    	 
       
+         
         private void GENERATE_XML(ElementNode element, int level){
-            String tab =  "\t";
-            String id;
-            for (int i = 0; i < level; i++)   tab+="\t";
-		    
-             
+                 
+                 String id;
                  KeywordList kw = new KeywordList();
                  SymbolTable x = new SymbolTable();
                  SymbolTable.XML_node xml_node = x.new XML_node();
-                  SymbolTable.XML_node xml_node_group = x.new XML_node();
+                 SymbolTable.XML_node xml_node_group = x.new XML_node();
                  if(kw.getXMLNode(element.getTag())!=null){
                         xml_node = kw.getXMLNode(element.getTag());
-                                                
+                        xml_node.setID(xml_id);
+                      
                         
-                        if(xml_node.getXMLTag().equals("RadioButton")){
-                            xml_node_group = kw.getXMLNode("RadioButtonGroup");
+                        if(element.getTag().equals("radiobutton")){
+                           
+                            if(rbparent!=element.getParent_ID() && rbcount == 0){
+                                rbparent = element.getParent_ID();
+                                xml_node_group = kw.getXMLNode("RadioButtonGroup");
+                                xml_node_group.setParent_ID(rbparent);
+                                xml_node_group.setID(xml_id);
+                                current_rb = xml_id;
+                                
+                                SymbolTable.xml_entry.add(xml_node_group);
+                                
+                                xml_id++;
+                                xml_node.setID(xml_id);
+                                xml_node.setParent_ID(current_rb);
+                                rbcount++;
+                            }
+                            else{
+                                xml_node.setParent_ID(current_rb);
+                            }
+                            
+                                SymbolTable.xml_entry.add(xml_node);
+                                
                         }
-                        
-                          WEBDROID.Android_Layout_XML.appendText(tab+xml_node.getXMLTag()+"\n");
-                        
+                          xml_id++;
+                       
                         //lambda expression
                         id =  kw.getXMLNode(element.getTag())!=null? 
                               xml_node.getXMLTag()+element.getID(): 
@@ -84,34 +92,28 @@ public class CodeGenerator {
                             xml_node.addXMLUDP("android:entries", "\"@array/"+element.getUDP().get("name")+"\"");
                        }    
                      
-                       
-                       for (Map.Entry e : element.getUDP().entrySet()) { 
-                         WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
-                        }
-                       
-                       for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
-                         WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
-                        }
-                      
-                       
-                       
+                             
                         if(xml_node.getXMLTag().equals("ScrollView")){
                               xml_node.setParent_ID(-1);
                               xml_node.setID(element.getID());
                               SymbolTable.xml_entry.add(xml_node);
-                        }else{
+                        }else if(!xml_node.getXMLTag().equals("RadioButton")){
                               xml_node.setParent_ID(element.getParent_ID());
                               xml_node.setID(element.getID());
                               SymbolTable.xml_entry.add(xml_node); 
                         }
                      
                  }
-//                 else
-//                    System.out.println(tab+"No equivalent Android XML: "+element.getTag());
-//             
+                 else{
+                         if(element.getTag().equals("title"))
+                         string_literals.put("app_name", element.getUDP().get("text"));
+                 }
+                     
+              if(xml_node.getID()==0)
+                  SymbolTable.xml_root = xml_node;
               
              children = element.getChildrenElement();
-	     WEBDROID.Android_Layout_XML.appendText(" ");
+	      
              for (ElementNode child_node : children) {
 			 GENERATE_XML(child_node, level + 1);
 		 }   
@@ -119,9 +121,66 @@ public class CodeGenerator {
         
         public void directTranslation(){
             GENERATE_XML(SymbolTable.root,0); 
+            buildSymbolTree(SymbolTable.xml_root);
+            printSymbolTableXML();
+            printLayoutXML(SymbolTable.xml_root,""); 
             printString();
         }
         
+         private static void printSymbolTableXML(){
+            for (XML_node e : SymbolTable.xml_entry) {
+                     String tablerow = "";
+                     tablerow = tablerow +  e.getID() +"\t";
+                     tablerow = tablerow + e.getXMLTag() + "\t";
+                     tablerow = tablerow + e.getParent_ID() +"\t";
+                     System.out.println(tablerow);
+                     
+                    }
+        }
+         
+        private void buildSymbolTree(XML_node xml_node) {
+		 xmlchildren = getChildrenById(xml_node.getID());             
+                 xml_node.setChildrenElement(xmlchildren);
+                    if (xmlchildren.isEmpty())  
+                        return;                
+                    
+                    for (XML_node child_node : xmlchildren)  
+                        buildSymbolTree(child_node);
+                 
+	 }
+         
+          public  List<XML_node> getChildrenById(int id) {
+                List<XML_node> children_ = new ArrayList<>();
+                for (XML_node e : SymbolTable.xml_entry) {
+                      if (e.getParent_ID() == id) {
+                       children_.add(e);
+
+                    }
+                }
+            return children_;
+	 }
+        
+        
+         private void printLayoutXML(XML_node xml_node, String tab){
+            tab = tab+"\t";
+            
+            System.out.println(tab+xml_node.getXMLTag());
+            WEBDROID.Android_Layout_XML.appendText(tab+xml_node.getXMLTag().trim()+"\n");
+
+
+            for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
+             WEBDROID.Android_Layout_XML.appendText(tab+"\t"+e.getKey()+" = "+e.getValue()+"\n");
+            }
+
+             xmlchildren = xml_node.getChildrenElement();
+	     
+             for (XML_node child_node : xmlchildren)  
+                printLayoutXML(child_node, tab);
+		             
+             
+         }
+         
+         
         private void printString(){
             WEBDROID.Android_String_XML.appendText("<resources>\n");
              

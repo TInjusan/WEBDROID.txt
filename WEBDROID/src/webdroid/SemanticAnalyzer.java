@@ -22,7 +22,8 @@ public class SemanticAnalyzer {
 
    }
         private  void analyze(){
-             for (ElementNode e : SymbolTable.html_entry) {
+        
+             for (ElementNode e : SymbolTable.get_html_table()) {
                  //Checking the validity of the id name if it doesn't begin with a digit and number of usage should only be one.  
                  if(e.getUDP().get("id")!=null){
                       String ID = e.getUDP().get("id");                      
@@ -57,7 +58,7 @@ public class SemanticAnalyzer {
                              case "radio":
                                      e.setTag("radiobutton");
                                      e.removeUDP("type");
-                                     break;
+                                    break;
                              case "checkbox":
                                       e.setTag("checkbox");
                                       e.removeUDP("type");
@@ -141,13 +142,13 @@ public class SemanticAnalyzer {
         
         private void removeElements(){
             for (ElementNode remove : removal)  {
-                SymbolTable.html_entry.remove(remove);
+                SymbolTable.RemoveTag(remove);
             }
             
         }
         private int searchID(String ID){
             int i = 0;
-            for (ElementNode e : SymbolTable.html_entry) {
+            for (ElementNode e : SymbolTable.get_html_table()) {
                  if(e.getUDP().get("id")!=null){
                     if (ID.equals( e.getUDP().get("id") )){
                         i++;
@@ -157,7 +158,7 @@ public class SemanticAnalyzer {
             return i;
         }
         private void setText(String ID, String Text){
-             for (ElementNode e : SymbolTable.html_entry) {
+             for (ElementNode e : SymbolTable.get_html_table()) {
                  if(e.getUDP().get("id")!=null){
                     if (ID.equals( e.getUDP().get("id") )){
                       e.addUDP("text", Text);
@@ -189,7 +190,7 @@ public class SemanticAnalyzer {
 	 }
         public  List<ElementNode> getChildrenById(int id) {
                 List<ElementNode> children_ = new ArrayList<>();
-                for (ElementNode e : SymbolTable.html_entry) {
+                for (ElementNode e : SymbolTable.get_html_table()) {
                       if (e.getParent_ID() == id) {
                        children_.add(e);
 
@@ -217,7 +218,7 @@ public class SemanticAnalyzer {
          }
         
         private static void printSymbolTable(){
-            for (ElementNode e : SymbolTable.html_entry) {
+            for (ElementNode e : SymbolTable.get_html_table()) {
                      String tablerow = "";
                      tablerow = tablerow +  e.getID() +"\t";
                      tablerow = tablerow + e.getTag() + "\t";

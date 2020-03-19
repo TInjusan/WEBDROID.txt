@@ -64,34 +64,19 @@ public class SymbolTable {
          private int xml_id;
          private String xml_tag;
          private Map<String, String>  xml_udp = new LinkedHashMap<>();
-         private Map<String, String> xml_properties = new LinkedHashMap<>();
          private int Parent_ID;
-         private List<ElementNode> Children_element;
+         private List<XML_node> Children_element;
             
          XML_node(){
             this.xml_id=-1;
-            xml_properties.put("android:id","");
-            xml_properties.put("android:layout_width","\"wrap_content\"");
-            xml_properties.put("android:layout_height","\"wrap_content\"");
-            xml_properties.put("android:text","");
-            xml_properties.put("android:textIsSelectable","\"false\"");
-            xml_properties.put("android:textStyle","");
-            xml_properties.put("android:textSize","");
-            xml_properties.put("android:textColor","");
-            xml_properties.put("android:importantForAutofill","\"no\"");
-            xml_properties.put("android:hint","");
-            xml_properties.put("android:inputType","");
-            xml_properties.put("android:entries","");
-            xml_properties.put("android:orientation","\"vertical\"");
-            xml_properties.put("android:layout_gravity","\"top\"");
-            xml_properties.put("xmlns:android","\"http://schemas.android.com/apk/res/android\"");
+            
          }
          
          public void setXML_node(String XML_tag, String assigned_properties){
              int i=0;
              this.xml_tag=XML_tag;
                 
-                for (Map.Entry e : xml_properties.entrySet()) { 
+                for (Map.Entry e : KeywordList.get_xml_properties().entrySet()) { 
                   if(assigned_properties.charAt(i)=='1'){
                        this.xml_udp.put((String)e.getKey(), (String)e.getValue());
                        }
@@ -103,7 +88,7 @@ public class SymbolTable {
          
          
           // Setters and Getters for each element properties
-         void    setID(int id)    {  this.xml_id = id;  }               
+         void setID(int id)    {  this.xml_id = id;  }               
          int  getID()             {  return xml_id;     }
                     
          void setXMLUDP(HashMap<String, String> udp)   { this.xml_udp = udp; }
@@ -116,25 +101,31 @@ public class SymbolTable {
           void   setParent_ID(int Parent_ID){ this.Parent_ID = Parent_ID; }
             int getParent_ID() {        return Parent_ID;     }
            //-------------------------------------------------------------------------// 
-            void setChildrenElement (List<ElementNode>  c){        this.Children_element = c;    }
-            List<ElementNode>  getChildrenElement(){        return Children_element;    }
+            void setChildrenElement (List<XML_node>  c){        this.Children_element = c;    }
+            List<XML_node>  getChildrenElement(){        return Children_element;    }
          //----------------------------------------------                                                    
                   
      }
-          
-     
-    public static List<ElementNode> html_entry = new ArrayList<>();
+               
+    private static List<ElementNode> html_table = new ArrayList<>();
     public static ElementNode root;
-    
+ 
     public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
     public static HashMap<String, String> string_literals = new HashMap<>();
     
     public static List<XML_node> xml_entry = new ArrayList<>();
     public static XML_node xml_root;
     
-    public void AddToTable(ElementNode e){
-        html_entry.add(e);
+    public static void AddToTable(ElementNode e){
+        html_table.add(e);
     }
+    public static List<ElementNode> get_html_table(){
+        return html_table;
+    }
+    public static void RemoveTag(ElementNode e){
+        html_table.remove(e);
+    }
+    
     public void setRoot(ElementNode e){
 
     }
