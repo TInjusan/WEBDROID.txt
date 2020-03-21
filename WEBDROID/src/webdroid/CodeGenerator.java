@@ -67,7 +67,7 @@ public class CodeGenerator {
                               xml_node.getXMLTag()+element.getID(): 
                               element.getUDP().get("id");
                         
-                       xml_node.addXMLUDP("android:id", "\"@id/"+id+"\"");
+                       xml_node.addXMLUDP("android:id", "\"@+id/"+id+"\"");
                        
                        for (Map.Entry e : element.getUDP().entrySet()) { 
                           switch(e.getKey().toString()){
@@ -92,7 +92,10 @@ public class CodeGenerator {
                        if(xml_node.getXMLTag().equals("Spinner")){
                             xml_node.addXMLUDP("android:entries", "\"@array/"+element.getUDP().get("name")+"\"");
                        }    
-                     
+                      if(xml_node.getXMLTag().equals("EditText")){
+                          xml_node.addXMLUDP("android:layout_width", "\"match_parent\"");
+                          
+                      }
                              
                         if(xml_node.getXMLTag().equals("ScrollView")){
                               xml_node.setParent_ID(-1);
@@ -180,12 +183,18 @@ public class CodeGenerator {
                 i++;
 
             }
-         
-            
              xmlchildren = xml_node.getChildrenElement();
 	     
-             for (XML_node child_node : xmlchildren)  
-                printLayoutXML(child_node, tab);
+             
+             for (XML_node child_node : xmlchildren){
+                    printLayoutXML(child_node, tab);
+                 
+             }  
+             
+               WEBDROID.Android_Layout_XML.appendText(
+                        xml_node.getXML_type() == XML_CODE.XML_NONVOID ? 
+                        tab+"</"+xml_node.getXMLTag()+">\n":""
+                );
 		             
              
          }
@@ -200,7 +209,7 @@ public class CodeGenerator {
                 for (Entry<String, ArrayList<String>> entry : ArrayString.entrySet()) {
                         WEBDROID.Android_String_XML.appendText(" <string-array name=\""+(String)entry.getKey()+"\">\n");
                       for(String item : entry.getValue()){
-                            WEBDROID.Android_String_XML.appendText("\t<item>"+item+"<item>\n"); 
+                            WEBDROID.Android_String_XML.appendText("\t<item>"+item+"</item>\n"); 
                       }
                         WEBDROID.Android_String_XML.appendText(" </string-array>\n");
                 }       

@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class WEBDROID extends Application {
-        
     
       public static String HTMLText = "";
       private static String FilePath=""; 
@@ -57,6 +56,7 @@ public class WEBDROID extends Application {
  
             newWindow.show();
             ErrorDetected =false;
+            
     }  
       
       
@@ -191,9 +191,8 @@ public class WEBDROID extends Application {
         }
         else if (event.getTarget()==button_convert){
                     HTMLText = HTMLTextField.getText();
-                    Android_String_XML.clear();
-                    Android_Layout_XML.clear();
-                    Android_Color_XML.clear();
+                     ClearAll();
+                    
                    //Parsing phase
                    Parser Parser = new Parser();
                    Parser.setHTMLParser(HTMLText);
@@ -201,17 +200,19 @@ public class WEBDROID extends Application {
                    if(!ErrorDetected){
                        SemanticAnalyzer Semantic = new SemanticAnalyzer();
                        Semantic.ExecuteAnalyzer();
-                       
-                       CodeGenerator CD = new CodeGenerator();
-                       CD.directTranslation();
+                       if(!ErrorDetected){
+                        CodeGenerator CD = new CodeGenerator();
+                        CD.directTranslation();
+                       }
+                       else
+                            ClearAll();
                    }
-                         
-//                   printing of the output - result
-//                   Android_Layout_XML.clear();
-//                   Android_Layout_XML.setText( XML_Code.get_layout_xml());
-//                   Android_String_XML.clear();
-//                   Android_String_XML.setText(XML_Code.get_string_xml());
-            
+                   else
+                       ClearAll();
+                   
+                  ErrorDetected =false;
+                  System.out.println("clicked");
+                    
         }
     }
         private static String ReadHTMLFile(){
@@ -234,6 +235,17 @@ public class WEBDROID extends Application {
         
         return s;
     }
+        private static void ClearAll(){            
+                    Android_String_XML.clear();
+                    Android_Layout_XML.clear();
+                    Android_Color_XML.clear();
+                    SymbolTable.ArrayString.clear();
+                    SymbolTable.root = null;
+                    SymbolTable.string_literals.clear();
+                    SymbolTable.xml_entry.clear();
+                    SymbolTable.xml_root= null;
+                    SymbolTable.ClearHTML();
+        }
          
 }
 

@@ -4,6 +4,8 @@
 package webdroid;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CharacterScanner {  
     
@@ -22,6 +24,8 @@ public class CharacterScanner {
     public TOKEN_CODE token;
     private TOKEN_CODE t;
     private int cchar_ptr;
+    private int newlinecount;
+    private Map<Integer, Integer>  newline = new LinkedHashMap<>();
     private char cchar;
     private char previous_cchar;
     private String lexeme;
@@ -35,6 +39,7 @@ public class CharacterScanner {
         cchar = ' ';
         lexeme = "";
         previous_cchar = ' ';
+        newlinecount = 1;
     }
     
     //setter method
@@ -68,6 +73,12 @@ public class CharacterScanner {
     
     private void skip_whitespace(){         
         if(Character.isWhitespace(cchar)) {
+            if(cchar=='\n'){
+                newline.put(lexemes.size(), newlinecount);
+                newlinecount++;
+            }
+                
+                
              cchar = get_source_char();    
              skip_whitespace();
         }    // Recursively go through all next whitespace 
@@ -191,7 +202,7 @@ public class CharacterScanner {
                     t = next_token();
                     kc = kw.SearchKeyword(getLexeme());
                      //Printing of token stream // Testing
-                     //  System.out.println(getLexeme()+"\t\t\t\t\t"+"- "+getToken()+"\t\t\t\t\t\t"+"- "+ kc);
+                      System.out.println(getLexeme()+"\t\t\t\t\t"+"- "+getToken()+"\t\t\t\t\t\t"+"- "+ kc);
                                  
                     lexemes.add(getLexeme());
                     tokens.add(getToken());
@@ -206,4 +217,7 @@ public class CharacterScanner {
     public ArrayList<TOKEN_CODE> getTokenStream(){
         return tokens;
     }  
+    public int getLine(int lexeme_index){        
+        return newline.get(lexeme_index);
+    }
 }

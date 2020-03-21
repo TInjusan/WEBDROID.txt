@@ -135,10 +135,10 @@ public class SymbolTable {
     public static void RemoveTag(ElementNode e){
         html_table.remove(e);
     }
-    
-    public void setRoot(ElementNode e){
-
+    public static void ClearHTML(){
+        html_table.clear();
     }
+    
     
     
 }
