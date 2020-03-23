@@ -13,6 +13,12 @@ import webdroid.KeywordList.XML_CODE;
 
 public class SymbolTable { 
    
+    SymbolTable(){ 
+                //setting default colors in android studio
+                color_literals.put("colorPrimary","#008577");
+                color_literals.put("colorPrimaryDark","#00574B");
+                color_literals.put("colorAccent","#D81B60");
+    }
      public  class ElementNode{
             private int ID;
             private String Tag;
@@ -122,10 +128,11 @@ public class SymbolTable {
  
     public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
     public static HashMap<String, String> string_literals = new HashMap<>();
+    public static HashMap<String, String> color_literals = new HashMap<>();
     
     public static List<XML_node> xml_entry = new ArrayList<>();
     public static XML_node xml_root;
-    
+     
     public static void AddToTable(ElementNode e){
         html_table.add(e);
     }

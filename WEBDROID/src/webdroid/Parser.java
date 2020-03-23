@@ -15,7 +15,7 @@ public class Parser {
     private int current_parent_id;    
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
-    public String CSS ="";
+     
      CharacterScanner HTML_Scanner = new CharacterScanner();
      
        public void setHTMLParser(String s){           
@@ -27,18 +27,6 @@ public class Parser {
    
        public void PARSE(){
            HTML();
-                      
-           if(!CSS.equals("")){
-                System.out.println(CSS);
-            CharacterScanner CSS_Scanner = new CharacterScanner();
-            CSS_Scanner.Run_Character_Scanner(CSS);
-            lexeme.clear();
-            token.clear();
-            
-            lexeme = CSS_Scanner.getLexemeStream();
-            token  = CSS_Scanner.getTokenStream(); 
-           }
-         
        }
            
        public void HTML(){
@@ -211,58 +199,62 @@ public class Parser {
                             Error(6,"");  
                         else{
                             
-                            if(property.equals("style")){
-                                                                 
-                                  Attribute.putAll(Styles());
-                            }
-                            
-                            Attribute.put(property, lexeme.get(i));
+                            if(property.equals("style"))                                                                  
+                                  Attribute.putAll(Styles(lexeme.get(i)));
+                            else
+                                  Attribute.put(property, lexeme.get(i));
                         }
                             
            }
            
            return Attribute;
         }
-          private HashMap<String, String> Styles(){ 
+       
+          private HashMap<String, String> Styles(String style_string){ 
             HashMap<String, String> style_value = new HashMap<>();
             
             CharacterScanner CSS_Scanner = new CharacterScanner();
-            CSS_Scanner.Run_Character_Scanner(lexeme.get(i)); 
+            CSS_Scanner.Run_Style_Scanner(style_string); 
                                  
               ArrayList<String> style_lexeme = CSS_Scanner.getLexemeStream();
               ArrayList<TOKEN_CODE> style_token = CSS_Scanner.getTokenStream();
             
                 int j = 0;
                 String style_name = "";
-                
+                 KeywordList.HTML_CODE kk; 
+                 
                do{
-                  kc = kw.SearchKeyword(style_lexeme.get(j));
-		  if(kc == KeywordList.HTML_CODE.CSS_PROPERTY) 
-                       style_name= style_lexeme.get(j);
+                  kk = kw.SearchKeyword(style_lexeme.get(j));
+		  if(kk == KeywordList.HTML_CODE.CSS_PROPERTY) {
+                       style_name = style_lexeme.get(j);
+                       j++;
+
+                      if(style_lexeme.get(j).equals(":")){
+                          j++; 
+                          style_value.put(style_name,style_lexeme.get(j) );
+                      }                             
+                      else 
+                          Error(8,style_name);
+                      
+                  }
+                      
                   else
                     Error(7,style_lexeme.get(j));   
                   
-                      j++;
-                  
-                   if(style_lexeme.get(j).equals(":"))                             
-                       j++;                           
-                   else 
-                       Error(8,style_name);
-                  
-                   style_value.put(style_name,style_lexeme.get(j) );
-                    
+                   System.out.println(style_name+" --->"+style_lexeme.get(j)); 
+                   j++; 
+                     
+                   if(style_token.get(j) != TOKEN_CODE.EOF_TOKEN ){
                    
-                   if(j+1 < style_lexeme.size()){
-                       j++; 
-                        if(style_lexeme.get(j).equals(";") )
-                        j++;                           
+                       if(style_lexeme.get(j).equals(";") )
+                             j++;                           
                         else 
                              Error(9,style_name); 
-                   }
-                    
-                   
-                   
-		 }while(j < style_lexeme.size() && style_token.get(j) != TOKEN_CODE.EOF_TOKEN );  
+                   } 
+                       
+                        
+                   System.out.println(style_lexeme.get(j)+" <<--"+style_token.get(j));
+		 }while(style_token.get(j) != TOKEN_CODE.EOF_TOKEN );  
               
               return style_value;
                                   
@@ -275,17 +267,17 @@ public class Parser {
            
            switch (code){
                //Generic Error Message:
-               case -1: WEBDROID.ErrorMessagePopup("Syntax Error","Line: "+HTML_Scanner.getLine(i) +"Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 0: WEBDROID.ErrorMessagePopup("Syntax Error 0","Line: "+HTML_Scanner.getLine(i) +"Invalid start tag."); break;
-               case 1: WEBDROID.ErrorMessagePopup("Syntax Error 1","Line: "+HTML_Scanner.getLine(i) +"Missing closing angle bracket '>' for the tag: "+s); break;
-               case 2: WEBDROID.ErrorMessagePopup("Syntax Error 2","Line: "+HTML_Scanner.getLine(i) +"Missing equal sign '=' for an attribute of "+s); break; 
-               case 3: WEBDROID.ErrorMessagePopup("Syntax Error 3","Line: "+HTML_Scanner.getLine(i) +"Error: for tag: "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
-               case 4: WEBDROID.ErrorMessagePopup("Syntax Error 4","Line: "+HTML_Scanner.getLine(i) +"Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 5: WEBDROID.ErrorMessagePopup("Syntax Error 5","Line: "+HTML_Scanner.getLine(i) +"HTML file should start with a non-void tag not random string."); break; 
-               case 6: WEBDROID.ErrorMessagePopup("Syntax Error 6","Line: "+HTML_Scanner.getLine(i) +"Property value should be a string enclosed in quotation marks (\") "); break; 
-               case 7: WEBDROID.ErrorMessagePopup("Syntax Error 7","Line: "+HTML_Scanner.getLine(i) +"Unsupported style attribute ("+s+")"); break; 
-               case 8: WEBDROID.ErrorMessagePopup("Syntax Error 8","Line: "+HTML_Scanner.getLine(i) +"Missing colon ':' for the style "+s); break; 
-               case 9: WEBDROID.ErrorMessagePopup("Syntax Error 9","Line: "+HTML_Scanner.getLine(i) +"Missing semi-colon ';' for the style "+s); break; 
+               case -1: WEBDROID.ErrorMessagePopup("Syntax Error ", "Line "+HTML_Scanner.getLine(i) +": Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
+               case 0:  WEBDROID.ErrorMessagePopup("Syntax Error 0","Line "+HTML_Scanner.getLine(i) +": Invalid start tag."); break;
+               case 1:  WEBDROID.ErrorMessagePopup("Syntax Error 1","Line "+HTML_Scanner.getLine(i) +": Missing closing angle bracket '>' for the tag: "+s); break;
+               case 2:  WEBDROID.ErrorMessagePopup("Syntax Error 2","Line "+HTML_Scanner.getLine(i) +": Missing equal sign '=' for an attribute of "+s); break; 
+               case 3:  WEBDROID.ErrorMessagePopup("Syntax Error 3","Line "+HTML_Scanner.getLine(i) +": Error: for tag: "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
+               case 4:  WEBDROID.ErrorMessagePopup("Syntax Error 4","Line "+HTML_Scanner.getLine(i) +": Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
+               case 5:  WEBDROID.ErrorMessagePopup("Syntax Error 5","Line "+HTML_Scanner.getLine(i) +": HTML file should start with a non-void tag not random string."); break; 
+               case 6:  WEBDROID.ErrorMessagePopup("Syntax Error 6","Line "+HTML_Scanner.getLine(i) +": Property value should be a string enclosed in quotation marks (\") "); break; 
+               case 7:  WEBDROID.ErrorMessagePopup("Syntax Error 7","Line "+HTML_Scanner.getLine(i) +": Unsupported style attribute ("+s+")"); break; 
+               case 8:  WEBDROID.ErrorMessagePopup("Syntax Error 8","Line "+HTML_Scanner.getLine(i) +": Missing colon ':' for the style "+s); break; 
+               case 9:  WEBDROID.ErrorMessagePopup("Syntax Error 9","Line "+HTML_Scanner.getLine(i) +": Missing semi-colon ';' for the style "+s); break; 
            
            }
             WEBDROID.ErrorDetected =true;

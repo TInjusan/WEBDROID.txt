@@ -6,16 +6,14 @@ import java.util.Map.Entry;
 import webdroid.KeywordList.XML_CODE;
 import static webdroid.SymbolTable.ArrayString;
 import static webdroid.SymbolTable.string_literals;
+import static webdroid.SymbolTable.color_literals;
 import webdroid.SymbolTable.ElementNode;
 import webdroid.SymbolTable.XML_node;
 
+
 public class CodeGenerator {
          static Map<Integer, SymbolTable> html_element;
-         static SymbolTable root;
-         static String string_xml;
-         static String layout_xml;
-         static String color_xml;
-         static String current_select="";
+         static SymbolTable root;     
          static List<ElementNode> children;
          static List<XML_node> xmlchildren;
          static int rbcount = 0;
@@ -24,6 +22,7 @@ public class CodeGenerator {
          static int xml_id = SymbolTable.get_html_table().size();
          static KeywordList k = new KeywordList();
       
+         
          
         private void GENERATE_XML(ElementNode element, int level){
                  
@@ -70,18 +69,26 @@ public class CodeGenerator {
                        xml_node.addXMLUDP("android:id", "\"@+id/"+id+"\"");
                        
                        for (Map.Entry e : element.getUDP().entrySet()) { 
-                          switch(e.getKey().toString()){
+                           switch(e.getKey().toString()){
                               case "text":
-                                 
-                                  string_literals.put(id, e.getValue().toString());
-                                  xml_node.addXMLUDP("android:text", "\"@string/"+id+"\"");
-                                  break;
-                                  
                               case "placeholder":
-                                  string_literals.put(id, e.getValue().toString());
-                                  xml_node.addXMLUDP("android:hint", "\"@string/"+id+"\"");
-                                  break;
                                   
+                                  string_literals.put(id, e.getValue().toString());
+                                  xml_node.addXMLUDP("android:"+ kw.getXML_Attr(e.getKey().toString()), "\"@string/"+id+"\"");
+                                  break;
+                              case "type":
+                                    xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\""+kw.getXML_Attr(e.getValue().toString())+"\""); 
+                                    break;
+                              case "background-color":
+                              case "color":
+                                   String colorname = kw.getColorName( e.getValue().toString());
+                                   String colorvalue = kw.getColor( e.getValue().toString());
+                                   colorname = colorname.equals(colorvalue)? id:colorname;
+                                   
+                                   
+                                   color_literals.put(colorname,colorvalue);
+                                  xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\"@color/"+colorname+"\""); 
+                                  break;
                               default:
                                   
                                   break;
@@ -92,10 +99,7 @@ public class CodeGenerator {
                        if(xml_node.getXMLTag().equals("Spinner")){
                             xml_node.addXMLUDP("android:entries", "\"@array/"+element.getUDP().get("name")+"\"");
                        }    
-                      if(xml_node.getXMLTag().equals("EditText")){
-                          xml_node.addXMLUDP("android:layout_width", "\"match_parent\"");
-                          
-                      }
+                      
                              
                         if(xml_node.getXMLTag().equals("ScrollView")){
                               xml_node.setParent_ID(-1);
@@ -129,6 +133,7 @@ public class CodeGenerator {
             printSymbolTableXML();
             printLayoutXML(SymbolTable.xml_root,""); 
             printString();
+            printColors();
         }
         
          private static void printSymbolTableXML(){
@@ -167,8 +172,7 @@ public class CodeGenerator {
         
          private void printLayoutXML(XML_node xml_node, String tab){
             tab = tab+"\t";
-            
-             WEBDROID.Android_Layout_XML.appendText(tab+"<"+xml_node.getXMLTag().trim()+"\n");
+            WEBDROID.Android_Layout_XML.appendText(tab+"<"+xml_node.getXMLTag().trim()+"\n");
 
             int i = 0;
             for (Map.Entry e : xml_node.getXMLUDP().entrySet()) { 
@@ -183,14 +187,12 @@ public class CodeGenerator {
                 i++;
 
             }
+             
              xmlchildren = xml_node.getChildrenElement();
-	     
-             
-             for (XML_node child_node : xmlchildren){
-                    printLayoutXML(child_node, tab);
-                 
-             }  
-             
+	     for (XML_node child_node : xmlchildren)
+                    printLayoutXML(child_node, tab);                
+              
+             //Closing tag for Non-void
                WEBDROID.Android_Layout_XML.appendText(
                         xml_node.getXML_type() == XML_CODE.XML_NONVOID ? 
                         tab+"</"+xml_node.getXMLTag()+">\n":""
@@ -216,5 +218,16 @@ public class CodeGenerator {
             
              WEBDROID.Android_String_XML.appendText("</resources>\n");           
         }
+        
+          private void printColors(){
+            WEBDROID.Android_Color_XML.appendText("<resources>\n");
+             
+            for (Map.Entry e :   color_literals.entrySet())  
+                 WEBDROID.Android_Color_XML.appendText(" <color name=\""+e.getKey()+"\">"+e.getValue()+"</color>\n");
+      
+             WEBDROID.Android_Color_XML.appendText("</resources>\n");           
+        }
+
+                
 
 }

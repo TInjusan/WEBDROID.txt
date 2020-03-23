@@ -210,6 +210,46 @@ public class CharacterScanner {
                    }while(t != TOKEN_CODE.EOF_TOKEN);
                 
     }
+    public void Run_Style_Scanner(String s){
+        int i = 0;
+        do{
+            lexeme = "";
+            switch(s.charAt(i)){
+                case 127:                   
+                    token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
+                     i++;
+                    break;
+                case ':':
+                    lexeme = ":";
+                    token = TOKEN_CODE.SPECIAL_CHARACTER;
+                     i++;
+                    break;
+                case ';':
+                    lexeme = ";";
+                    token = TOKEN_CODE.SPECIAL_CHARACTER;
+                     i++;
+                    break;
+                default:
+                    do{
+                        lexeme = lexeme+s.charAt(i);                         
+                        i++;
+                    }while(i<s.length() && s.charAt(i)!=':' && s.charAt(i)!=';');
+                    
+                    token = TOKEN_CODE.WORD;
+                    break;
+            }
+            
+            lexemes.add(lexeme.trim());
+            tokens.add(token);
+            kc = kw.SearchKeyword(lexeme.trim());
+            System.out.println(lexeme.trim()+"--------"+token+"-------"+ kc);
+                     
+           
+        }while(i<s.length());
+            lexemes.add("");
+            tokens.add(TOKEN_CODE.EOF_TOKEN); 
+            
+    }
         
     public ArrayList<String> getLexemeStream(){
         return lexemes;
@@ -217,7 +257,11 @@ public class CharacterScanner {
     public ArrayList<TOKEN_CODE> getTokenStream(){
         return tokens;
     }  
-    public int getLine(int lexeme_index){        
-        return newline.get(lexeme_index);
+    public int getLine(int lexeme_index){  
+      
+         while(newline.get(lexeme_index)==null)           
+           lexeme_index++;
+                  
+        return newline.get(lexeme_index); 
     }
 }

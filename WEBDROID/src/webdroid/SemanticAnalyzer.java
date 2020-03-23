@@ -52,7 +52,6 @@ public class SemanticAnalyzer {
                          switch(e.getUDP().get("type")){
                              case "email":
                              case "password":
-                             case "date":
                                     e.setTag("textbox");
                                     break;
                              case "radio":
