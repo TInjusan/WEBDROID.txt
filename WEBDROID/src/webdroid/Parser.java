@@ -26,20 +26,36 @@ public class Parser {
                  
    
        public void PARSE(){
-           HTML();
+          System.out.println(lexeme.size());
+          System.out.println("end of parser"); 
+           
+            if(lexeme.size()<5){
+                  Error(5,"");
+                 System.out.println("heto na po mga kaibigan");
+            }
+              
+            else{
+                    System.out.println("pasok"); 
+                    HTML();
+                  
+            }
+              
+           
+            
        }
            
        public void HTML(){
            
-           if(lexeme.get(i+1).equals("!")){  //lookahead of there's a Doctype declaration
-                if( (lexeme.get(i) + lexeme.get(i+1) + lexeme.get(i+2) + " "+lexeme.get(i+3)+lexeme.get(i+4)) . equals("<!DOCTYPE html>"))
-                    i+=4;  // proceed to the first element
-                else
-                    Error(-1,"");
-           }
-           else i--;  //If no DOCTYPE declaration then deduct one so the checking of element starts with zero
-                       
-           Element();             
+                if(lexeme.get(i+1).equals("!")){  //lookahead of there's a Doctype declaration
+                        if( (lexeme.get(i) + lexeme.get(i+1) + lexeme.get(i+2) + " "+lexeme.get(i+3)+lexeme.get(i+4)) . equals("<!DOCTYPE html>"))
+                            i+=4;  // proceed to the first element
+                        else
+                            Error(-1,"");
+                 }
+                 else i--;  //If no DOCTYPE declaration then deduct one so the checking of element starts with zero
+
+                Element(); 
+                     
        } 
        
        public void Element(){
@@ -49,8 +65,7 @@ public class Parser {
                  
                  kc = kw.SearchKeyword(lexeme.get(i+1));  //The lookahead assignment
                  switch(kc){                               //The lookahead statement
-                   case HTML_NONVOID_PROPERTY:  //special case for style since it is both nonvoid tag and a property
-                   case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
+                  case HTML_NONVOID_TAG: //The lookahead statement if the lexeme is a non-void tag
                                             
                        try{
                             current_parent_id = html_element_stack.peek().getID();
@@ -69,7 +84,7 @@ public class Parser {
                        break;
                    default:
                          
-                        Error(0,"");
+                        Error(0,lexeme.get(i+1));
                         break;   
                     }
                 }
@@ -88,9 +103,6 @@ public class Parser {
                       catch(EmptyStackException e){
                                Error(5,""); 
                       }
-
-
-                   
                     id++;
                  }
                   
@@ -104,7 +116,7 @@ public class Parser {
                     nextLexeme();  
                     kc = kw.SearchKeyword(lexeme.get(i));
                     Attribute.putAll(Attribute());    // Calling of Attribute method and getting the properties
-                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
+                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME);
                 
                 //initiate node html tag node properties
                     SymbolTable x = new SymbolTable();
@@ -165,7 +177,7 @@ public class Parser {
 
                      Attribute.putAll(Attribute());  
                     
-                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY);
+                }while(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME);
                 
                 SymbolTable x = new SymbolTable();
                 SymbolTable.ElementNode node = x.new ElementNode(id, current_tag,kw.SearchKeyword(current_tag), Attribute,html_element_stack.peek().getID());
@@ -182,7 +194,7 @@ public class Parser {
            HashMap<String, String> Attribute = new HashMap<>();
            String property;
            
-           if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME || kc == KeywordList.HTML_CODE.HTML_NONVOID_PROPERTY){
+           if(kc == KeywordList.HTML_CODE.HTML_PROPERTY_NAME){
                property = lexeme.get(i);   //storing the property name to be passed to the hashmap return key
                
                nextLexeme(); //  Store the property name into the symbol table (pending)
@@ -259,21 +271,19 @@ public class Parser {
               return style_value;
                                   
         } 
-       
-       
-       
+          
        private void nextLexeme(){ i++; }  //Moving from one lexeme to the next one.
        private void Error(int code, String s){
            
            switch (code){
                //Generic Error Message:
                case -1: WEBDROID.ErrorMessagePopup("Syntax Error ", "Line "+HTML_Scanner.getLine(i) +": Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 0:  WEBDROID.ErrorMessagePopup("Syntax Error 0","Line "+HTML_Scanner.getLine(i) +": Invalid start tag."); break;
+               case 0:  WEBDROID.ErrorMessagePopup("Syntax Error 0","Line "+HTML_Scanner.getLine(i) +": Unsupported tag \""+s+"\""); break;
                case 1:  WEBDROID.ErrorMessagePopup("Syntax Error 1","Line "+HTML_Scanner.getLine(i) +": Missing closing angle bracket '>' for the tag: "+s); break;
                case 2:  WEBDROID.ErrorMessagePopup("Syntax Error 2","Line "+HTML_Scanner.getLine(i) +": Missing equal sign '=' for an attribute of "+s); break; 
-               case 3:  WEBDROID.ErrorMessagePopup("Syntax Error 3","Line "+HTML_Scanner.getLine(i) +": Error: for tag: "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
+               case 3:  WEBDROID.ErrorMessagePopup("Syntax Error 3","Line "+HTML_Scanner.getLine(i) +": Closing tag "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
                case 4:  WEBDROID.ErrorMessagePopup("Syntax Error 4","Line "+HTML_Scanner.getLine(i) +": Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 5:  WEBDROID.ErrorMessagePopup("Syntax Error 5","Line "+HTML_Scanner.getLine(i) +": HTML file should start with a non-void tag not random string."); break; 
+               case 5:  WEBDROID.ErrorMessagePopup("Syntax Error 5","HTML file should at least have one and/or start with a non-void tag."); break; 
                case 6:  WEBDROID.ErrorMessagePopup("Syntax Error 6","Line "+HTML_Scanner.getLine(i) +": Property value should be a string enclosed in quotation marks (\") "); break; 
                case 7:  WEBDROID.ErrorMessagePopup("Syntax Error 7","Line "+HTML_Scanner.getLine(i) +": Unsupported style attribute ("+s+")"); break; 
                case 8:  WEBDROID.ErrorMessagePopup("Syntax Error 8","Line "+HTML_Scanner.getLine(i) +": Missing colon ':' for the style "+s); break; 

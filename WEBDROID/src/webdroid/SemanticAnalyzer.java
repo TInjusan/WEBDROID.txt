@@ -35,6 +35,19 @@ public class SemanticAnalyzer {
                            Error(5,ID);                           
                       }
                   }  
+                 
+                 //Checking for duplicate for
+                     if(e.getUDP().get("for")!=null){
+                      String ID = e.getUDP().get("for");                      
+                      if(  Character.isDigit( ID.charAt(0)))   //check if valid id by getting the first character, it should not be a digit
+                            Error(4,ID); 
+                   
+                     else{
+                          if(searchFOR(ID)>1)                           
+                           Error(7,ID);                           
+                      }
+                  }  
+                     
                  //Checking the validity of the class name if it doesn't begin with a digit
                  if(e.getUDP().get("class")!=null){
                       String classname = e.getUDP().get("class");                      
@@ -112,11 +125,26 @@ public class SemanticAnalyzer {
                                    removal.add(e);
                               }
                               else
-                                   Error(1,id);
-                               
+                                   Error(1,id);                               
                            }
                        }
+                       else if(e.getTag().contains("h")){
+                                if(e.getTag().equals("h1"))
+                                    e.addUDP("font-size", "25sp");
+                                else if(e.getTag().equals("h2"))
+                                    e.addUDP("font-size", "20sp");
+                                else if(e.getTag().equals("h3"))
+                                    e.addUDP("font-size", "15sp");
+                                
+                                e.addUDP("font-weight", "700");
+                      }                           
                  }
+                 
+                 if(e.getTag().equals("select")){
+                     
+                 }
+                 
+                 
                  if(e.getTag().equals("select")){
                       ArrayList<String> R = new ArrayList<>();
                       if(e.getUDP().get("name")==null){
@@ -156,6 +184,18 @@ public class SemanticAnalyzer {
             }      
             return i;
         }
+        private int searchFOR(String ID){
+            int i = 0;
+            for (ElementNode e : SymbolTable.get_html_table()) {
+                 if(e.getUDP().get("for")!=null){
+                    if (ID.equals( e.getUDP().get("for") )){
+                        i++;
+                    }
+                 }
+            }      
+            return i;
+        }        
+        
         private void setText(String ID, String Text){
              for (ElementNode e : SymbolTable.get_html_table()) {
                  if(e.getUDP().get("id")!=null){
@@ -210,7 +250,8 @@ public class SemanticAnalyzer {
                case 4: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid id: "+s+". First character should not be a number"); break;
                case 5: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id: "+s+" is not allowed."); break;
                case 6: WEBDROID.ErrorMessagePopup("Semantic Error","Please make sure to set the value property of a button as it is the text of button itself"); break;
-               
+               case 7: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id ["+s+"] as a value of \"for\" attribute is not allowed."); break;
+       
            }
             WEBDROID.ErrorDetected =true;
          

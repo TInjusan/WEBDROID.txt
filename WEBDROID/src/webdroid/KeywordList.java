@@ -10,7 +10,7 @@ import webdroid.SymbolTable.XML_node;
 public class KeywordList {
     
     
-    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG,HTML_NONVOID_PROPERTY, 
+    public enum HTML_CODE {NOT_FOUND, HTML_NONVOID_TAG, 
                            HTML_VOID_TAG, HTML_PROPERTY_NAME, HTML_SPECIAL_CHARACTER, HTML_STRING_ELEMENT,
                             CSS_PROPERTY};
     
@@ -46,7 +46,7 @@ public class KeywordList {
             Keyword.put("id",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("name",HTML_CODE.HTML_PROPERTY_NAME);
             Keyword.put("type",HTML_CODE.HTML_PROPERTY_NAME);
-            Keyword.put("style",HTML_CODE.HTML_NONVOID_PROPERTY);             
+            Keyword.put("style",HTML_CODE.HTML_PROPERTY_NAME);             
                   
             Keyword.put("br",HTML_CODE.HTML_VOID_TAG);
             Keyword.put("link",HTML_CODE.HTML_VOID_TAG);
@@ -251,6 +251,10 @@ public class KeywordList {
             html_xml.put("form", LinearLayout);
             html_xml.put("div", LinearLayout);
             
+            SymbolTable.XML_node ImageView = x.new XML_node(); 
+            LinearLayout.setXML_node("ImageView","111000000000000", XML_CODE.XML_VOID);
+            html_xml.put("img", ImageView);
+            
             SymbolTable.XML_node RadioGroup = x.new XML_node(); 
             RadioGroup.setXML_node("RadioGroup","011000000000000", XML_CODE.XML_NONVOID);
             html_xml.put("RadioButtonGroup", RadioGroup);
@@ -292,6 +296,8 @@ public class KeywordList {
             html_xml_attr.put("type", "inputType");
             html_xml_attr.put("background-color", "background"); 
             html_xml_attr.put("color", "textColor"); 
+            html_xml_attr.put("font-size", "textSize"); 
+            html_xml_attr.put("font-weight", "textFontWeight"); 
                        
    }
      XML_node getXMLNode(String key){         
@@ -325,8 +331,7 @@ public class KeywordList {
             color=key;
         
         return color;
-    } 
-    
+    }  
      HTML_CODE SearchKeyword(String key){ 
                    
           if(Keyword.containsKey(key.toLowerCase())) 
@@ -336,5 +341,3 @@ public class KeywordList {
      }
   }
      
-   
- 

@@ -79,15 +79,20 @@ public class CodeGenerator {
                               case "type":
                                     xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\""+kw.getXML_Attr(e.getValue().toString())+"\""); 
                                     break;
+                              case "font-size":
+                              case "font-weight":
+                                    xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\""+e.getValue().toString()+"\""); 
+                                    break;
                               case "background-color":
                               case "color":
                                    String colorname = kw.getColorName( e.getValue().toString());
                                    String colorvalue = kw.getColor( e.getValue().toString());
                                    colorname = colorname.equals(colorvalue)? id:colorname;
-                                   
-                                   
                                    color_literals.put(colorname,colorvalue);
-                                  xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\"@color/"+colorname+"\""); 
+                                   xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\"@color/"+colorname+"\""); 
+                                  break;
+                              case "src":
+                                  copyimage(e.getValue().toString());
                                   break;
                               default:
                                   
@@ -132,8 +137,11 @@ public class CodeGenerator {
             buildSymbolTree(SymbolTable.xml_root);
             printSymbolTableXML();
             printLayoutXML(SymbolTable.xml_root,""); 
-            printString();
-            printColors();
+            printStringXML();
+            printColorsXML();
+        }
+        private void copyimage(String file){
+            
         }
         
          private static void printSymbolTableXML(){
@@ -163,8 +171,7 @@ public class CodeGenerator {
                 for (XML_node e : SymbolTable.xml_entry) {
                       if (e.getParent_ID() == id) {
                        children_.add(e);
-
-                    }
+                      }
                 }
             return children_;
 	 }
@@ -202,7 +209,7 @@ public class CodeGenerator {
          }
          
          
-        private void printString(){
+        private void printStringXML(){
             WEBDROID.Android_String_XML.appendText("<resources>\n");
              
             for (Map.Entry e :   string_literals.entrySet())  
@@ -219,7 +226,7 @@ public class CodeGenerator {
              WEBDROID.Android_String_XML.appendText("</resources>\n");           
         }
         
-          private void printColors(){
+          private void printColorsXML(){
             WEBDROID.Android_Color_XML.appendText("<resources>\n");
              
             for (Map.Entry e :   color_literals.entrySet())  

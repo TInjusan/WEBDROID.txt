@@ -64,11 +64,18 @@ public class CharacterScanner {
     }
     
     private char get_previous_char(){
-        if(cchar_ptr-2<0){
-            return source.charAt(cchar_ptr-1);
+        try{
+            
+            if(cchar_ptr-2<0){
+                return source.charAt(cchar_ptr-1);
+            }
+            else
+                return source.charAt(cchar_ptr-2); 
+            
+        }catch(StringIndexOutOfBoundsException e){
+           return  source.charAt(0);
         }
-        else
-            return source.charAt(cchar_ptr-2);
+        
     }   
     
     private void skip_whitespace(){         
@@ -91,8 +98,12 @@ public class CharacterScanner {
      */
     
     public TOKEN_CODE next_token(){
-      
-        previous_cchar= get_previous_char(); //preserving the previous character before skipping whitespaace for string element extraction use.
+        try{
+           previous_cchar= get_previous_char(); //preserving the previous character before skipping whitespaace for string element extraction use.
+        }catch(StringIndexOutOfBoundsException e){
+            System.out.println("Blank HTML");
+        }
+       
         skip_whitespace(); 
         //Grouping the characters into lexemes and associate token
  

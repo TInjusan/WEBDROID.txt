@@ -125,7 +125,7 @@ public class SymbolTable {
                
     private static List<ElementNode> html_table = new ArrayList<>();
     public static ElementNode root;
- 
+    public final String XML_Declaration = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
     public static HashMap<String, ArrayList<String> > ArrayString = new HashMap<>();
     public static HashMap<String, String> string_literals = new HashMap<>();
     public static HashMap<String, String> color_literals = new HashMap<>();
