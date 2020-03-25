@@ -1,4 +1,9 @@
 package webdroid; 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +14,7 @@ import static webdroid.SymbolTable.string_literals;
 import static webdroid.SymbolTable.color_literals;
 import webdroid.SymbolTable.ElementNode;
 import webdroid.SymbolTable.XML_node;
+import static webdroid.WEBDROID.android_location;
 
 
 public class CodeGenerator {
@@ -67,7 +73,8 @@ public class CodeGenerator {
                               element.getUDP().get("id");
                         
                        xml_node.addXMLUDP("android:id", "\"@+id/"+id+"\"");
-                       
+                       System.out.println("HTML:"+ element.getTag()+" XML: "+ xml_node.getXMLTag());
+                        
                        for (Map.Entry e : element.getUDP().entrySet()) { 
                            switch(e.getKey().toString()){
                               case "text":
@@ -92,15 +99,16 @@ public class CodeGenerator {
                                    xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\"@color/"+colorname+"\""); 
                                   break;
                               case "src":
-                                  copyimage(e.getValue().toString());
-                                  break;
+                                    String xml_filename = copyimage(e.getValue().toString());
+                                    xml_node.addXMLUDP("android:"+kw.getXML_Attr(e.getKey().toString()), "\"@drawable/"+xml_filename.substring(0, xml_filename.indexOf('.'))+"\""); 
+                                 break;
                               default:
                                   
                                   break;
                           }
                         }
                        
-                    
+                      
                        if(xml_node.getXMLTag().equals("Spinner")){
                             xml_node.addXMLUDP("android:entries", "\"@array/"+element.getUDP().get("name")+"\"");
                        }    
@@ -140,8 +148,34 @@ public class CodeGenerator {
             printStringXML();
             printColorsXML();
         }
-        private void copyimage(String file){
+        private String copyimage(String source_file){
+           
+            File source = new File(source_file);
+            System.out.println("Source File: "+source.getAbsolutePath());
+            String file_name = source_file.substring(source_file.lastIndexOf('\\')+1, source_file.length());
+            file_name = file_name.toLowerCase();
+            file_name = file_name.replaceAll(" ", "");
+            System.out.println("File Name: "+file_name);
             
+            File destination = new File (android_location.getText()+"\\app\\src\\main\\res\\drawable\\"+file_name);
+            System.out.println("Destination File: "+destination);
+             
+            try {
+                 
+                Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+            } catch(FileAlreadyExistsException e) {
+                  //Do nothing
+            }            
+             catch(IOException e){
+                e.printStackTrace();
+            }
+        
+            
+         
+             //   Files.copy(sourcePath, destinationPath,  StandardCopyOption.REPLACE_EXISTING);
+        
+            
+            return file_name;
         }
         
          private static void printSymbolTableXML(){

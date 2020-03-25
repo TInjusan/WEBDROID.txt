@@ -1,6 +1,5 @@
 package webdroid; 
-import java.awt.Desktop;
-import static java.awt.SystemColor.desktop;
+import java.awt.Desktop; 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javafx.geometry.HPos;
@@ -35,8 +34,9 @@ public class WEBDROID extends Application {
       private static String FilePath=""; 
       public static Button button_browse, button_convert, button_save_xml, button_browse_android, button_save_html;
       public static TextArea HTMLTextField, Android_Layout_XML, Android_String_XML, Android_Color_XML;
-      private static  Hyperlink html_location = new Hyperlink("");
-      private static  Hyperlink android_location = new Hyperlink("");
+      public static  Hyperlink html_location = new Hyperlink("");
+      public static  Hyperlink android_location = new Hyperlink("");
+      private static Label HTMLLabel = new Label("HTML Code:");
       private static Stage stage;
       public static boolean ErrorDetected =false;
 
@@ -45,8 +45,7 @@ public class WEBDROID extends Application {
         public void start(Stage primaryStage) {
             stage = primaryStage;
             primaryStage.setTitle("WEBDROID");
-            
-            Label HTMLLabel = new Label("HTML Code:");
+             
             Label Android_Layout_XML_label = new Label("Android Layout  XML:");
             Label Android_String_XML_label = new Label("Android String  XML:");
             Label Android_Color_XML_label = new Label("Android Color  XML:");
@@ -287,11 +286,10 @@ public class WEBDROID extends Application {
                     }catch(NullPointerException e){
                         System.out.println("No file selected");
                     }
-                  html_location.setText(FilePath);
+                  html_location.setText(FilePath.substring(0, FilePath.lastIndexOf('\\')));
+                  HTMLLabel.setText(FilePath.substring (FilePath.lastIndexOf('\\')+1, FilePath.length()));
                   html_location.setPrefWidth(300);
-            
-                    
-        }
+           }
         else if (event.getTarget()==button_convert){
                     HTMLText = HTMLTextField.getText();
                      ClearAll();
@@ -318,7 +316,7 @@ public class WEBDROID extends Application {
         }
         else if(event.getTarget()==button_browse_android){
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setInitialDirectory(new File("C:\\Users\\Dell\\Documents"));
+            directoryChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Test Cases"));
              
              try{
                     File selectedDirectory = directoryChooser.showDialog(stage);
@@ -367,7 +365,7 @@ public class WEBDROID extends Application {
                         
         }
         else if(event.getTarget()==button_save_html){
-                    File htmlfile = new File(html_location.getText());
+                    File htmlfile = new File(html_location.getText()+"\\"+HTMLLabel.getText());
                   
                     try ( FileWriter fileWriterLayout = new FileWriter(htmlfile)) {			
 			fileWriterLayout.write(HTMLTextField.getText());
@@ -386,8 +384,9 @@ public class WEBDROID extends Application {
 
                             if(file != null){
                                 SaveFile(HTMLTextField.getText(), file);
-                                html_location.setText(file.getAbsolutePath());
-                                html_location.setPrefWidth(300);
+                                 html_location.setText(FilePath.substring(0, FilePath.lastIndexOf('\\')));
+                                 HTMLLabel.setText(FilePath.substring (FilePath.lastIndexOf('\\')+1, FilePath.length()));
+                                 html_location.setPrefWidth(300);
                             }   
                     }
 		

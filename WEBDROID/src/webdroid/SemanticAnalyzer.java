@@ -140,10 +140,15 @@ public class SemanticAnalyzer {
                       }                           
                  }
                  
-                 if(e.getTag().equals("select")){
-                     
+                 if(e.getTag().equals("img")){
+                     String full_source ="";
+                     if(e.getUDP().get("src")==null)
+                         Error(8,"");
+                     else{
+                          full_source = WEBDROID.html_location.getText()+"\\"+e.getUDP().get("src").trim();
+                          e.addUDP("src", full_source);
+                     }                        
                  }
-                 
                  
                  if(e.getTag().equals("select")){
                       ArrayList<String> R = new ArrayList<>();
@@ -251,6 +256,7 @@ public class SemanticAnalyzer {
                case 5: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id: "+s+" is not allowed."); break;
                case 6: WEBDROID.ErrorMessagePopup("Semantic Error","Please make sure to set the value property of a button as it is the text of button itself"); break;
                case 7: WEBDROID.ErrorMessagePopup("Semantic Error","Multiple usage of id ["+s+"] as a value of \"for\" attribute is not allowed."); break;
+               case 8: WEBDROID.ErrorMessagePopup("Semantic Error","Image tag should always have a source file."); break;
        
            }
             WEBDROID.ErrorDetected =true;

@@ -252,7 +252,7 @@ public class KeywordList {
             html_xml.put("div", LinearLayout);
             
             SymbolTable.XML_node ImageView = x.new XML_node(); 
-            LinearLayout.setXML_node("ImageView","111000000000000", XML_CODE.XML_VOID);
+            ImageView.setXML_node("ImageView","111000000000000", XML_CODE.XML_VOID);
             html_xml.put("img", ImageView);
             
             SymbolTable.XML_node RadioGroup = x.new XML_node(); 
@@ -290,6 +290,7 @@ public class KeywordList {
             html_xml.put("select", Spinner);
                         
             html_xml_attr.put("text", "text");
+            html_xml_attr.put("src", "src");
             html_xml_attr.put("placeholder", "hint");
             html_xml_attr.put("password", "textPassword");
             html_xml_attr.put("email", "textEmailAddress");
