@@ -133,19 +133,20 @@ public class SymbolTable {
     public static List<XML_node> xml_entry = new ArrayList<>();
     public static XML_node xml_root;
      
-    public static void AddToTable(ElementNode e){
+    public static void AddToTable(ElementNode e) {
         html_table.add(e);
     }
-    public static List<ElementNode> get_html_table(){
+
+    public static List<ElementNode> get_html_table() {
         return html_table;
     }
-    public static void RemoveTag(ElementNode e){
+
+    public static void RemoveTag(ElementNode e) {
         html_table.remove(e);
     }
-    public static void ClearHTML(){
+
+    public static void ClearHTML() {
         html_table.clear();
     }
-    
-    
-    
+
 }

@@ -15,9 +15,9 @@ public class Parser {
     private int current_parent_id;    
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;    
-     
-     CharacterScanner HTML_Scanner = new CharacterScanner();
-     
+    CharacterScanner HTML_Scanner = new CharacterScanner();
+    private static String ErrorMessage = "";
+    
        public void setHTMLParser(String s){           
             HTML_Scanner.Run_Character_Scanner(s);
             lexeme = HTML_Scanner.getLexemeStream();
@@ -134,10 +134,14 @@ public class Parser {
                 if(!(lexeme.get(i).equals(">"))) //Move to the next lexeme which can be new element or string element
                         Error(1,current_tag);
                  
-                
-                while(!(lexeme.get(i)+lexeme.get(i+1)).equals("</")){  //Repeating element lookahead
+                try{
+                    while(!(lexeme.get(i)+lexeme.get(i+1)).equals("</")){  //Repeating element lookahead
                         Element();
                 }
+                }catch(IndexOutOfBoundsException d){
+                    //Lookahead goes beyond the size of Lexeme stream.
+                }
+                
                 
                 if(lexeme.get(i).equals("<")){
                         if(lexeme.get(i+1).equals("/")){ //the lookahead to see if it is a closing tag or another element
@@ -152,17 +156,20 @@ public class Parser {
                         }
                         else
                             Error(3,"");
-                    }
-                          
-                           
+                    }   
                 }
-                if(lexeme.get(i+1).equals(">")){
-                    nextLexeme();  //Move to the next lexeme which can be new element or string element
-                  }
-                else{
-                    Error(1,current_tag);
-                }    
-                 
+                
+                 try{
+                        if(lexeme.get(i+1).equals(">")){
+                            nextLexeme();  //Move to the next lexeme which can be new element or string element
+                          }
+                        else{
+                            Error(1,current_tag);
+                        }   
+                 }
+                 catch(IndexOutOfBoundsException d){
+                    //Lookahead goes beyond the size of Lexeme stream.
+                 }
                  
        }
       
@@ -265,9 +272,9 @@ public class Parser {
                    } 
                        
                         
-                   System.out.println(style_lexeme.get(j)+" <<--"+style_token.get(j));
-		 }while(style_token.get(j) != TOKEN_CODE.EOF_TOKEN );  
-              
+                  System.out.println(style_lexeme.get(j) + " <<--" + style_token.get(j));
+              } while (style_token.get(j) != TOKEN_CODE.EOF_TOKEN);
+
               return style_value;
                                   
         } 
@@ -277,22 +284,29 @@ public class Parser {
            
            switch (code){
                //Generic Error Message:
-               case -1: WEBDROID.ErrorMessagePopup("Syntax Error ", "Line "+HTML_Scanner.getLine(i) +": Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1)); break;
-               case 0:  WEBDROID.ErrorMessagePopup("Syntax Error 0","Line "+HTML_Scanner.getLine(i) +": Unsupported tag \""+s+"\""); break;
-               case 1:  WEBDROID.ErrorMessagePopup("Syntax Error 1","Line "+HTML_Scanner.getLine(i) +": Missing closing angle bracket '>' for the tag: "+s); break;
-               case 2:  WEBDROID.ErrorMessagePopup("Syntax Error 2","Line "+HTML_Scanner.getLine(i) +": Missing equal sign '=' for an attribute of "+s); break; 
-               case 3:  WEBDROID.ErrorMessagePopup("Syntax Error 3","Line "+HTML_Scanner.getLine(i) +": Closing tag "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag()); break; 
-               case 4:  WEBDROID.ErrorMessagePopup("Syntax Error 4","Line "+HTML_Scanner.getLine(i) +": Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1)); break; 
-               case 5:  WEBDROID.ErrorMessagePopup("Syntax Error 5","HTML file should at least have one and/or start with a non-void tag."); break; 
-               case 6:  WEBDROID.ErrorMessagePopup("Syntax Error 6","Line "+HTML_Scanner.getLine(i) +": Property value should be a string enclosed in quotation marks (\") "); break; 
-               case 7:  WEBDROID.ErrorMessagePopup("Syntax Error 7","Line "+HTML_Scanner.getLine(i) +": Unsupported style attribute ("+s+")"); break; 
-               case 8:  WEBDROID.ErrorMessagePopup("Syntax Error 8","Line "+HTML_Scanner.getLine(i) +": Missing colon ':' for the style "+s); break; 
-               case 9:  WEBDROID.ErrorMessagePopup("Syntax Error 9","Line "+HTML_Scanner.getLine(i) +": Missing semi-colon ';' for the style "+s); break; 
+               case -1: ErrorMessage = ErrorMessage+  "Line "+HTML_Scanner.getLine(i) +": Incorrect/Unsupported DOCTYPE declaration."+lexeme.get(i)+lexeme.get(i+1); break;
+               case 0:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Unsupported tag \""+s+"\""; break;
+               case 1:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Missing closing angle bracket '>' for the tag: "+s; break;
+               case 2:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Missing equal sign '=' for an attribute of "+s; break; 
+               case 3:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Closing tag "+lexeme.get(i)+lexeme.get(i+1)+". Incorrect tag name to close. It should be: "+html_element_stack.peek().getTag(); break; 
+               case 4:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Non_void_element: Syntax Error at : "+lexeme.get(i)+lexeme.get(i+1); break; 
+               case 5:  ErrorMessage = ErrorMessage+ "HTML file should at least have one and/or start with a non-void tag."; break; 
+               case 6:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Property value should be a string enclosed in quotation marks (\") "; break; 
+               case 7:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Unsupported style attribute ("+s+")"; break; 
+               case 8:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Missing colon ':' for the style "+s; break; 
+               case 9:  ErrorMessage = ErrorMessage+ "Line "+HTML_Scanner.getLine(i) +": Missing semi-colon ';' for the style "+s; break; 
            
            }
             WEBDROID.ErrorDetected =true;
+            ErrorMessage +="\n";
+       }    
+      
+       public String showSyntaxError(){
+           return ErrorMessage;
        }
-         
+       public static void clearErrorMessage(){
+           ErrorMessage = "";
+       }
      
       
 }

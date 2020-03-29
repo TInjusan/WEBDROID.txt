@@ -249,7 +249,7 @@ public class SemanticAnalyzer {
                //Generic Error Message:
                
                case 0: WEBDROID.ErrorMessagePopup("Semantic Error","Input type: "+s+" is not a supported type for input tag."); break;
-               case 1: WEBDROID.ErrorMessagePopup("Semantic Error","Label attribute \"for: "+s+"\". Doesn't exist"); break;
+               case 1: WEBDROID.ErrorMessagePopup("Semantic Error","Element reference of Label with attribute \"for: "+s+"\". Doesn't exist"); break;
                case 2: WEBDROID.ErrorMessagePopup("Semantic Error","Please make sure to assign a name to each select tag."); break;
                case 3: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid class: "+s+". First character should not be a digit"); break; 
                case 4: WEBDROID.ErrorMessagePopup("Semantic Error","Invalid id: "+s+". First character should not be a number"); break;

@@ -201,18 +201,24 @@ public class WEBDROID extends Application {
     public static void main(String[] args) {
         launch(args);        
     }
-    
-    
-    
-          
+              
        public static void ErrorMessagePopup(String Error, String Error_Message){
             Label message = new Label(Error_Message);
- 
+            ScrollPane scrollPaneErrorMessage = new ScrollPane();
+            scrollPaneErrorMessage.setContent(message);
+                // Always show vertical scroll bar
+                scrollPaneErrorMessage.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+
+                // Horizontal scroll bar is only displayed when needed
+                scrollPaneErrorMessage.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+                
             StackPane secondaryLayout = new StackPane();
-            secondaryLayout.getChildren().add(message);
+            secondaryLayout.getChildren().add(scrollPaneErrorMessage);
  
             Scene secondScene = new Scene(secondaryLayout, 500, 250);
- 
+            
+            
+            
             // New window (Stage)
             Stage newWindow = new Stage();
             newWindow.setTitle(Error);
@@ -308,9 +314,11 @@ public class WEBDROID extends Application {
                        else
                             ClearAll();
                    }
-                   else
+                   else{
+                       ErrorMessagePopup("Syntax Error",Parser.showSyntaxError() ); 
                        ClearAll();
-                   
+                   }
+                     
                   ErrorDetected =false;
                   System.out.println("clicked");
         }
@@ -435,6 +443,7 @@ public class WEBDROID extends Application {
                     SymbolTable.xml_entry.clear();
                     SymbolTable.xml_root= null;
                     SymbolTable.ClearHTML();
+                    Parser.clearErrorMessage();
         }         
 }
 
