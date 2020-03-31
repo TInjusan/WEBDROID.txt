@@ -142,7 +142,7 @@ public class Parser {
         }
         
         nextLexeme();          
-      
+        try {
         // Get the current tag which is on top of the stack 
         if (current_tag.equals(lexeme.get(i + 1))) {  // Compare the name of the tag vs the one on top of the stack                      
             html_element_stack.pop();         // Removing of the top tag because it has been closed.
@@ -150,7 +150,10 @@ public class Parser {
         } else {
             Error(3, "");  
         }
-
+         }  catch (IndexOutOfBoundsException d) {
+            //Lookahead goes beyond the size of Lexeme stream.
+        }
+        
         try {
             if (lexeme.get(i + 1).equals(">")) {
                 nextLexeme();  //Move to the next lexeme which can be new element or string element
@@ -256,7 +259,7 @@ public class Parser {
         return style_value;
     }
     //Moving from one lexeme to the next one.
-    private void nextLexeme() { i++;  }  
+    private void nextLexeme() {  i++;   }  
 
     private void Error(int code, String s) {
 

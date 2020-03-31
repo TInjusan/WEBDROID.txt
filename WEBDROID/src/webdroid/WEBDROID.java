@@ -1,7 +1,3 @@
-/**
- * Main class program for the WEBDROID.
- * WEBDROID is a WEB HTML to ANDROID XML FORM TRANSLATOR
- */
 package webdroid;
 import java.awt.Desktop;
 import java.io.FileNotFoundException;
@@ -213,10 +209,7 @@ public class WEBDROID extends Application {
         Label message = new Label(Error_Message);
         ScrollPane scrollPaneErrorMessage = new ScrollPane();
         scrollPaneErrorMessage.setContent(message);
-        // Always show vertical scroll bar
         scrollPaneErrorMessage.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-
-        // Horizontal scroll bar is only displayed when needed
         scrollPaneErrorMessage.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
         StackPane secondaryLayout = new StackPane();
@@ -300,28 +293,32 @@ public class WEBDROID extends Application {
                 FilePath = file.getAbsoluteFile().toString();
                 HTMLTextField.clear();
                 HTMLTextField.setText(ReadHTMLFile());
+                html_location.setText(FilePath.substring(0, FilePath.lastIndexOf('\\')));
+                HTMLLabel.setText(FilePath.substring(FilePath.lastIndexOf('\\') + 1, FilePath.length()));
+                html_location.setPrefWidth(300);
             } catch (NullPointerException e) {
                 System.out.println("No file selected");
             }
-            html_location.setText(FilePath.substring(0, FilePath.lastIndexOf('\\')));
-            HTMLLabel.setText(FilePath.substring(FilePath.lastIndexOf('\\') + 1, FilePath.length()));
-            html_location.setPrefWidth(300);
+            
         } else if (event.getTarget() == button_convert) {
             HTMLText = HTMLTextField.getText();
             ClearAll();
 
             //Parsing phase
-            Parser Parser = new Parser();
+            Parser Parser = new Parser();            
             Parser.setHTMLParser(HTMLText);
             Parser.PARSE();
+            
             if (!ErrorDetected) {
                 SemanticAnalyzer Semantic = new SemanticAnalyzer();
                 Semantic.ExecuteAnalyzer();
                 if (!ErrorDetected) {
                     CodeGenerator CD = new CodeGenerator();
                     CD.directTranslation();
+                   
                 } else {
                     ErrorMessagePopup("Semantic Error", Semantic.showSemanticError());
+                    Semantic.clearErrorMessage();
                     ClearAll();
                 }
             } else {
@@ -442,10 +439,12 @@ public class WEBDROID extends Application {
         Android_Color_XML.clear();
         SymbolTable.ArrayString.clear();
         SymbolTable.root = null;
-        SymbolTable.string_literals.clear();
-        SymbolTable.xml_entry.clear();
-        SymbolTable.xml_root = null;
+        SymbolTable.string_xml.clear();
+        SymbolTable.color_xml.clear();
+        SymbolTable.layout_xml.clear();
+        SymbolTable.layout_xml_root = null;
         SymbolTable.ClearHTML();
         Parser.clearErrorMessage();
+       
     }
 }

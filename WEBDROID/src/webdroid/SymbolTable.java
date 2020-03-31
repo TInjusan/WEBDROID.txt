@@ -17,20 +17,19 @@ public class SymbolTable {
 
     SymbolTable() {
         //setting default colors in android studio
-        color_literals.put("colorPrimary", "#008577");
-        color_literals.put("colorPrimaryDark", "#00574B");
-        color_literals.put("colorAccent", "#D81B60");
+        color_xml.put("colorPrimary", "#008577");
+        color_xml.put("colorPrimaryDark", "#00574B");
+        color_xml.put("colorAccent", "#D81B60");
     }
     
     private static List<ElementNode> html_table = new ArrayList<>();
     public static ElementNode root;
     public final String XML_Declaration = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
     public static HashMap<String, ArrayList<String>> ArrayString = new HashMap<>();
-    public static HashMap<String, String> string_literals = new HashMap<>();
-    public static HashMap<String, String> color_literals = new HashMap<>();
-
-    public static List<XML_node> xml_entry = new ArrayList<>();
-    public static XML_node xml_root;
+    public static HashMap<String, String> string_xml = new HashMap<>();
+    public static HashMap<String, String> color_xml = new HashMap<>();
+    public static List<XML_node> layout_xml = new ArrayList<>();
+    public static XML_node layout_xml_root;
 
     public static void AddToTable(ElementNode e) {
         html_table.add(e);

@@ -41,7 +41,7 @@ public class KeywordList {
         colors.putAll(getCSVkeyword(path + "Colors.csv"));
         xml_properties.putAll(getCSVkeyword(path + "xml_properties.csv"));
         html_xml_attr.putAll(getCSVkeyword(path + "html_xml_attr.csv"));
-
+          
         /**
          * Matching of HTML tag to Android XML tag
          * The second parameter binary string represents the default and required
@@ -50,7 +50,7 @@ public class KeywordList {
          */
         SymbolTable x = new SymbolTable();
 
-        //Instantiation of object from SymbolTable sub class.
+        //Instantiation of object from SymbolTable sub-class.
         SymbolTable.XML_node ScrollView = x.new XML_node();
         ScrollView.setXML_node("ScrollView", "011000000000101", XML_CODE.XML_NONVOID);
         html_xml.put("html", ScrollView);
@@ -97,7 +97,6 @@ public class KeywordList {
         SymbolTable.XML_node Spinner = x.new XML_node();
         Spinner.setXML_node("Spinner", "111000000000000", XML_CODE.XML_VOID);
         html_xml.put("select", Spinner);
-
     }
 
     XML_node getXMLNode(String key) {
@@ -136,7 +135,7 @@ public class KeywordList {
     }
 
     private HashMap<String, String> getCSVkeyword(String file) {
-        HashMap<String, String> s = new HashMap<>();
+        HashMap<String, String> s = new LinkedHashMap<>();
         String line = "";
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             while ((line = br.readLine()) != null) {

@@ -114,6 +114,7 @@ public class CharacterScanner {
                 get_string_token();      // in quotations ("")
             } else if (cchar == 127) {
                 lexeme = "";
+                newline.put(lexemes.size(), newlinecount);
                 token = TOKEN_CODE.EOF_TOKEN;  //This characater is the end of the file
             } else if (cchar <= 32 && cchar >= 126) {  // These are the unsupported characters
                 token = TOKEN_CODE.ERROR;
@@ -148,10 +149,11 @@ public class CharacterScanner {
                                         //character of the lexeme
         do {
             cchar = get_source_char();
-            lexeme += String.valueOf(cchar);
-
-        } while (cchar != '\"');
-        lexeme = lexeme.replace("\"", "");
+            lexeme += String.valueOf(cchar);            
+            
+        } while (cchar != '\"' && cchar_ptr + 1 <= source.length());
+        lexeme = lexeme.replace("\"", "").trim();
+         
         cchar = get_source_char();
         token = TOKEN_CODE.STRING;
     }
@@ -190,7 +192,7 @@ public class CharacterScanner {
             t = next_token();
             kc = kw.SearchKeyword(getLexeme());
             lexemes.add(getLexeme());
-            tokens.add(getToken());
+            tokens.add(getToken());                        
         } while (t != TOKEN_CODE.EOF_TOKEN);
 
     }

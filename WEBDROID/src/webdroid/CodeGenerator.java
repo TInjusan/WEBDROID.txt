@@ -1,5 +1,4 @@
 package webdroid;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -11,24 +10,40 @@ import java.util.Map;
 import java.util.Map.Entry;
 import webdroid.KeywordList.XML_CODE;
 import static webdroid.SymbolTable.ArrayString;
-import static webdroid.SymbolTable.string_literals;
-import static webdroid.SymbolTable.color_literals;
 import webdroid.SymbolTable.ElementNode;
 import webdroid.SymbolTable.XML_node;
 import static webdroid.WEBDROID.android_location;
+import static webdroid.SymbolTable.string_xml;
+import static webdroid.SymbolTable.color_xml;
 
+/**
+ * This class is where the translation takes place to printing of the translated output.
+ * The CodeGenerator will first get the modified abstract syntax tree from 
+ * SymbolTable after Semantic Analysis.
+ * The HTML abstract syntax tree will then be converted to 
+ * Intermediate Representation Tree for XML using XMLNode class from Symbol Table.
+ * Once the IRT XML is properly generated it will then be used to
+ * print the XML Layout, XML String and XML colors.
+ * 
+ */
 public class CodeGenerator {
 
     static Map<Integer, SymbolTable> html_element;
     static SymbolTable root;
     static List<ElementNode> children;
     static List<XML_node> xmlchildren;
-    static int rbcount = 0;
-    static int rbparent = -1;
-    static int current_rb = -1;
-    static int xml_id = SymbolTable.get_html_table().size();
+    static int rbcount;
+    static int rbparent;
+    static int current_rb;
+    static int xml_id;
     static KeywordList k = new KeywordList();
-
+    
+    CodeGenerator(){
+            rbcount = 0;
+            rbparent = -1;
+            current_rb = -1;
+            xml_id = SymbolTable.get_html_table().size();        
+    }
     private void GENERATE_XML(ElementNode element, int level) {
 
         String id;
@@ -41,43 +56,20 @@ public class CodeGenerator {
             xml_node = kw.getXMLNode(element.getTag());
             xml_node.setID(xml_id);
 
-            if (element.getTag().equals("radiobutton")) {
-
-                if (rbparent != element.getParent_ID() && rbcount == 0) {
-                    rbparent = element.getParent_ID();
-                    xml_node_group = kw.getXMLNode("RadioButtonGroup");
-                    xml_node_group.setParent_ID(rbparent);
-                    xml_node_group.setID(xml_id);
-                    current_rb = xml_id;
-
-                    SymbolTable.xml_entry.add(xml_node_group);
-
-                    xml_id++;
-                    xml_node.setID(xml_id);
-                    xml_node.setParent_ID(current_rb);
-                    rbcount++;
-                } else {
-                    xml_node.setParent_ID(current_rb);
-                }
-
-                SymbolTable.xml_entry.add(xml_node);
-
-            }
-            xml_id++;
-
-            //lambda expression
-            id = kw.getXMLNode(element.getTag()) != null
+            
+            //lambda expression setting up UDP id
+            //this is visible android XML layout
+            id = element.getUDP().get("id")== null
                     ? xml_node.getXMLTag() + element.getID()
                     : element.getUDP().get("id");
 
             xml_node.addXMLUDP("android:id", "\"@+id/" + id + "\"");
-          
+
             for (Map.Entry e : element.getUDP().entrySet()) {
                 switch (e.getKey().toString()) {
                     case "text":
                     case "placeholder":
-
-                        string_literals.put(id, e.getValue().toString());
+                        string_xml.put(id, e.getValue().toString().trim());
                         xml_node.addXMLUDP("android:" + kw.getXML_Attr(e.getKey().toString()), "\"@string/" + id + "\"");
                         break;
                     case "type":
@@ -92,7 +84,7 @@ public class CodeGenerator {
                         String colorname = kw.getColorName(e.getValue().toString());
                         String colorvalue = kw.getColor(e.getValue().toString());
                         colorname = colorname.equals(colorvalue) ? id : colorname;
-                        color_literals.put(colorname, colorvalue);
+                        color_xml.put(colorname, colorvalue);
                         xml_node.addXMLUDP("android:" + kw.getXML_Attr(e.getKey().toString()), "\"@color/" + colorname + "\"");
                         break;
                     case "src":
@@ -100,31 +92,56 @@ public class CodeGenerator {
                         xml_node.addXMLUDP("android:" + kw.getXML_Attr(e.getKey().toString()), "\"@drawable/" + xml_filename.substring(0, xml_filename.indexOf('.')) + "\"");
                         break;
                     default:
-
                         break;
                 }
             }
 
-            if (xml_node.getXMLTag().equals("Spinner")) {
-                xml_node.addXMLUDP("android:entries", "\"@array/" + element.getUDP().get("name") + "\"");
-            }
+            switch(xml_node.getXMLTag()){
+                case "RadioButton":
+                    if (rbparent != element.getParent_ID() && rbcount == 0) {
+                        rbparent = element.getParent_ID();
+                        xml_node_group = kw.getXMLNode("RadioButtonGroup");
+                        xml_node_group.setParent_ID(rbparent);
+                        xml_node_group.setID(xml_id);
+                        current_rb = xml_id;
 
-            if (xml_node.getXMLTag().equals("ScrollView")) {
-                xml_node.setParent_ID(-1);
-                xml_node.setID(element.getID());
-                SymbolTable.xml_entry.add(xml_node);
-            } else if (!xml_node.getXMLTag().equals("RadioButton")) {
-                xml_node.setParent_ID(element.getParent_ID());
-                xml_node.setID(element.getID());
-                SymbolTable.xml_entry.add(xml_node);
-            }
+                        SymbolTable.layout_xml.add(xml_node_group);
 
+                        xml_id++;
+                        xml_node.setID(xml_id);
+                        xml_node.setParent_ID(current_rb);
+                        rbcount++;
+                    } else {
+                        xml_node.setParent_ID(current_rb);
+                    }
+
+                    SymbolTable.layout_xml.add(xml_node);
+
+                    break;
+                case "Spinner":
+                    xml_node.addXMLUDP("android:entries", "\"@array/" + element.getUDP().get("name") + "\"");
+                    xml_node.setID(element.getID());
+                    SymbolTable.layout_xml.add(xml_node);
+                    break;
+                case "ScrollView":
+                    xml_node.setParent_ID(-1);
+                    xml_node.setID(element.getID());
+                    SymbolTable.layout_xml.add(xml_node);    
+                    break;
+                default:
+                    xml_node.setParent_ID(element.getParent_ID());
+                    xml_node.setID(element.getID());
+                    SymbolTable.layout_xml.add(xml_node);
+                break;
+            }
+            xml_id++;
+        
         } else if (element.getTag().equals("title")) {
-            string_literals.put("app_name", element.getUDP().get("text"));
+            string_xml.put("app_name", element.getUDP().get("text"));
         }
 
         if (xml_node.getID() == 0) {
-            SymbolTable.xml_root = xml_node;
+            SymbolTable.layout_xml_root = xml_node;
         }
 
         children = element.getChildrenElement();
@@ -136,8 +153,8 @@ public class CodeGenerator {
 
     public void directTranslation() {
         GENERATE_XML(SymbolTable.root, 0);
-        buildSymbolTree(SymbolTable.xml_root);
-        printLayoutXML(SymbolTable.xml_root, "");
+        buildSymbolTree(SymbolTable.layout_xml_root);
+        printLayoutXML(SymbolTable.layout_xml_root, "");
         printStringXML();
         printColorsXML();
     }
@@ -157,7 +174,6 @@ public class CodeGenerator {
         } catch (FileAlreadyExistsException e) {
             //File already exists.
         } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return file_name;
@@ -178,7 +194,7 @@ public class CodeGenerator {
 
     public List<XML_node> getChildrenById(int id) {
         List<XML_node> children_ = new ArrayList<>();
-        for (XML_node e : SymbolTable.xml_entry) {
+        for (XML_node e : SymbolTable.layout_xml) {
             if (e.getParent_ID() == id) {
                 children_.add(e);
             }
@@ -214,13 +230,12 @@ public class CodeGenerator {
                 xml_node.getXML_type() == XML_CODE.XML_NONVOID
                         ? tab + "</" + xml_node.getXMLTag() + ">\n" : ""
         );
-
     }
 
     private void printStringXML() {
         WEBDROID.Android_String_XML.appendText("<resources>\n");
 
-        for (Map.Entry e : string_literals.entrySet()) {
+        for (Map.Entry e : string_xml.entrySet()) {
             WEBDROID.Android_String_XML.appendText(" <string name=\"" + e.getKey() + "\">" + e.getValue() + "</string>\n");
         }
 
@@ -238,7 +253,7 @@ public class CodeGenerator {
     private void printColorsXML() {
         WEBDROID.Android_Color_XML.appendText("<resources>\n");
 
-        for (Map.Entry e : color_literals.entrySet()) {
+        for (Map.Entry e : color_xml.entrySet()) {
             WEBDROID.Android_Color_XML.appendText(" <color name=\"" + e.getKey() + "\">" + e.getValue() + "</color>\n");
         }
 
