@@ -1,0 +1,10 @@
+text,text
+src,src
+placeholder,hint
+password,textPassword
+email,textEmailAddress
+type,inputType
+background-color,background 
+color,textColor 
+font-size,textSize 
+font-weight,textFontWeight
