@@ -46,7 +46,7 @@ public class WEBDROID extends Application {
     public static boolean ErrorDetected = false;
     final String dir = System.getProperty("user.dir");
     public String path = dir.replace("/", "\\\\") + "\\others\\";
-
+    private String initial_dir = dir.replace("/", "\\\\") + "\\test\\";
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
@@ -286,7 +286,7 @@ public class WEBDROID extends Application {
             fileChooser.getExtensionFilters().add(extFilter);
 
             //Please change the initial directory if this program is running on a different system
-            fileChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Prototype\\WEBDROID.txt\\WEBDROID\\test\\HTML CSS Files"));
+            fileChooser.setInitialDirectory(new File(initial_dir));
             File file = fileChooser.showOpenDialog(stage);
 
             try {
@@ -329,7 +329,7 @@ public class WEBDROID extends Application {
 
         } else if (event.getTarget() == button_browse_android) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setInitialDirectory(new File("D:\\Computer Science\\Senior's Project\\Test Cases"));
+            directoryChooser.setInitialDirectory(new File(initial_dir));
 
             try {
                 File selectedDirectory = directoryChooser.showDialog(stage);
