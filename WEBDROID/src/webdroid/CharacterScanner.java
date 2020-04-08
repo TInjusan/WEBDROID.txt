@@ -1,3 +1,8 @@
+package webdroid;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * The task of this class is scanning each and every character in the file
  * and identify them if they are digit, letter, etc., 
@@ -6,11 +11,6 @@
  * string belongs to. The output of this class is mainly the
  * Lexeme and Token stream.
  */
-package webdroid;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class CharacterScanner {
 
     public enum TOKEN_CODE {
@@ -46,7 +46,7 @@ public class CharacterScanner {
     }
 
     //setter method
-    public void setSource(String s) {
+    private void setSource(String s) {
         this.source = s;
         cchar_ptr = 0;
         this.cchar = get_source_char();
@@ -87,7 +87,7 @@ public class CharacterScanner {
         }   // Recursively go through all next whitespace 
     }
 
-    public TOKEN_CODE next_token() {
+    private TOKEN_CODE next_token() {
         try {
             //preserving the previous character
             //before skipping whitespaace                           
@@ -152,21 +152,20 @@ public class CharacterScanner {
             lexeme += String.valueOf(cchar);            
             
         } while (cchar != '\"' && cchar_ptr + 1 <= source.length());
-        lexeme = lexeme.replace("\"", "").trim();
-         
+        lexeme = lexeme.replace("\"", "").trim();         
         cchar = get_source_char();
         token = TOKEN_CODE.STRING;
     }
 
     private void get_string_element() {
 
-        lexeme = String.valueOf(cchar);
-        while (cchar != '<') {
+        lexeme = "";
+        do{
+            lexeme += String.valueOf(cchar);
             cchar = get_source_char();
-
-            if (cchar != '<')  
-                lexeme += String.valueOf(cchar);
+            
         }
+        while (cchar != '<' && cchar != 127);  
 
         token = TOKEN_CODE.STRING_ELEMENT;
     }
@@ -184,17 +183,21 @@ public class CharacterScanner {
     //getter method
     public TOKEN_CODE getToken() {   return token;  }
     public String getLexeme()    {   return lexeme; }
-
-    public void Run_Character_Scanner(String s) {
-
+    
+     CharacterScanner(String s) {
+        source = "";
+        cchar = ' ';
+        lexeme = "";
+        previous_cchar = ' ';
+        newlinecount = 1;
         setSource(s);
         do {
             t = next_token();
             kc = kw.SearchKeyword(getLexeme());
             lexemes.add(getLexeme());
-            tokens.add(getToken());                        
-        } while (t != TOKEN_CODE.EOF_TOKEN);
-
+            tokens.add(getToken());  
+          } while (t != TOKEN_CODE.EOF_TOKEN);
+       
     }
 
     public void Run_Style_Scanner(String s) {
@@ -243,7 +246,7 @@ public class CharacterScanner {
     }
 
     public int getLine(int lexeme_index) {
-
+        lexeme_index++;
         while (newline.get(lexeme_index) == null) {
             lexeme_index++;
         }

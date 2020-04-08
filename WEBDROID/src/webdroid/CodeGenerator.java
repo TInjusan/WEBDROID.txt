@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import webdroid.KeywordList.XML_CODE;
-import static webdroid.SymbolTable.ArrayString;
 import webdroid.SymbolTable.ElementNode;
 import webdroid.SymbolTable.XML_node;
 import static webdroid.WEBDROID.android_location;
 import static webdroid.SymbolTable.string_xml;
 import static webdroid.SymbolTable.color_xml;
-
+import static webdroid.SymbolTable.ArrayString;
 /**
  * This class is where the translation takes place to printing of the translated output.
  * The CodeGenerator will first get the modified abstract syntax tree from 
@@ -44,7 +43,7 @@ public class CodeGenerator {
             current_rb = -1;
             xml_id = SymbolTable.get_html_table().size();        
     }
-    private void GENERATE_XML(ElementNode element, int level) {
+    private void GENERATE_XML(ElementNode element) {
 
         String id;
         KeywordList kw = new KeywordList();
@@ -126,7 +125,8 @@ public class CodeGenerator {
                 case "ScrollView":
                     xml_node.setParent_ID(-1);
                     xml_node.setID(element.getID());
-                    SymbolTable.layout_xml.add(xml_node);    
+                    SymbolTable.layout_xml.add(xml_node); 
+                    SymbolTable.layout_xml_root = xml_node;
                     break;
                 default:
                     xml_node.setParent_ID(element.getParent_ID());
@@ -140,19 +140,15 @@ public class CodeGenerator {
             string_xml.put("app_name", element.getUDP().get("text"));
         }
 
-        if (xml_node.getID() == 0) {
-            SymbolTable.layout_xml_root = xml_node;
-        }
-
         children = element.getChildrenElement();
 
         for (ElementNode child_node : children) {
-            GENERATE_XML(child_node, level + 1);
+            GENERATE_XML(child_node);
         }
     }
 
     public void directTranslation() {
-        GENERATE_XML(SymbolTable.root, 0);
+        GENERATE_XML(SymbolTable.root);
         buildSymbolTree(SymbolTable.layout_xml_root);
         printLayoutXML(SymbolTable.layout_xml_root, "");
         printStringXML();

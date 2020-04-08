@@ -1,5 +1,4 @@
 package webdroid;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ public class SemanticAnalyzer {
     private List<ElementNode> removal = new ArrayList<>();
 
     SemanticAnalyzer() {
-        buildSymbolTree(SymbolTable.root);    //First build after Syntax Analysis - Abstract Syntax Tree
-    }
+        buildSymbolTree(SymbolTable.root);  //First build  
+    }                                       //of AST after Syntax Analysis
 
     public void ExecuteAnalyzer() {
         analyze();
@@ -37,23 +36,28 @@ public class SemanticAnalyzer {
             for (Map.Entry udp : e.getUDP().entrySet()) {   
                 String value = udp.getValue().toString();
                 String key = udp.getKey().toString();
-
-                 if(Character.isDigit(value.charAt(0)) && 
-                              !key.equals("placeholder") &&
-                              !key.equals("height") &&
-                              !key.equals("width")){
-                     Error(4, value, key);
-                 }     
-                 switch(udp.getKey().toString()){
-                     case "id":
-                                if(searchDuplicate(key,value)>1)
-                                Error(5, value, "");    
-                         break;
-                     case "for":
-                                if (searchDuplicate(key,value) > 1) 
-                                Error(7, value, "");    
-                         break;
-                 }
+                if (value.equals("")) {
+                    Error(10, key, "");
+                } else {
+                    if (Character.isDigit(value.charAt(0))
+                            && !key.equals("placeholder")
+                            && !key.equals("height")
+                            && !key.equals("width")) {
+                        Error(4, value, key);
+                    }
+                    switch (udp.getKey().toString()) {
+                        case "id":
+                            if (searchDuplicate(key, value) > 1) {
+                                Error(5, value, "");
+                            }
+                            break;
+                        case "for":
+                            if (searchDuplicate(key, value) > 1) {
+                                Error(7, value, "");
+                            }
+                            break;
+                    }
+                }
             }   
             // Semantic Analysis and Modification for HTML Element     
             switch(e.getTag()){
@@ -102,51 +106,42 @@ public class SemanticAnalyzer {
                     }
                 }
                     break;
-            case "p":
-            case "label":
-            case "h1":
-            case "h2":
-            case "h3":
+            case "p":           
             case "title":
-                children = getChildrenById(e.getID());
-                if (children.size() > 1) {
-                     Error(3, "","");
-                } 
-                else { //Setting the text from its child string element
-                    e.addUDP("text", children.get(0).getUDP().get("text"));
-                    removal.add(children.get(0));
-                }
-
+                    childStringValidation(e);               
+                    break;
+            case "label":
                 // Assigning the text to the element using the for attribute
-                if (e.getTag().equals("label")) {
-
+                    childStringValidation(e);
                     if (e.getUDP().get("for") != null) {
                         String id = e.getUDP().get("for");
                         String text = e.getUDP().get("text");
 
-                        if (searchDuplicate("for",id) > 0) {
+                        if (searchDuplicate("for", id) > 0) {
                             setText(id, text);
                             removal.add(e);
                         } else {
-                            Error(1, id,"");
+                            Error(1, id, "");
                         }
                     }
-                }
-                // Modifying h1, h2, h3 sizes in sp
-                else if (e.getTag().contains("h")) {
-                    if (e.getTag().equals("h1")) {
-                        e.addUDP("font-size", "25sp");
-                    } else if (e.getTag().equals("h2")) {
-                        e.addUDP("font-size", "20sp");
-                    } else if (e.getTag().equals("h3")) {
-                        e.addUDP("font-size", "15sp");
-                    }
-                    //Setting text as bold
-                    e.addUDP("font-weight", "700");
-                }                
-                break;
+                    break;
+            case "h1":
+                    e.addUDP("font-size", "25sp");   //Size modification
+                    e.addUDP("font-weight", "700");  //Setting text as bold
+                    childStringValidation(e);
+                    break;
+            case "h2":                    
+                    e.addUDP("font-size", "20sp");  //Size modification
+                    e.addUDP("font-weight", "700"); //Setting text as bold
+                    childStringValidation(e);
+                    break;
+            case "h3":
+                    e.addUDP("font-size", "15sp");  //Size modification
+                    e.addUDP("font-weight", "700"); //Setting text as bold
+                    childStringValidation(e);
+                    break;
             case "img":
-                String full_source = "";
+                String full_source = ""; 
                 if (e.getUDP().get("src") == null) {
                     Error(8, "","");
                 } else {
@@ -157,8 +152,7 @@ public class SemanticAnalyzer {
                      }
                      catch (FileNotFoundException o) {
                            Error(9,full_source,"");
-                     }                   
-                   
+                     }    
                 } 
                 break;
             case "select":
@@ -188,7 +182,19 @@ public class SemanticAnalyzer {
             SymbolTable.RemoveTag(remove);
         }
     }
+    
+    private void childStringValidation(ElementNode e){
+                children = getChildrenById(e.getID());
+                if (children.size() > 1) {
+                     Error(3, "","");
+                } 
+                else { //Setting the text from its child string element
+                    e.addUDP("text", children.get(0).getUDP().get("text"));
+                    removal.add(children.get(0));
+                }
 
+    }
+    
     private int searchDuplicate(String key, String value) {
         int i = 0;
         for (ElementNode e : SymbolTable.get_html_table()) {
@@ -248,13 +254,14 @@ public class SemanticAnalyzer {
            case 0: ErrorMessage += "Input type: "+s1+" is not a supported type for input tag."; break;
            case 1: ErrorMessage += "Element reference of Label with attribute \"for: "+s1+"\". Doesn't exist"; break;
            case 2: ErrorMessage += "Please make sure to assign a name to each select tag."; break;
-           case 3: ErrorMessage += "Error. Text Tags should only have one child."; break; 
+           case 3: ErrorMessage += "Text Tags should only have one child."; break; 
            case 4: ErrorMessage += "Invalid "+s2+": "+s1+". First character should not be a digit"; break;
            case 5: ErrorMessage += "Multiple usage of id: "+s1+" is not allowed."; break;
            case 6: ErrorMessage += "Please make sure to set the value property of a button as it is the text of button itself"; break;
            case 7: ErrorMessage += "Multiple usage of id ["+s1+"] as a value of \"for\" attribute is not allowed."; break;
            case 8: ErrorMessage += "Image tag should always have a source value."; break;
            case 9: ErrorMessage += "Image tag source value not found: "+s1+"."; break;
+           case 10: ErrorMessage += "Blank value of attribute: "+s1+" is not allowed."; break;
         }
         WEBDROID.ErrorDetected = true;
         ErrorMessage += "\n";

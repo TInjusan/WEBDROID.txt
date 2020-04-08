@@ -1,5 +1,4 @@
 package webdroid;
-
 import java.util.ArrayList;
 import java.util.*;
 import webdroid.CharacterScanner.TOKEN_CODE;
@@ -23,23 +22,20 @@ public class Parser {
     private static String ErrorMessage = "";
     KeywordList kw = new KeywordList();
     KeywordList.HTML_CODE kc;
-    CharacterScanner HTML_Scanner = new CharacterScanner();
+    CharacterScanner HTML_Scanner;
     
     public void setHTMLParser(String s) {
-        HTML_Scanner.Run_Character_Scanner(s);
+        HTML_Scanner = new CharacterScanner(s);
         lexeme = HTML_Scanner.getLexemeStream();
         token = HTML_Scanner.getTokenStream();
     }
 
-    public void PARSE() {
-        if (lexeme.size() < 5)
-           Error(5, "");
-        else 
-            HTML(); 
+    public void PARSE() {        
+            HTML();  
     }
 
-    public void HTML() {
-
+    public void HTML() {        
+        try {
         if (lexeme.get(i + 1).equals("!")) {  //lookahead if there's 
             if ((lexeme.get(i) +              //a Doctype declaration
                  lexeme.get(i + 1) +
@@ -54,7 +50,12 @@ public class Parser {
         } else {  // If no DOCTYPE declaration then deduct one so the
             i--;  // checking of element starts with zero
         }
-        Element();
+        
+            Element();
+        } catch (IndexOutOfBoundsException d) {
+            Error(5, "");
+            //Lookahead goes beyond the size of Lexeme stream.
+        }
     }
 
     public void Element() {
@@ -139,30 +140,35 @@ public class Parser {
             }
         } catch (IndexOutOfBoundsException d) {
             //Lookahead goes beyond the size of Lexeme stream.
+            //This means that it was not able to found the closing tag
+            Error(4,"");
+            
         }
         
-        nextLexeme();          
+        nextLexeme();
         try {
-        // Get the current tag which is on top of the stack 
-        if (current_tag.equals(lexeme.get(i + 1))) {  // Compare the name of the tag vs the one on top of the stack                      
-            html_element_stack.pop();         // Removing of the top tag because it has been closed.
-            nextLexeme();
-        } else {
-            Error(3, "");  
-        }
-         }  catch (IndexOutOfBoundsException d) {
-            //Lookahead goes beyond the size of Lexeme stream.
-        }
-        
-        try {
-            if (lexeme.get(i + 1).equals(">")) {
-                nextLexeme();  //Move to the next lexeme which can be new element or string element
+            // Get the current tag which is on top of the stack 
+            if (current_tag.equals(lexeme.get(i + 1))) {  // Compare the name of the tag vs the one on top of the stack                      
+                html_element_stack.pop();         // Removing of the top tag because it has been closed.
+                nextLexeme();
+                
+                try {
+                    if (lexeme.get(i + 1).equals(">")) {
+                        nextLexeme();  //Move to the next lexeme which can be new element or string element
+                    } else {
+                        Error(1, current_tag);
+                    }
+                } catch (IndexOutOfBoundsException d) {
+                    //Lookahead goes beyond the size of Lexeme stream.
+                }
             } else {
-                Error(1, current_tag);
+                Error(3, "");
             }
         } catch (IndexOutOfBoundsException d) {
             //Lookahead goes beyond the size of Lexeme stream.
         }
+
+       
 
     }
 
@@ -259,7 +265,7 @@ public class Parser {
         return style_value;
     }
     //Moving from one lexeme to the next one.
-    private void nextLexeme() {  i++;   }  
+    private void nextLexeme() {   i++;   }  
 
     private void Error(int code, String s) {
 
@@ -277,12 +283,13 @@ public class Parser {
                     + ": Missing equal sign '=' for an attribute of " + s;
                 break;
             case 3:  ErrorMessage += "Line " + HTML_Scanner.getLine(i) 
-                    + ": Closing tag " + lexeme.get(i) + lexeme.get(i + 1) 
+                    + ": Closing tag " + lexeme.get(i + 1) 
                     + ". Incorrect tag name to close. It should be: " 
                     + html_element_stack.peek().getTag();
                 break;
-            case 4: ErrorMessage += "Line " + HTML_Scanner.getLine(i) 
-                    + ": Non_void_element: Syntax Error at : " + lexeme.get(i) + lexeme.get(i + 1);
+            case 4: ErrorMessage += "Last Line:"
+                    + ": Missing closing tag for " + html_element_stack.peek().getTag();
+                    html_element_stack.pop();
                 break;
             case 5: ErrorMessage += 
                     "HTML file should at least have one and/or start with a non-void tag.";
