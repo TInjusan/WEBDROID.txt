@@ -285,7 +285,6 @@ public class WEBDROID extends Application {
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("HTML files (*.html, *css)", "*.html", "*.css");
             fileChooser.getExtensionFilters().add(extFilter);
 
-            //Please change the initial directory if this program is running on a different system
             fileChooser.setInitialDirectory(new File(initial_dir));
             File file = fileChooser.showOpenDialog(stage);
 
@@ -345,9 +344,6 @@ public class WEBDROID extends Application {
             File layout = new File(android_location.getText() + "\\app\\src\\main\\res\\layout\\activity_main.xml");
             File string = new File(android_location.getText() + "\\app\\src\\main\\res\\values\\strings.xml");
             File colors = new File(android_location.getText() + "\\app\\src\\main\\res\\values\\colors.xml");
-            System.out.println(layout);
-            System.out.println(string);
-            System.out.println(colors);
             String missingfile = "";
             try (FileWriter fileWriterLayout = new FileWriter(layout)) {
                 fileWriterLayout.write(Android_Layout_XML.getText());

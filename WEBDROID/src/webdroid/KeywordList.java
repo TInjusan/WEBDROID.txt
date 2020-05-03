@@ -37,8 +37,8 @@ public class KeywordList {
     //constructor initializing the keywords
     KeywordList() {
    
-        Keyword.putAll(getCSVkeyword(path + "Keyword.csv"));
-        colors.putAll(getCSVkeyword(path + "Colors.csv"));
+        Keyword.putAll(getCSVkeyword(path + "keyword.csv"));
+        colors.putAll(getCSVkeyword(path + "colors.csv"));
         xml_properties.putAll(getCSVkeyword(path + "xml_properties.csv"));
         html_xml_attr.putAll(getCSVkeyword(path + "html_xml_attr.csv"));
           

@@ -172,5 +172,7 @@ public class SymbolTable {
         XML_CODE getXML_type() {
             return XML_type;
         }
-    } 
+    }
+    
+ 
 }

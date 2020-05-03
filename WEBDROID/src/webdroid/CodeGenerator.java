@@ -119,6 +119,7 @@ public class CodeGenerator {
                     break;
                 case "Spinner":
                     xml_node.addXMLUDP("android:entries", "\"@array/" + element.getUDP().get("name") + "\"");
+                    xml_node.setParent_ID(element.getParent_ID());
                     xml_node.setID(element.getID());
                     SymbolTable.layout_xml.add(xml_node);
                     break;
@@ -146,7 +147,7 @@ public class CodeGenerator {
             GENERATE_XML(child_node);
         }
     }
-
+      
     public void directTranslation() {
         GENERATE_XML(SymbolTable.root);
         buildSymbolTree(SymbolTable.layout_xml_root);

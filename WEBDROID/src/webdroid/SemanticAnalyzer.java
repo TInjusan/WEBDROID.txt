@@ -97,7 +97,6 @@ public class SemanticAnalyzer {
                             } catch (NullPointerException ee) {
                                 Error(6, "","");
                             }
-
                             break;
 
                         default:
@@ -108,6 +107,7 @@ public class SemanticAnalyzer {
                     break;
             case "p":           
             case "title":
+            case "button":
                     childStringValidation(e);               
                     break;
             case "label":
